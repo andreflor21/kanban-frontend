@@ -1,6 +1,13 @@
 // import React from 'react';
 
-import { Container, LogoStyled, Title, FormStyled, TextStyled } from './styles';
+import {
+    Container,
+    LogoStyled,
+    Title,
+    FormStyled,
+    TextStyled,
+    LinkStyled,
+} from './styles';
 import Logo from '../../assets/logo.svg';
 import Input from '../Input';
 import Button from '../Button';
@@ -24,16 +31,9 @@ const Login = () => {
 
                 <Button type="submit">Login</Button>
             </FormStyled>
-            <a
-                style={{
-                    marginTop: '22px',
-                    textTransform: 'lowercase',
-                    textDecoration: 'underline',
-                }}
-                href="/esqueci-minha-senha"
-            >
+            <LinkStyled href="/esqueci-minha-senha">
                 Esqueci minha senha
-            </a>
+            </LinkStyled>
         </Container>
     );
 };

@@ -41,3 +41,17 @@ export const TextStyled = styled.h3`
     padding-top: 30px;
     padding-bottom: 16px;
 `;
+
+export const LinkStyled = styled.a`
+    color: var(--gray-100);
+    margin-top: 22px;
+    text-transform: lowercase;
+    text-decoration: underline;
+
+    &:hover {
+        color: var(--emerald-400);
+    }
+    &:active {
+        color: var(--gray-100);
+    }
+`;

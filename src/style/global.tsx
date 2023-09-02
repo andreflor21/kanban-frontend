@@ -80,10 +80,10 @@ export default createGlobalStyle`
       text-decoration: none;
     }
 
-    @media screen and (min-width: 920px) {
-      body {
-        padding-top: 70px;
-      }
+    // @media screen and (min-width: 920px) {
+    //   body {
+    //     padding-top: 70px;
+    //   }
 
-    }
+    // }
 `;
