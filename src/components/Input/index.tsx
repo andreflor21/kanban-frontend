@@ -15,28 +15,34 @@ interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
     className?: string;
 }
 
-const Input = ({
-    label,
-    inputType = 'text',
-    errorMessage,
-    placeholder,
-    error = false,
-    className,
-    ...rest
-}: InputProps) => {
-    return (
-        <ContainerInput>
-            {label && <LabelStyled htmlFor="">{label}</LabelStyled>}
-            <InputStyled
-                className={className}
-                type={inputType}
-                placeholder={placeholder}
-                {...rest}
-                error={error}
-            />
-            {error && <ErrorMessage>{errorMessage}</ErrorMessage>}
-        </ContainerInput>
-    );
-};
+const Input = forwardRef<HTMLInputElement, InputProps>(
+    (
+        {
+            label,
+            inputType = 'text',
+            errorMessage,
+            placeholder,
+            error = false,
+            className,
+            ...rest
+        }: InputProps,
+        ref
+    ) => {
+        return (
+            <ContainerInput>
+                {label && <LabelStyled htmlFor="">{label}</LabelStyled>}
+                <InputStyled
+                    className={className}
+                    type={inputType}
+                    placeholder={placeholder}
+                    {...rest}
+                    ref={ref}
+                    // error={error}
+                />
+                {error && <ErrorMessage>{errorMessage}</ErrorMessage>}
+            </ContainerInput>
+        );
+    }
+);
 
-export default forwardRef(Input);
+export default Input;

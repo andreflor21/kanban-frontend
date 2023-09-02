@@ -5,7 +5,7 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { CheckCircle, X } from 'phosphor-react';
 import jwt_decode from 'jwt-decode';
 import { Usuario } from '../../types/usuario';
@@ -23,8 +23,12 @@ interface UsuarioLogin {
 }
 
 interface AuthProviderData {
-    userLogin: (usuarioLogin: UsuarioLogin, setLoad: Dispatch<boolean>) => void;
-    userLogoff: () => void;
+    userLogin: (
+        usuarioLogin: UsuarioLogin,
+        setLoad: Dispatch<boolean>,
+        navigate: NavigateFunction
+    ) => void;
+    userLogoff: (navigate: NavigateFunction) => void;
     token: string;
     setAuth: (value: React.SetStateAction<string>) => void;
     idUser: number;
@@ -37,14 +41,12 @@ interface DecodedToken {
     iat: string;
     exp: number;
 }
-
 const AuthContext = createContext<AuthProviderData>({} as AuthProviderData);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
     const convertStrToNumber = (str: string) => {
         return parseInt(str);
     };
-    // const navigate = useNavigate();
     const [auth, setAuth] = useState<string>(() => {
         const token = localStorage.getItem('@kanban/token');
 
@@ -68,7 +70,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const getUser = (
         id: number | string,
         token: string,
-        setLoad: Dispatch<boolean>
+        setLoad: Dispatch<boolean>,
+        navigate: NavigateFunction
     ) => {
         api.get(`usuarios/${id}`, {
             headers: {
@@ -78,10 +81,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             .then((res) => {
                 // const navigate = useNavigate();
                 setUser(res.data);
-                localStorage.setItem(
-                    '@kanban/usuario',
-                    JSON.stringify(res.data)
-                );
+                // localStorage.setItem(
+                //     '@kanban/usuario',
+                //     JSON.stringify(res.data)
+                // );
                 notification.open({
                     message: 'sucesso',
                     closeIcon: <X />,
@@ -97,7 +100,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     ),
                 });
                 setLoad(false);
-                // navigate('');
+                navigate('/dashboard');
             })
             .catch((err) => {
                 setLoad(false);
@@ -118,7 +121,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 });
             });
     };
-    const userLogin = (data: UsuarioLogin, setLoad: Dispatch<boolean>) => {
+    const userLogin = (
+        data: UsuarioLogin,
+        setLoad: Dispatch<boolean>,
+        navigate: NavigateFunction
+    ) => {
         api.post('login', data)
             .then((res: AxiosResponse) => {
                 localStorage.setItem(
@@ -127,13 +134,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 );
 
                 const decodedToken: DecodedToken = jwt_decode(res.data.token);
-                localStorage.setItem('@kanban/idUser', decodedToken.sub);
+                localStorage.setItem('@kanban/idUser', res.data.user_id);
                 setIdUser(convertStrToNumber(decodedToken.sub));
                 setAuth(res.data.token);
-                getUser(decodedToken.sub, res.data.token, setLoad);
+                getUser(res.data.user_id, res.data.token, setLoad, navigate);
             })
             .catch((err: AxiosError) => {
                 setLoad(false);
+                console.error(err);
+
                 notification.open({
                     message: 'erro',
                     closeIcon: <X />,
@@ -152,12 +161,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             });
     };
 
-    const userLogoff = () => {
+    const userLogoff = (navigate: NavigateFunction) => {
         setUser({});
         setAuth('');
         setIdUser(0);
         localStorage.clear();
-        navigate('');
+        navigate('/');
     };
 
     return (
