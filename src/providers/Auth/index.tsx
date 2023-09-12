@@ -5,7 +5,7 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { NavigateFunction } from 'react-router-dom';
 import { CheckCircle, X } from 'phosphor-react';
 import jwt_decode from 'jwt-decode';
 import { Usuario } from '../../types/usuario';
@@ -33,7 +33,8 @@ interface AuthProviderData {
     setAuth: (value: React.SetStateAction<string>) => void;
     idUser: number;
     setIdUser: (value: React.SetStateAction<number>) => void;
-    user?: Usuario;
+    user: Usuario;
+    setUser: (value: React.SetStateAction<Usuario>) => void;
 }
 
 interface DecodedToken {
@@ -62,29 +63,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (userStorage) {
             return JSON.parse(userStorage);
         }
-        return '';
     });
 
-    const [idUser, setIdUser] = useState<number>(0);
+    const [idUser, setIdUser] = useState<number>(() => {
+        const id = localStorage.getItem('@kanban/idUser');
 
-    const getUser = (
+        if (id) {
+            return JSON.parse(id);
+        }
+        return 0;
+    });
+
+    const getUser = async (
         id: number | string,
         token: string,
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => {
-        api.get(`usuarios/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        await api
+            .get(`usuarios/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
             .then((res) => {
                 // const navigate = useNavigate();
+                setIdUser(res.data.id);
+                localStorage.setItem(
+                    '@kanban/usuario',
+                    JSON.stringify(res.data)
+                );
                 setUser(res.data);
-                // localStorage.setItem(
-                //     '@kanban/usuario',
-                //     JSON.stringify(res.data)
-                // );
                 notification.open({
                     message: 'sucesso',
                     closeIcon: <X />,
@@ -179,6 +188,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 idUser,
                 setIdUser,
                 user,
+                setUser,
             }}
         >
             {children}

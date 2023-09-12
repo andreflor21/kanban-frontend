@@ -1,10 +1,9 @@
-import Login from './components/Login';
-import Routes from './routes';
+import Rotas from './routes';
 import GlobalStyle from './style/global';
 function App() {
     return (
         <>
-            <Routes />
+            <Rotas />
             <GlobalStyle themeDark={false} />
         </>
     );

@@ -37,9 +37,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                     placeholder={placeholder}
                     {...rest}
                     ref={ref}
-                    // error={error}
                 />
-                {error && <ErrorMessage>{errorMessage}</ErrorMessage>}
+                {error == true ? (
+                    <ErrorMessage>{errorMessage}</ErrorMessage>
+                ) : undefined}
             </ContainerInput>
         );
     }

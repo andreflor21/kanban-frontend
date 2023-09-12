@@ -1,17 +1,24 @@
-import { HashRouter, Routes as Rotas, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import Login from '../components/Login';
 import { useAuth } from '../providers/Auth';
-import { Dashboard } from '../components/Dashboard';
+import { Dashboard } from '../pages/Dashboard';
+import { FormUsuario } from '../components/UsuarioForm';
 
-const Routes = () => {
+const Rotas = () => {
     const { token } = useAuth();
 
     return (
-        <Rotas>
-            <Route path="/dashboard" element={<Dashboard />} />
+        <Routes>
             <Route path="/" element={<Login />} />
-        </Rotas>
+            <Route path="/dashboard" element={<Dashboard />} />
+            {token ? (
+                <Route path="/usuario" element={<FormUsuario />} />
+            ) : (
+                <Route path="/xxxx" element={<Dashboard />} />
+                // <Navigate to="/" replace={true} />
+            )}
+        </Routes>
     );
 };
 
-export default Routes;
+export default Rotas;

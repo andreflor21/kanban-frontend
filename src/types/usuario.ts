@@ -4,12 +4,28 @@ export interface Usuario {
     senha?: string;
     cpf: string;
     id?: number | string;
-    dataNascimento?: Date;
+    dtNascimento?: string;
+    codigo?: string;
     ativo?: boolean;
+    trocaSenha?: boolean;
     tokenReset?: string;
-    tokenResetExpire?: Date;
+    tokenResetExpire?: string;
     perfil: {
         id: number | string;
         descricao: string;
     };
+}
+export interface UsuarioData {
+    nome?: string;
+    email?: string;
+    senha?: string;
+    cpf?: string;
+    id?: number | string;
+    dtNascimento?: string;
+    codigo?: string;
+    ativo?: boolean;
+    trocaSenha?: boolean;
+    tokenReset?: string;
+    tokenResetExpire?: string;
+    perfil?: number | string;
 }

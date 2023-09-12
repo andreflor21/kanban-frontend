@@ -8,7 +8,7 @@ export const InputStyled = styled.input`
     background: var(--gray-100);
     border: 2px solid
         ${(props: InputStyledProps) =>
-            props.error ? 'var(--red-500)' : 'var(--green)'};
+            props.error ? 'var(--red-500)' : 'var(--gray-500)'};
     box-sizing: border-box;
     border-radius: 8px;
     width: 100%;
