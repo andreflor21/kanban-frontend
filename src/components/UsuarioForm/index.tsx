@@ -23,27 +23,30 @@ interface Option {
 }
 
 export const FormUsuario = () => {
-    const { token, idUser } = useAuth();
-    const { editUser, getUser, user } = useUsers();
+    const { user, idUser, setUser } = useAuth();
+    const { editUser, getUser } = useUsers();
+    // console.log(user);
 
     useEffect(() => {
         if (!user) {
-            getUser(idUser);
+            const u = localStorage.getItem('@kanban/usuario');
+            if (u) {
+                setUser(JSON.parse(u));
+            }
         }
-        console.log(idUser);
-    }, []);
+    }, [user]);
 
     const { perfis } = usePerfil();
-    const [nome, setNome] = useState(user?.nome || '');
-    const [email, setEmail] = useState(user?.email || '');
-    const [codigo, setCodigo] = useState(user?.codigo || '');
-    const [ativo, setAtivo] = useState(user?.ativo || false);
-    const [cpf, setCpf] = useState(user?.cpf || '');
-    const [dtNascimento, setDtNascimento] = useState(
-        user?.dtNascimento || undefined
+    const [nome, setNome] = useState<string>(user?.nome);
+    const [email, setEmail] = useState<string>(user?.email);
+    const [codigo, setCodigo] = useState<string>(user?.codigo);
+    const [ativo, setAtivo] = useState<boolean>(user?.ativo);
+    const [cpf, setCpf] = useState<string>(user?.cpf);
+    const [dtNascimento, setDtNascimento] = useState<string>(
+        user?.dtNascimento
     );
-    const [senha, setSenha] = useState(user?.senha || '');
-    const [perfil, setPerfil] = useState(user?.perfil?.id || 0);
+    const [senha, setSenha] = useState<string>(user?.senha);
+    const [perfil, setPerfil] = useState<number | string>(user?.perfil?.id);
     const [nomeError, setNomeError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [codigoError, setCodigoError] = useState(false);
@@ -52,6 +55,8 @@ export const FormUsuario = () => {
     const [dtNascimentoError, setDtNascimentoError] = useState(false);
     const [senhaError, setSenhaError] = useState(false);
     const [perfilError, setPerfilError] = useState(false);
+
+    console.log(nome, email, codigo, ativo, cpf, dtNascimento, perfil);
 
     const cpfMask = (cpf: string) => {
         if (cpf.length === 14) {
@@ -73,9 +78,9 @@ export const FormUsuario = () => {
             codigo,
             ativo,
             cpf,
-            dtNascimento,
+            dtNascimento: dtNascimento + 'T00:00:00.000Z',
             senha,
-            perfil,
+            perfilId: perfil,
         };
 
         const schema = yup.object().shape({
@@ -86,7 +91,7 @@ export const FormUsuario = () => {
             cpf: yup.string(),
             dtNascimento: yup.string(),
             senha: yup.string(),
-            perfil: yup.number(),
+            perfilId: yup.number(),
         });
 
         await schema
@@ -190,14 +195,20 @@ export const FormUsuario = () => {
             <Checkbox
                 label="Ativo"
                 name="ativo"
-                checked
-                onCheckedChange={(e: boolean) => setAtivo(e)}
+                checked={ativo}
+                onCheckedChange={(checked) => {
+                    if (checked === true) {
+                        setAtivo(true);
+                    } else {
+                        setAtivo(false);
+                    }
+                }}
             />
             <ContainerSelect>
                 <LabelStyled htmlFor="perfil">Perfil</LabelStyled>
                 <SelectStyled
                     id="perfil"
-                    name="perfil"
+                    name="perfilId"
                     value={perfil}
                     onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                         setPerfil(e.target.value);

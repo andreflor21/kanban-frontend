@@ -27,5 +27,5 @@ export interface UsuarioData {
     trocaSenha?: boolean;
     tokenReset?: string;
     tokenResetExpire?: string;
-    perfil?: number | string;
+    perfilId?: number | string;
 }

@@ -30,14 +30,14 @@ interface UserProviderData {
     getAllUsers: () => void;
     users: Usuario[];
     user: Usuario;
+    setUser: Dispatch<Usuario>;
 }
 
 const UserContext = createContext<UserProviderData>({} as UserProviderData);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-    const { token, idUser } = useAuth();
+    const { token, idUser, user, setUser } = useAuth();
     const [users, setUsers] = useState<Usuario[]>([]);
-    const [user, setUser] = useState<Usuario>({} as Usuario);
 
     const newUser = (
         usuarioData: UsuarioData,
@@ -207,6 +207,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                 getAllUsers,
                 users,
                 user,
+                setUser,
             }}
         >
             {children}

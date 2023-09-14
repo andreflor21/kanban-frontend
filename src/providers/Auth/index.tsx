@@ -34,7 +34,7 @@ interface AuthProviderData {
     idUser: number;
     setIdUser: (value: React.SetStateAction<number>) => void;
     user: Usuario;
-    setUser: (value: React.SetStateAction<Usuario>) => void;
+    setUser: Dispatch<Usuario>;
 }
 
 interface DecodedToken {

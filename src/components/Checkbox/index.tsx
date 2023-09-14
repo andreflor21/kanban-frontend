@@ -5,10 +5,10 @@ import { Container, Root, Indicator, LabelStyled } from './styles';
 interface CheckboxProps extends RCheckbox.CheckboxProps {
     label?: string;
 }
-export const Checkbox = ({ label }: CheckboxProps) => {
+export const Checkbox = ({ label, ...rest }: CheckboxProps) => {
     return (
         <Container>
-            <Root>
+            <Root {...rest}>
                 <Indicator>
                     <Check color="#4338ca" weight="bold" size={24} />
                 </Indicator>
