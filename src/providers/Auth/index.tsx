@@ -6,7 +6,7 @@ import {
     ReactNode,
 } from 'react';
 import { NavigateFunction } from 'react-router-dom';
-import { CheckCircle, X } from 'phosphor-react';
+import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import jwt_decode from 'jwt-decode';
 import { Usuario } from '../../types/usuario';
 import { notification } from 'antd';
@@ -28,7 +28,7 @@ interface AuthProviderData {
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => void;
-    userLogoff: (navigate: NavigateFunction) => void;
+    userLogoff: () => void;
     token: string;
     setAuth: (value: React.SetStateAction<string>) => void;
     idUser: number;
@@ -109,9 +109,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     ),
                 });
                 setLoad(false);
+                // getPerfis();
                 navigate('/dashboard');
             })
-            .catch((err) => {
+            .catch(() => {
                 setLoad(false);
                 notification.open({
                     message: 'erro',
@@ -122,7 +123,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     description:
                         'Erro no login. Verifique seu usuario e senha, tente novamente.',
                     icon: (
-                        <CheckCircle
+                        <WarningCircle
                             style={{ color: '#ef4444' }}
                             weight="fill"
                         />
@@ -147,6 +148,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 setIdUser(convertStrToNumber(decodedToken.sub));
                 setAuth(res.data.token);
                 getUser(res.data.user_id, res.data.token, setLoad, navigate);
+                // getPerfis();
             })
             .catch((err: AxiosError) => {
                 setLoad(false);
@@ -161,7 +163,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     description:
                         'Erro no login. Verifique seu usuario e senha, tente novamente.',
                     icon: (
-                        <CheckCircle
+                        <WarningCircle
                             style={{ color: '#ef4444' }}
                             weight="fill"
                         />
@@ -170,12 +172,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             });
     };
 
-    const userLogoff = (navigate: NavigateFunction) => {
-        setUser({});
+    const userLogoff = () => {
+        setUser({} as Usuario);
         setAuth('');
         setIdUser(0);
         localStorage.clear();
-        navigate('/');
     };
 
     return (

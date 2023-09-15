@@ -11,7 +11,7 @@ import api from '../../services/api';
 import { NavigateFunction } from 'react-router-dom';
 import { useAuth } from '../Auth';
 import { notification } from 'antd';
-import { CheckCircle, X } from 'phosphor-react';
+import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import { AxiosError, AxiosResponse } from 'axios';
 
 interface PerfilProviderProps {
@@ -59,17 +59,17 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                     },
                     description:
                         'Erro. Verifique sua conexão e tente novamente.',
-                    icon: <CheckCircle style={{ color: 'red' }} />,
+                    icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
             });
     };
 
-    useEffect(() => {
-        if (token) {
-            getPerfis();
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [token]);
+    // useEffect(() => {
+    //     if (token) {
+    //         getPerfis();
+    //     }
+    //     // eslint-disable-next-line react-hooks/exhaustive-deps
+    // }, [token]);
 
     const getPerfil = (idPerfil: number) => {
         api.get(`perfil/${idPerfil}`, {
@@ -89,7 +89,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                     },
                     description:
                         'Erro. Verifique sua conexão e tente novamente.',
-                    icon: <CheckCircle style={{ color: 'red' }} />,
+                    icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
             });
     };
@@ -133,7 +133,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                     description:
                         'Erro no cadastro do perfil, verifique os dados e tente novamente.',
                     icon: (
-                        <CheckCircle
+                        <WarningCircle
                             style={{ color: '#ef4444' }}
                             weight="fill"
                         />
@@ -173,7 +173,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                     description:
                         'Erro no cadastro do perfil, verifique os dados e tente novamente.',
                     icon: (
-                        <CheckCircle
+                        <WarningCircle
                             style={{ color: '#ef4444' }}
                             weight="fill"
                         />
@@ -196,7 +196,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                         WebkitBorderRadius: 4,
                     },
                     description: 'Sucesso ao deletar.',
-                    icon: <CheckCircle style={{ color: 'green' }} />,
+                    icon: <CheckCircle style={{ color: '#22c55e' }} />,
                 });
             })
             .catch((err: AxiosError) => {
@@ -208,7 +208,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                     },
                     description:
                         'Erro ao excluir. Verifique sua conexão e tente novamente.',
-                    icon: <CheckCircle style={{ color: 'red' }} />,
+                    icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
             });
     };
