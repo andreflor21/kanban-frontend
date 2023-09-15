@@ -9,11 +9,6 @@ export const FormStyled = styled.form`
     @media only screen and (min-width: 768px) {
         margin: 2rem auto 1rem 12rem;
     }
-    button {
-        margin-top: 2rem;
-        max-width: 200px;
-        position: relative;
-    }
 
     > span {
         font-style: normal;
@@ -22,6 +17,12 @@ export const FormStyled = styled.form`
         line-height: 19px;
         padding: 0.5rem;
     }
+`;
+
+export const ButtonForm = styled.button`
+    margin-top: 2rem;
+    max-width: 200px;
+    position: relative;
 `;
 export const SelectStyled = styled.select`
     background: var(--gray-100);

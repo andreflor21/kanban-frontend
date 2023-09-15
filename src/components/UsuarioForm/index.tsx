@@ -14,13 +14,7 @@ import {
     ContainerSelect,
     OptionStyled,
 } from './styles';
-import SelectInput from '../SelectInput';
 import { Checkbox } from '../Checkbox';
-
-interface Option {
-    id: string;
-    descricao: string;
-}
 
 export const FormUsuario = () => {
     const { user, idUser, setUser } = useAuth();
@@ -32,11 +26,14 @@ export const FormUsuario = () => {
             const u = localStorage.getItem('@kanban/usuario');
             if (u) {
                 setUser(JSON.parse(u));
+            } else {
+                getUser(idUser);
             }
         }
+        getPerfis();
     }, [user]);
 
-    const { perfis } = usePerfil();
+    const { perfis, getPerfis } = usePerfil();
     const [nome, setNome] = useState<string>(user?.nome);
     const [email, setEmail] = useState<string>(user?.email);
     const [codigo, setCodigo] = useState<string>(user?.codigo);
@@ -45,18 +42,14 @@ export const FormUsuario = () => {
     const [dtNascimento, setDtNascimento] = useState<string>(
         user?.dtNascimento
     );
-    const [senha, setSenha] = useState<string>(user?.senha);
     const [perfil, setPerfil] = useState<number | string>(user?.perfil?.id);
     const [nomeError, setNomeError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [codigoError, setCodigoError] = useState(false);
-    const [ativoError, setAtivoError] = useState(false);
     const [cpfError, setCpfError] = useState(false);
     const [dtNascimentoError, setDtNascimentoError] = useState(false);
-    const [senhaError, setSenhaError] = useState(false);
-    const [perfilError, setPerfilError] = useState(false);
 
-    console.log(nome, email, codigo, ativo, cpf, dtNascimento, perfil);
+    // console.log(nome, email, codigo, ativo, cpf, dtNascimento, perfil);
 
     const cpfMask = (cpf: string) => {
         if (cpf.length === 14) {
@@ -78,8 +71,7 @@ export const FormUsuario = () => {
             codigo,
             ativo,
             cpf,
-            dtNascimento: dtNascimento + 'T00:00:00.000Z',
-            senha,
+            dtNascimento: dtNascimento,
             perfilId: perfil,
         };
 
@@ -90,7 +82,6 @@ export const FormUsuario = () => {
             ativo: yup.boolean(),
             cpf: yup.string(),
             dtNascimento: yup.string(),
-            senha: yup.string(),
             perfilId: yup.number(),
         });
 
@@ -174,19 +165,6 @@ export const FormUsuario = () => {
                 value={dtNascimento?.split('T')[0]}
                 error={dtNascimentoError}
                 name="dtNascimento"
-                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setDtNascimento(e.target.value);
-                    setDtNascimentoError(false);
-                }}
-            />
-            <Input
-                label="Senha"
-                inputType="password"
-                placeholder="Digite sua senha"
-                errorMessage="Campo Obrigatório"
-                value={senha}
-                error={senhaError}
-                name="senha"
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     setDtNascimento(e.target.value);
                     setDtNascimentoError(false);

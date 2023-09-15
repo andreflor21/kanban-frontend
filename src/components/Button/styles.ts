@@ -6,7 +6,8 @@ export const ButtonItem = styled.button`
     border: none;
     background: var(--blue-900);
     color: var(--emerald-400);
-
+    margin-top: 2rem;
+    position: relative;
     border-radius: 8px;
     font-size: 18px;
     padding: 6px 32px;
