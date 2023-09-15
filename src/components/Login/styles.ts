@@ -5,12 +5,101 @@ export const Container = styled.div`
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    max-width: 390px;
     align-items: center;
+    width: 100%;
     /* border: 1px solid red; */
     background-color: var(--slate-200);
+    @media only screen and (min-width: 768px) {
+        display: none;
+    }
+`;
+export const ContainerDesktop = styled.div`
+    display: none;
+    @media only screen and (min-width: 768px) {
+        flex-direction: row;
+        align-items: flex-start;
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--gray-100);
+        display: flex;
+    }
+    @media only screen and (min-width: 1024px) {
+        flex-direction: row;
+        align-items: flex-start;
+        width: 100%;
+        min-height: 100vh;
+        background-color: var(--gray-100);
+        display: flex;
+    }
+`;
+export const ContainerLogo = styled.div`
+    height: 86px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin: 45px 0 0 45px;
 `;
 
+export const Wrapper = styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+`;
+export const InnerWrapper = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    @media only screen and (min-width: 1024px) {
+        flex-direction: row-reverse;
+        align-items: flex-end;
+        justify-content: space-around;
+    }
+`;
+
+export const ListStyled = styled.ul`
+    display: flex;
+    flex-direction: column;
+    padding-left: 2rem;
+    margin-bottom: 2rem;
+    @media only screen and (min-width: 1024px) {
+        padding: 0;
+        margin-bottom: 0;
+    }
+    li {
+        color: var(--Blue-900, #272f51);
+        font-family: Poppins;
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: normal;
+        text-align: justify;
+        text-wrap: nowrap;
+    }
+`;
+
+export const ImgStyled = styled.img`
+    align-self: center;
+    margin-top: 2rem;
+    width: 100%;
+    padding: 2rem;
+    @media only screen and (min-width: 768px) {
+        width: 680px;
+        padding: 0;
+    }
+`;
+export const ContainerForm = styled.div`
+    width: 30rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--emerald-400);
+    border-radius: 60px 0px 0px 0px;
+`;
 export const LogoStyled = styled.img`
     height: 5rem;
 `;
@@ -20,6 +109,10 @@ export const Title = styled.h2`
     color: var(--blue-900);
     font-size: 48px;
     padding-bottom: 2rem;
+    @media only screen and (min-width: 768px) {
+        padding-left: 2rem;
+        padding-bottom: 0;
+    }
 `;
 
 export const FormStyled = styled.form`
