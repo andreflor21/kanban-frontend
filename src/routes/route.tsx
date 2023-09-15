@@ -1,6 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../providers/Auth';
 import Aside from '../components/Aside';
+import Header from '../components/Header';
+import HeaderNavAuth from '../components/HeaderNav';
 
 const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
     const { token } = useAuth();
@@ -9,6 +11,9 @@ const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
         <Navigate to={'/login'} state={{ from: location }} replace />
     ) : (
         <>
+            <Header auth={true}>
+                <HeaderNavAuth />
+            </Header>
             <Aside />
             {children}
         </>

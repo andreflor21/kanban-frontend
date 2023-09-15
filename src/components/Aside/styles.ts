@@ -15,23 +15,32 @@ to{
 `;
 
 export const AsideContainer = styled.aside`
-    width: 100%;
-    height: 80px;
+    display: none;
+    @media screen and (min-width: 426px) {
+        width: 100%;
+        height: 80px;
 
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    z-index: 3;
-    display: flex;
-    justify-content: center;
-    background-color: var(--emerald-400);
-    border-radius: 0;
-
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 3;
+        display: flex;
+        justify-content: center;
+        background-color: var(--emerald-400);
+        border-radius: 0;
+    }
     div {
         width: 90%;
         margin: 0 auto;
     }
-
+    h3 {
+        /* position: absolute;
+        top: 32px;
+        left: 50%; */
+        font-size: 2rem;
+        color: var(--blue-900);
+        animation: ${appearFromNowhere} 1s;
+    }
     @media screen and (min-width: 720px) {
         height: 100vh;
         transition: width 0.4s;
@@ -164,9 +173,19 @@ export const Logo = styled.img`
     display: none;
     @media screen and (min-width: 720px) {
         display: block;
-        position: absolute;
-        top: 20px;
+        /* position: absolute;
+        top: 20px; */
         width: 50px;
         align-self: center;
     }
+`;
+
+export const ContainerLogo = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 32px;
+    padding: 0px 32px;
+    position: absolute;
+    top: 20px;
 `;

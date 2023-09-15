@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
-import { AsideContainer, MenuWrapper, Logo } from './styles';
+import { AsideContainer, MenuWrapper, Logo, ContainerLogo } from './styles';
 import LogoImg from '../../assets/logo.svg';
 // import LogoAside from '../../asssets/svg/logo-white-aside.svg';
 import { useAuth } from '../../providers/Auth';
@@ -21,8 +21,7 @@ const Aside = () => {
     const [leftIndicator, setLeftIndicator] = useState('-4px');
     const [hovered, setHovered] = useState(false);
     const indicator = useRef<HTMLSpanElement>(null);
-    const { user, userLogoff } = useAuth();
-    const navigate = useNavigate();
+    const { userLogoff } = useAuth();
     const getDimensions = () => {
         navLinks.current.forEach((item: HTMLAnchorElement) => {
             if (item?.className === 'navlink--active') {
@@ -58,10 +57,14 @@ const Aside = () => {
     return (
         <AsideContainer
             className={hovered ? 'hovered' : ''}
+            // className="hovered"
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
-            <Logo src={LogoImg} alt="Logo"></Logo>
+            <ContainerLogo>
+                <Logo src={LogoImg} alt="Logo" />
+                {hovered ? <h3>Kanban</h3> : undefined}
+            </ContainerLogo>
             <div>
                 <MenuWrapper
                     topIndicator={topIndicator}
@@ -88,7 +91,6 @@ const Aside = () => {
                             isActive ? 'navlink--active' : ''
                         }
                     >
-                        {/* <img src={LogoAside} alt="materiais" /> */}
                         <Tag weight="fill" />
                         <span>Materiais</span>
                     </NavLink>
