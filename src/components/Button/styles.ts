@@ -12,7 +12,8 @@ export const ButtonItem = styled.button`
     font-size: 18px;
     padding: 6px 32px;
     transition: all 350ms;
-    width: 234px;
+    width: 100%;
+    max-width: 15rem;
     &:hover {
         background-color: var(--teal-100);
     }

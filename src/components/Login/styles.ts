@@ -10,36 +10,23 @@ export const Container = styled.div`
     /* border: 1px solid red; */
     background-color: var(--slate-200);
     @media only screen and (min-width: 768px) {
-        display: none;
-    }
-`;
-export const ContainerDesktop = styled.div`
-    display: none;
-    @media only screen and (min-width: 768px) {
         flex-direction: row;
         align-items: flex-start;
-        width: 100%;
-        min-height: 100vh;
         background-color: var(--gray-100);
-        display: flex;
-    }
-    @media only screen and (min-width: 1024px) {
-        flex-direction: row;
-        align-items: flex-start;
-        width: 100%;
-        min-height: 100vh;
-        background-color: var(--gray-100);
-        display: flex;
     }
 `;
 export const ContainerLogo = styled.div`
-    height: 86px;
     display: flex;
-    flex-direction: row;
+    flex-direction: column-reverse;
     align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    margin: 45px 0 0 45px;
+    @media only screen and (min-width: 768px) {
+        height: 86px;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        margin: 45px 0 0 45px;
+    }
 `;
 
 export const Wrapper = styled.div`
@@ -48,14 +35,20 @@ export const Wrapper = styled.div`
     flex-direction: column;
 `;
 export const InnerWrapper = styled.div`
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
+    display: none;
+    @media only screen and (min-width: 768px) {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+    }
     @media only screen and (min-width: 1024px) {
-        flex-direction: row-reverse;
+        justify-content: space-around;
+    }
+    @media only screen and (min-width: 1440px) {
         align-items: flex-end;
         justify-content: space-around;
+        flex-direction: row-reverse;
     }
 `;
 
@@ -67,6 +60,7 @@ export const ListStyled = styled.ul`
     @media only screen and (min-width: 1024px) {
         padding: 0;
         margin-bottom: 0;
+        margin-left: 2rem;
     }
     li {
         color: var(--Blue-900, #272f51);
@@ -85,20 +79,23 @@ export const ImgStyled = styled.img`
     margin-top: 2rem;
     width: 100%;
     padding: 2rem;
-    @media only screen and (min-width: 768px) {
-        width: 680px;
+    max-height: 480px;
+    @media only screen and (min-width: 1920px) {
+        max-height: 680px;
         padding: 0;
     }
 `;
 export const ContainerForm = styled.div`
-    width: 30rem;
-    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background-color: var(--emerald-400);
-    border-radius: 60px 0px 0px 0px;
+    @media only screen and (min-width: 768px) {
+        width: 30rem;
+        height: 100vh;
+        background-color: var(--emerald-400);
+        border-radius: 60px 0px 0px 0px;
+    }
 `;
 export const LogoStyled = styled.img`
     height: 5rem;
@@ -109,6 +106,7 @@ export const Title = styled.h2`
     color: var(--blue-900);
     font-size: 48px;
     padding-bottom: 2rem;
+
     @media only screen and (min-width: 768px) {
         padding-left: 2rem;
         padding-bottom: 0;
@@ -118,10 +116,14 @@ export const Title = styled.h2`
 export const FormStyled = styled.form`
     display: flex;
     flex-direction: column;
-    width: 65%;
+    width: 90%;
     justify-content: space-between;
     align-items: center;
     gap: 32px;
+    max-width: 20rem;
+    @media only screen and (min-width: 768px) {
+        width: 75%;
+    }
 `;
 
 export const TextStyled = styled.h3`
@@ -129,10 +131,13 @@ export const TextStyled = styled.h3`
     color: var(--blue-900);
     font-size: 34px;
     font-weight: 600;
-    align-self: start;
-    padding-left: 70px;
+    padding-left: 16px;
     padding-top: 30px;
     padding-bottom: 16px;
+    align-self: flex-start;
+    @media only screen and (min-width: 768px) {
+        padding-left: 36px;
+    }
 `;
 
 export const LinkStyled = styled.a`

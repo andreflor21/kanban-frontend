@@ -63,34 +63,6 @@ const Login = () => {
     return (
         <>
             <Container>
-                <Title>Kanban</Title>
-                <LogoStyled src={Logo} />
-                <TextStyled>Login</TextStyled>
-                <FormStyled onSubmit={handleSubmit(onSubmit)}>
-                    <Input
-                        inputType="email"
-                        label="Email"
-                        placeholder="Digite seu email"
-                        {...register('email')}
-                        error={!!errors.email}
-                        errorMessage={errors.email?.message}
-                    />
-                    <Input
-                        inputType="password"
-                        label="Senha"
-                        placeholder="Digite sua senha"
-                        {...register('senha')}
-                        error={!!errors.senha}
-                        errorMessage={errors.senha?.message}
-                    />
-
-                    <Button type="submit">Login</Button>
-                </FormStyled>
-                <LinkStyled href="/esqueci-minha-senha">
-                    Esqueci minha senha
-                </LinkStyled>
-            </Container>
-            <ContainerDesktop>
                 <Wrapper>
                     <ContainerLogo>
                         <LogoStyled src={Logo} />
@@ -133,7 +105,7 @@ const Login = () => {
                         Esqueci minha senha
                     </LinkStyled>
                 </ContainerForm>
-            </ContainerDesktop>
+            </Container>
         </>
     );
 };
