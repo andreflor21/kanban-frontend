@@ -1,5 +1,12 @@
+import TitlePage from '../../components/TitlePage';
+
 const Dashboard = () => {
-    return <h1>Dashboard</h1>;
+    return (
+        <>
+            <TitlePage title="Dashboard" />
+            <h1>Dashboard</h1>
+        </>
+    );
 };
 
 export default Dashboard;
