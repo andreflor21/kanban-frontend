@@ -13,9 +13,9 @@ export const ButtonItem = styled.button`
     padding: 6px 32px;
     transition: all 350ms;
     width: 100%;
-    max-width: 15rem;
+    /* max-width: 15rem; */
     &:hover {
-        background-color: var(--teal-100);
+        background-color: var(--indigo-700);
     }
 
     &:disabled {

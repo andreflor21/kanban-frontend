@@ -24,6 +24,7 @@ import imgLogin from '../../assets/img_login_desktop.svg';
 import Input from '../Input';
 import Button from '../Button';
 import { useNavigate } from 'react-router-dom';
+import { ForgotPassword } from '../ForgotPassword';
 
 interface FormValues {
     email: string;
@@ -101,9 +102,10 @@ const Login = () => {
 
                         <Button type="submit">Login</Button>
                     </FormStyled>
-                    <LinkStyled href="/esqueci-minha-senha">
+                    {/* <LinkStyled href="/esqueci-minha-senha">
                         Esqueci minha senha
-                    </LinkStyled>
+                    </LinkStyled> */}
+                    <ForgotPassword>Esqueci minha senha</ForgotPassword>
                 </ContainerForm>
             </Container>
         </>

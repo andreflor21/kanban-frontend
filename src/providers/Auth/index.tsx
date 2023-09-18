@@ -21,6 +21,9 @@ interface UsuarioLogin {
     email: string;
     senha: string;
 }
+interface UserForgotPasswordData {
+    email: string;
+}
 
 interface AuthProviderData {
     userLogin: (
@@ -35,6 +38,7 @@ interface AuthProviderData {
     setIdUser: (value: React.SetStateAction<number>) => void;
     user: Usuario;
     setUser: Dispatch<Usuario>;
+    userForgotPassword: (data: UserForgotPasswordData) => void;
 }
 
 interface DecodedToken {
@@ -171,7 +175,46 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 });
             });
     };
+    const userForgotPassword = (data: UserForgotPasswordData) => {
+        api.post('esqueci-senha', data)
+            .then((res) => {
+                console.log(res);
 
+                notification.open({
+                    message: 'sucesso',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: res.data.message,
+                    icon: (
+                        <CheckCircle
+                            style={{ color: '#22c55e' }}
+                            weight="fill"
+                        />
+                    ),
+                    duration: 2,
+                });
+            })
+            .catch((err: AxiosError) => {
+                console.log(err);
+
+                notification.open({
+                    message: 'Falha ao recuperar senha',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: err.response?.data?.message,
+                    icon: (
+                        <WarningCircle
+                            style={{ color: '#ef4444' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            });
+    };
     const userLogoff = () => {
         setUser({} as Usuario);
         setAuth('');
@@ -190,6 +233,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 setIdUser,
                 user,
                 setUser,
+                userForgotPassword,
             }}
         >
             {children}

@@ -91,10 +91,13 @@ export const ContainerForm = styled.div`
     align-items: center;
     justify-content: center;
     @media only screen and (min-width: 768px) {
-        width: 30rem;
+        width: 75%;
         height: 100vh;
         background-color: var(--emerald-400);
         border-radius: 60px 0px 0px 0px;
+    }
+    @media only screen and (min-width: 1440px) {
+        width: 50%;
     }
 `;
 export const LogoStyled = styled.img`
@@ -147,7 +150,7 @@ export const LinkStyled = styled.a`
     text-decoration: underline;
 
     &:hover {
-        color: var(--emerald-400);
+        color: var(--blue-900);
     }
     &:active {
         color: var(--gray-100);
