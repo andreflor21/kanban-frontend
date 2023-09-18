@@ -23,6 +23,7 @@ import Logo from '../../assets/logo.svg';
 import imgLogin from '../../assets/img_login_desktop.svg';
 import Input from '../Input';
 import Button from '../Button';
+import {ForgotPassword} from '../ForgotPassword';
 import { useNavigate } from 'react-router-dom';
 
 interface FormValues {
@@ -101,10 +102,10 @@ const Login = () => {
 
                         <Button type="submit">Login</Button>
                     </FormStyled>
-                    <LinkStyled href="/esqueci-minha-senha">
+                    {/* <LinkStyled href="/esqueci-minha-senha">
                         Esqueci minha senha
-                    </LinkStyled>
-                </ContainerForm>
+                    </LinkStyled> */}
+                    <ForgotPassword>Esqueci minha senha</ForgotPassword>
             </Container>
         </>
     );
