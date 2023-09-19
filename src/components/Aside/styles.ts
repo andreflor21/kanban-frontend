@@ -35,7 +35,7 @@ export const AsideContainer = styled.aside`
         border-radius: 0;
     }
     div {
-        width: 90%;
+        /* width: 90%; */
         margin: 0 auto;
     }
     h3 {
@@ -190,7 +190,8 @@ export const Logo = styled.img`
         display: block;
         /* position: absolute;
         top: 20px; */
-        width: 50px;
+        width: 48px;
+        aspect-ratio: 1/1;
         align-self: center;
     }
 `;
@@ -200,13 +201,12 @@ export const ContainerLogo = styled.div`
     align-items: center;
     justify-content: flex-start;
     gap: 32px;
-    padding: 0px 32px;
+    padding: 0px 20px;
     position: absolute;
     top: 20px;
 `;
 
 export const MenuAnt = styled(Menu)`
-    width: 100%;
     height: 75%;
     display: flex;
     flex-direction: row;
@@ -216,22 +216,34 @@ export const MenuAnt = styled(Menu)`
     border: none;
     background-color: transparent;
     border-inline-end: none !important;
-    li {
+    font-family: var(--font-standard) !important;
+    div {
         display: flex !important;
         align-items: center;
+        flex-direction: row;
         justify-content: center;
-        padding-inline: 0 !important;
-        span {
-            display: ${(props: MenuProps) =>
-                props.inlineCollapsed ? 'none' : 'inline-block'} !important;
-        }
-        div {
-            display: flex !important;
+    }
+
+    &.collapsed {
+        li {
+            display: inline-flex !important;
             align-items: center;
-            flex-direction: row;
             justify-content: center;
-            padding: 0 !important;
+            padding: 0px !important;
+            div {
+                padding-inline-end: 0px !important;
+                padding: 0px !important;
+            }
         }
+    }
+    &.open {
+        div {
+            padding-inline: 40px;
+        }
+    }
+    span {
+        display: ${(props: MenuProps) =>
+            props.inlineCollapsed ? 'none' : 'inline-block'} !important;
     }
 
     @media screen and (min-width: 720px) {
@@ -239,7 +251,7 @@ export const MenuAnt = styled(Menu)`
         flex-direction: column;
         position: relative;
         height: 100%;
-        padding-right: 0;
+        padding-right: 0px;
         padding-bottom: 0px;
     }
 `;

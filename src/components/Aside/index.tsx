@@ -11,8 +11,6 @@ import LogoImg from '../../assets/logo.svg';
 // import LogoAside from '../../asssets/svg/logo-white-aside.svg';
 import { useAuth } from '../../providers/Auth';
 import {
-    CaretDown,
-    CaretUp,
     FileText,
     Gear,
     House,
@@ -24,178 +22,7 @@ import {
     User,
     Users,
 } from 'phosphor-react';
-// const Aside = () => {
-//     const { pathname } = useLocation();
-//     const [topIndicator, setTopIndicator] = useState('0');
-//     const navLinks = useRef<HTMLAnchorElement[]>([]);
-//     const [leftIndicator, setLeftIndicator] = useState('-4px');
-//     const [hovered, setHovered] = useState(false);
-//     const [active, setActive] = useState(false);
-//     const indicator = useRef<HTMLSpanElement>(null);
-//     const { userLogoff } = useAuth();
-//     const getDimensions = () => {
-//         navLinks.current.forEach((item: HTMLAnchorElement) => {
-//             if (item?.className === 'navlink--active') {
-//                 const top = item.offsetTop;
-//                 const left = item.offsetLeft;
-//                 setLeftIndicator(`${left}px`);
-//                 setTopIndicator(`${top}px`);
-//             }
-//         });
-//     };
-
-//     useEffect(() => {
-//         setHovered(false);
-//         getDimensions();
-
-//         let timeoutId: NodeJS.Timeout;
-
-//         const resizeListener = () => {
-//             clearTimeout(timeoutId);
-//             timeoutId = setTimeout(() => getDimensions(), 150);
-//         };
-
-//         window.onresize = () => {
-//             resizeListener();
-//         };
-
-//         return () => {
-//             window.onresize = () => {
-//                 resizeListener();
-//             };
-//         };
-//     }, [pathname]);
-//     return (
-//         <AsideContainer
-//             className={hovered ? 'hovered' : ''}
-//             // className="hovered"
-//             // onMouseEnter={() => setHovered(true)}
-//             // onMouseLeave={() => setHovered(false)}
-//             onClick={() => setHovered(!hovered)}
-//         >
-//             <ContainerLogo>
-//                 <Logo src={LogoImg} alt="Logo" />
-//                 {hovered ? <h3>Kanban</h3> : undefined}
-//             </ContainerLogo>
-//             <div>
-//                 <MenuWrapper
-//                     topIndicator={topIndicator}
-//                     leftIndicator={leftIndicator}
-//                 >
-//                     <NavLink
-//                         to="/dashboard"
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <House weight="regular" />
-//                         <span>Dashboard</span>
-//                     </NavLink>
-//                     <NavLink
-//                         to="/materiais"
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <Tag weight="regular" />
-//                         <span>Materiais</span>
-//                     </NavLink>
-//                     <NavLink
-//                         to="/pedidos"
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <Package weight="regular" />
-//                         <span>Pedidos</span>
-//                     </NavLink>
-//                     <NavLink
-//                         to="/kanbans"
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <Kanban weight="regular" />
-//                         <span>Kanbans</span>
-//                     </NavLink>
-//                     <NavLink
-//                         to="/fornecedores"
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <Truck weight="regular" />
-//                         <span>Fornecedores</span>
-//                     </NavLink>
-//                     <NavLink
-//                         to={'/notas'}
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <FileText weight="regular" />
-//                         <span>Notas</span>
-//                     </NavLink>
-//                     <NavLink
-//                         to={'/configuracoes'}
-//                         ref={(el: HTMLAnchorElement) =>
-//                             navLinks.current.push(el)
-//                         }
-//                         className={({ isActive }) => {
-//                             setActive(isActive);
-//                             return isActive ? 'navlink--active' : '';
-//                         }}
-//                     >
-//                         <Gear weight="regular" />
-//                         <span>
-//                             Configurações
-//                             {/* <CaretUp
-//                                 weight="light"
-//                                 className={active ? 'show' : 'hide'}
-//                             /> */}
-//                             {/* <CaretDown
-//                                 weight="light"
-//                                 className={active ? 'hide' : 'show'}
-//                             /> */}
-//                         </span>
-//                     </NavLink>
-//                     <NavLink
-//                         to={'/'}
-//                         onClick={userLogoff}
-//                         className={({ isActive }) =>
-//                             isActive ? 'navlink--active' : ''
-//                         }
-//                     >
-//                         <SignOut weight="regular" />
-//                         <span>Sair</span>
-//                     </NavLink>
-//                     <span className="indicator" ref={indicator}></span>
-//                 </MenuWrapper>
-//             </div>
-//         </AsideContainer>
-//     );
-// };
-
 import type { MenuProps } from 'antd';
-import { Menu } from 'antd';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -204,7 +31,9 @@ function getItem(
     key: React.Key,
     icon?: React.ReactNode,
     children?: MenuItem[],
-    type?: 'group'
+    type?: 'group',
+    title?: string,
+    disabled?: boolean
 ): MenuItem {
     return {
         key,
@@ -212,66 +41,87 @@ function getItem(
         children,
         label,
         type,
+        title,
+        disabled,
     } as MenuItem;
 }
 
 const Aside = () => {
-    const [collapsed, setCollapsed] = useState(false);
-    const { pathname } = useLocation();
     const navLinks = useRef<HTMLAnchorElement[]>([]);
-    const [topIndicator, setTopIndicator] = useState('0');
-    const [leftIndicator, setLeftIndicator] = useState('-4px');
+    const { pathname } = useLocation();
     const [hovered, setHovered] = useState(false);
-    const [active, setActive] = useState(false);
-    const indicator = useRef<HTMLSpanElement>(null);
+    const [current, setCurrent] = useState(pathname.substring(1));
     const { userLogoff } = useAuth();
-    const getDimensions = () => {
-        navLinks.current.forEach((item: HTMLAnchorElement) => {
-            if (item?.className === 'navlink--active') {
-                const top = item.offsetTop;
-                const left = item.offsetLeft;
-                setLeftIndicator(`${left}px`);
-                setTopIndicator(`${top}px`);
-            }
-        });
-    };
     const items: MenuItem[] = [
         getItem(
             <NavLink
-                to={'/dashboard'}
-                // ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+                to="/dashboard"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
             >
-                Dashboard
+                <span>Dashboard</span>
             </NavLink>,
-            '1',
-            <House weight="regular" size={24} color={'#272F51'} />
+            'dashboard',
+            <NavLink
+                to="/dashboard"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+            >
+                {' '}
+                <House weight="regular" size={24} color={'#272F51'} />
+            </NavLink>
         ),
         getItem(
-            'Materiais',
-            '2',
+            <NavLink
+                to="/materiais"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+            >
+                Materiais
+            </NavLink>,
+            'materiais',
             <Tag weight="regular" size={24} color={'#272F51'} />
         ),
         getItem(
-            'Pedidos',
-            '3',
+            <NavLink
+                to="/pedidos"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+            >
+                Pedidos
+            </NavLink>,
+            'pedidos',
             <Package weight="regular" size={24} color={'#272F51'} />
         ),
-
         getItem(
-            'Kanbans',
-            'sub1',
-            <Kanban weight="regular" size={24} color={'#272F51'} />,
-            [
-                getItem('Option 5', '5'),
-                getItem('Option 6', '6'),
-                getItem('Option 7', '7'),
-                getItem('Option 8', '8'),
-            ]
+            <NavLink
+                to="/kanbans"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+            >
+                Kanbans
+            </NavLink>,
+            'kanbans',
+            <Kanban weight="regular" size={24} color={'#272F51'} />
         ),
-
+        getItem(
+            <NavLink
+                to="/fornecedores"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+            >
+                Fornecedores
+            </NavLink>,
+            'fornecedores',
+            <Truck weight="regular" size={24} color={'#272F51'} />
+        ),
+        getItem(
+            <NavLink
+                to="/notas"
+                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
+            >
+                Notas
+            </NavLink>,
+            'notas',
+            <FileText weight="regular" size={24} color={'#272F51'} />
+        ),
         getItem(
             'Configurações',
-            'sub2',
+            'configs',
             <Gear weight="regular" size={24} color={'#272F51'} />,
             [
                 getItem(
@@ -283,7 +133,7 @@ const Aside = () => {
                     >
                         Perfil
                     </NavLink>,
-                    '9',
+                    'configuracoes/perfil',
                     <Users weight="regular" size={24} color={'#272F51'} />
                 ),
                 getItem(
@@ -295,37 +145,26 @@ const Aside = () => {
                     >
                         Usuário
                     </NavLink>,
-                    '10',
+                    'configuracoes/usuario',
                     <User weight="regular" size={24} color={'#272F51'} />
                 ),
             ]
         ),
+        getItem(
+            <NavLink to="/" onClick={userLogoff}>
+                Sair
+            </NavLink>,
+            'sair',
+            <SignOut weight="regular" size={24} color={'#272F51'} />
+        ),
     ];
 
-    useEffect(() => {
-        setHovered(false);
-        getDimensions();
-
-        let timeoutId: NodeJS.Timeout;
-
-        const resizeListener = () => {
-            clearTimeout(timeoutId);
-            timeoutId = setTimeout(() => getDimensions(), 150);
-        };
-
-        window.onresize = () => {
-            resizeListener();
-        };
-
-        return () => {
-            window.onresize = () => {
-                resizeListener();
-            };
-        };
-    }, [pathname]);
+    const onClick: MenuProps['onClick'] = (e) => {
+        setCurrent(e.key);
+    };
     return (
         <AsideContainer
-            className={hovered ? 'hovered' : 'hovered'}
+            className={hovered ? 'hovered' : ''}
             onMouseEnter={() => setHovered(true)}
             onMouseLeave={() => setHovered(false)}
         >
@@ -334,7 +173,14 @@ const Aside = () => {
                     <Logo src={LogoImg} alt="Logo" />
                     {hovered ? <h3>Kanban</h3> : undefined}
                 </ContainerLogo>
-                <MenuAnt mode="inline" inlineCollapsed={false} items={items} />
+                <MenuAnt
+                    mode="inline"
+                    className={!hovered ? 'collapsed' : 'open'}
+                    inlineCollapsed={!hovered}
+                    items={items}
+                    onClick={onClick}
+                    selectedKeys={[current]}
+                />
             </div>
         </AsideContainer>
     );
