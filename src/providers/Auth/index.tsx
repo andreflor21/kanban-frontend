@@ -32,6 +32,7 @@ interface AuthProviderData {
         navigate: NavigateFunction
     ) => void;
     userLogoff: () => void;
+    userForgotPassword: (data: UserForgotPasswordData) => void;
     token: string;
     setAuth: (value: React.SetStateAction<string>) => void;
     idUser: number;

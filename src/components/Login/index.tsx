@@ -23,6 +23,7 @@ import Logo from '../../assets/logo.svg';
 import imgLogin from '../../assets/img_login_desktop.svg';
 import Input from '../Input';
 import Button from '../Button';
+import { ForgotPassword } from '../ForgotPassword';
 import { useNavigate } from 'react-router-dom';
 import { ForgotPassword } from '../ForgotPassword';
 
