@@ -1,3 +1,4 @@
+import { Menu } from 'antd';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -104,6 +105,16 @@ export const MenuWrapper = styled.nav`
         }
     }
 
+    @media only screen and (min-width: 768px) {
+        display: none;
+    }
+`;
+
+export const MenuAnt = styled(Menu)`
+    margin-top: 70px;
+    background-color: transparent;
+    border: 0;
+    font-family: var(--font-standard) !important;
     @media only screen and (min-width: 768px) {
         display: none;
     }

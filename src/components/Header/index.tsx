@@ -3,6 +3,7 @@ import Logo from '../../assets/logo.svg';
 import React, { ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { List, X } from 'phosphor-react';
+import { useAuth } from '../../providers/Auth';
 
 interface HeaderProps {
     auth?: boolean;
@@ -16,7 +17,7 @@ const Header = ({
     auth = false,
 }: HeaderProps) => {
     const [openMenu, setOpenMenu] = useState(false);
-
+    const { user } = useAuth();
     return (
         <HeaderBar>
             <Link className="logo" to="/dashboard">
@@ -31,7 +32,14 @@ const Header = ({
                     onClick={() => setOpenMenu(!openMenu)}
                     openMenu={openMenu}
                 >
-                    {!openMenu ? <List size={32} /> : <X size={32} />}
+                    {!openMenu ? (
+                        <List size={32} />
+                    ) : (
+                        <div>
+                            <p>{`Olá, ${user?.nome}`}</p>
+                            <X size={32} />
+                        </div>
+                    )}
                 </ResponsiveMenu>
                 <ResponsiveMenuContent openMenu={openMenu}>
                     {children}

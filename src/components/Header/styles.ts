@@ -2,15 +2,11 @@ import styled, { css } from 'styled-components';
 
 interface ResponsiveMenuProps {
     openMenu: boolean;
-    whiteSchema: boolean;
-}
-interface HeaderBarProps {
-    isAuth: boolean;
 }
 export const HeaderBar = styled.header`
     width: 100%;
-    padding: 12px 2rem;
-    height: 48px;
+    padding: 1rem 2rem;
+    height: 4rem;
     position: absolute;
     top: 0;
     left: 0;
@@ -39,23 +35,9 @@ export const HeaderBar = styled.header`
         height: 32px;
     }
 
-    ${(props: HeaderBarProps) =>
-        props.isAuth &&
-        css`
-            img {
-                height: 38px;
-            }
-        `}
-
     nav.desktop {
         display: none;
         justify-content: space-between;
-
-        ${(props: HeaderBarProps) =>
-            props.isAuth &&
-            css`
-                display: flex;
-            `}
 
         @media screen and (min-width: 768px) {
             display: flex;
@@ -68,29 +50,30 @@ export const HeaderBar = styled.header`
         img {
             height: 42px;
         }
-
-        ${(props: HeaderBarProps) =>
-            props.isAuth &&
-            css`
-                img {
-                    display: none;
-                }
-            `}
     }
 `;
 
 export const ResponsiveMenu = styled.div`
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-end;
     position: relative;
     z-index: 2000;
     cursor: pointer;
-
+    width: 100%;
     svg {
         color: var(--blue-900);
     }
-
+    div {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: space-between;
+        p {
+            text-wrap: nowrap;
+            margin-left: -64px;
+        }
+    }
     @media screen and (min-width: 768px) {
         display: none;
     }
