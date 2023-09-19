@@ -5,9 +5,10 @@ export const FormStyled = styled.form`
     display: flex;
     flex-direction: column;
     margin: 2rem auto 1rem;
-    width: 50%;
+    width: 90%;
     @media only screen and (min-width: 768px) {
         margin: 2rem auto 1rem 12rem;
+        width: 30%;
     }
 
     > span {
@@ -77,7 +78,7 @@ export const ContainerSelect = styled.div`
         position: absolute;
         right: 10px;
         bottom: 0;
-        z-index: 2;
+        z-index: 1;
     }
 `;
 export const ErrorMessage = styled.span`
