@@ -5,8 +5,8 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
-import { CheckCircle, X } from 'phosphor-react';
+import { NavigateFunction } from 'react-router-dom';
+import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import jwt_decode from 'jwt-decode';
 import { Usuario } from '../../types/usuario';
 import { notification } from 'antd';
@@ -21,6 +21,9 @@ interface UsuarioLogin {
     email: string;
     senha: string;
 }
+interface UserForgotPasswordData {
+    email: string;
+}
 
 interface AuthProviderData {
     userLogin: (
@@ -28,12 +31,15 @@ interface AuthProviderData {
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => void;
-    userLogoff: (navigate: NavigateFunction) => void;
+    userLogoff: () => void;
+    userForgotPassword: (data: UserForgotPasswordData) => void;
     token: string;
     setAuth: (value: React.SetStateAction<string>) => void;
     idUser: number;
     setIdUser: (value: React.SetStateAction<number>) => void;
-    user?: Usuario;
+    user: Usuario;
+    setUser: Dispatch<Usuario>;
+    userForgotPassword: (data: UserForgotPasswordData) => void;
 }
 
 interface DecodedToken {
@@ -62,29 +68,37 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         if (userStorage) {
             return JSON.parse(userStorage);
         }
-        return '';
     });
 
-    const [idUser, setIdUser] = useState<number>(0);
+    const [idUser, setIdUser] = useState<number>(() => {
+        const id = localStorage.getItem('@kanban/idUser');
 
-    const getUser = (
+        if (id) {
+            return JSON.parse(id);
+        }
+        return 0;
+    });
+
+    const getUser = async (
         id: number | string,
         token: string,
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => {
-        api.get(`usuarios/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        })
+        await api
+            .get(`usuarios/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
             .then((res) => {
                 // const navigate = useNavigate();
+                setIdUser(res.data.id);
+                localStorage.setItem(
+                    '@kanban/usuario',
+                    JSON.stringify(res.data)
+                );
                 setUser(res.data);
-                // localStorage.setItem(
-                //     '@kanban/usuario',
-                //     JSON.stringify(res.data)
-                // );
                 notification.open({
                     message: 'sucesso',
                     closeIcon: <X />,
@@ -100,9 +114,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     ),
                 });
                 setLoad(false);
+                // getPerfis();
                 navigate('/dashboard');
             })
-            .catch((err) => {
+            .catch(() => {
                 setLoad(false);
                 notification.open({
                     message: 'erro',
@@ -113,7 +128,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     description:
                         'Erro no login. Verifique seu usuario e senha, tente novamente.',
                     icon: (
-                        <CheckCircle
+                        <WarningCircle
                             style={{ color: '#ef4444' }}
                             weight="fill"
                         />
@@ -138,6 +153,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 setIdUser(convertStrToNumber(decodedToken.sub));
                 setAuth(res.data.token);
                 getUser(res.data.user_id, res.data.token, setLoad, navigate);
+                // getPerfis();
             })
             .catch((err: AxiosError) => {
                 setLoad(false);
@@ -152,7 +168,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     description:
                         'Erro no login. Verifique seu usuario e senha, tente novamente.',
                     icon: (
-                        <CheckCircle
+                        <WarningCircle
                             style={{ color: '#ef4444' }}
                             weight="fill"
                         />
@@ -160,13 +176,51 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 });
             });
     };
+    const userForgotPassword = (data: UserForgotPasswordData) => {
+        api.post('esqueci-senha', data)
+            .then((res) => {
+                console.log(res);
 
-    const userLogoff = (navigate: NavigateFunction) => {
-        setUser({});
+                notification.open({
+                    message: 'sucesso',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: res.data.message,
+                    icon: (
+                        <CheckCircle
+                            style={{ color: '#22c55e' }}
+                            weight="fill"
+                        />
+                    ),
+                    duration: 2,
+                });
+            })
+            .catch((err: AxiosError) => {
+                console.log(err);
+
+                notification.open({
+                    message: 'Falha ao recuperar senha',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: err.response?.data?.message,
+                    icon: (
+                        <WarningCircle
+                            style={{ color: '#ef4444' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            });
+    };
+    const userLogoff = () => {
+        setUser({} as Usuario);
         setAuth('');
         setIdUser(0);
         localStorage.clear();
-        navigate('/');
     };
 
     return (
@@ -179,6 +233,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 idUser,
                 setIdUser,
                 user,
+                setUser,
+                userForgotPassword,
             }}
         >
             {children}

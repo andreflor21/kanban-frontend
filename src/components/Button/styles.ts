@@ -6,14 +6,16 @@ export const ButtonItem = styled.button`
     border: none;
     background: var(--blue-900);
     color: var(--emerald-400);
-
+    margin-top: 2rem;
+    position: relative;
     border-radius: 8px;
     font-size: 18px;
     padding: 6px 32px;
     transition: all 350ms;
-    width: 234px;
+    width: 100%;
+    /* max-width: 15rem; */
     &:hover {
-        background-color: var(--teal-100);
+        background-color: var(--indigo-700);
     }
 
     &:disabled {
