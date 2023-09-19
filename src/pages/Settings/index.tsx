@@ -1,7 +1,8 @@
 import React from 'react';
-import { Title, Container } from './styles';
+import { Container } from './styles';
 import { FormUsuario } from '../../components/UsuarioForm';
 import TitlePage from '../../components/TitlePage';
+import Title from '../../components/Title';
 
 const Settings = () => {
     return (

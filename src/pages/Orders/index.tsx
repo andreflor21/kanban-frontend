@@ -1,5 +1,12 @@
+import Title from '../../components/Title';
+import TitlePage from '../../components/TitlePage';
 const Orders = () => {
-    return <h1>Orders</h1>;
+    return (
+        <>
+            <TitlePage title="Orders" />
+            <Title>Orders</Title>
+        </>
+    );
 };
 
 export default Orders;

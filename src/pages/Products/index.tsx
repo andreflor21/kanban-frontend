@@ -1,5 +1,12 @@
+import Title from '../../components/Title';
+import TitlePage from '../../components/TitlePage';
 const Products = () => {
-    return <h1>Products</h1>;
+    return (
+        <>
+            <TitlePage title="Products" />
+            <Title>Products</Title>
+        </>
+    );
 };
 
 export default Products;

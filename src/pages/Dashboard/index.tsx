@@ -1,10 +1,11 @@
 import TitlePage from '../../components/TitlePage';
+import Title from '../../components/Title';
 
 const Dashboard = () => {
     return (
         <>
             <TitlePage title="Dashboard" />
-            <h1>Dashboard</h1>
+            <Title>Dashboard</Title>
         </>
     );
 };

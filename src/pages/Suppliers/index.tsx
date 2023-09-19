@@ -1,5 +1,12 @@
+import Title from '../../components/Title';
+import TitlePage from '../../components/TitlePage';
 const Suppliers = () => {
-    return <h1>Suppliers</h1>;
+    return (
+        <>
+            <TitlePage title="Suppliers" />
+            <Title>Suppliers</Title>
+        </>
+    );
 };
 
 export default Suppliers;

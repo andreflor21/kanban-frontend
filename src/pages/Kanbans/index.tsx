@@ -1,5 +1,13 @@
+import Title from '../../components/Title';
+import TitlePage from '../../components/TitlePage';
+
 const Kanbans = () => {
-    return <h1>Kanbans</h1>;
+    return (
+        <>
+            <TitlePage title="Kanbans" />
+            <Title>Kanbans</Title>
+        </>
+    );
 };
 
 export default Kanbans;
