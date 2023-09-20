@@ -21,7 +21,9 @@ export const InputStyled = styled.input`
     &::placeholder {
         color: var(--slate-400);
     }
-
+    &:disabled {
+        border: none;
+    }
     &::-webkit-calendar-picker-indicator {
         opacity: 0.4;
     }

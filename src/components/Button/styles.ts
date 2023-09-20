@@ -14,6 +14,10 @@ export const ButtonItem = styled.button`
     transition: all 350ms;
     width: 100%;
     /* max-width: 15rem; */
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: fit-content;
+    text-wrap: nowrap;
     &:hover {
         background-color: var(--indigo-700);
     }
