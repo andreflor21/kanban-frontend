@@ -13,6 +13,8 @@ export const ButtonItem = styled.button`
     padding: 6px 32px;
     transition: all 350ms;
     width: 100%;
+    font-family: var(--font-secondary);
+    font-weight: 400;
     /* max-width: 15rem; */
     flex-grow: 1;
     flex-shrink: 1;
