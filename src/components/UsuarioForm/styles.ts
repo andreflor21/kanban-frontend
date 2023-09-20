@@ -8,7 +8,7 @@ export const FormStyled = styled.form`
     width: 90%;
     @media only screen and (min-width: 768px) {
         margin: 2rem auto 1rem 12rem;
-        width: 30%;
+        width: 40%;
     }
 
     > span {
@@ -17,6 +17,11 @@ export const FormStyled = styled.form`
         font-size: 16px;
         line-height: 19px;
         padding: 0.5rem;
+    }
+
+    &.modal {
+        margin: 0 auto;
+        width: 80%;
     }
 `;
 
@@ -109,11 +114,11 @@ export const ErrorMessage = styled.span`
 `;
 
 export const ContainerButtons = styled.div`
+    width: 100%;
     display: grid;
-    width: calc(100% + 32px);
     grid-template-columns: 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    gap: 0px 32px;
+
     grid-template-areas:
         'button1 button2'
         'button3 button3';
@@ -122,12 +127,19 @@ export const ContainerButtons = styled.div`
     button {
         &.button1 {
             grid-area: button1;
+            padding: 6px 16px;
         }
         &.button2 {
             grid-area: button2;
+            padding: 6px 16px;
         }
         &.button3 {
             grid-area: button3;
+            padding: 6px 16px;
         }
+    }
+    gap: 0px 16px;
+    @media screen and (min-width: 768px) {
+        gap: 0px 32px;
     }
 `;

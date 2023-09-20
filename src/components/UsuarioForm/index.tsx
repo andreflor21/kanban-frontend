@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { useEffect, useState } from 'react';
+import { Dispatch, useEffect, useState } from 'react';
 import { useAuth } from '../../providers/Auth';
 import { usePerfil } from '../../providers/Perfil';
 import { useUsers } from '../../providers/User';
@@ -22,13 +22,24 @@ import ChangePassword from '../ChangePassword';
 interface FormUsuarioProps {
     usuario: Usuario | null;
     usuarioId: string;
+    novoUsuario: boolean;
+    setNewUserModal: Dispatch<boolean>;
+    className?: string;
 }
 
-export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
+export const FormUsuario = ({
+    usuario,
+    usuarioId,
+    novoUsuario = false,
+    setNewUserModal = () => {},
+    className,
+}: FormUsuarioProps) => {
     const { idUser } = useAuth();
-    const { editUser } = useUsers();
+    const { editUser, newUser } = useUsers();
     const navigate = useNavigate();
-    const [readOnly] = useState(idUser !== parseInt(usuarioId) ? true : false);
+    const [readOnly] = useState(
+        idUser !== parseInt(usuarioId) && usuarioId !== '' ? true : false
+    );
     useEffect(() => {
         getPerfis();
     }, []);
@@ -47,6 +58,7 @@ export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
     const [cpfError, setCpfError] = useState(false);
     const [dtNascimentoError, setDtNascimentoError] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [load, setLoad] = useState(false);
 
     // console.log(nome, email, codigo, ativo, cpf, dtNascimento, perfil);
 
@@ -74,7 +86,7 @@ export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
             ativo,
             cpf,
             dtNascimento: dtNascimento,
-            perfilId: perfil,
+            perfil: perfil,
         };
 
         const schema = yup.object().shape({
@@ -84,13 +96,18 @@ export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
             ativo: yup.boolean(),
             cpf: yup.string(),
             dtNascimento: yup.string(),
-            perfilId: yup.number(),
+            perfil: yup.number(),
         });
 
         await schema
             .validate({ ...updateObject })
             .then((v) => {
-                editUser(v);
+                if (novoUsuario) {
+                    newUser(v, setLoad, navigate);
+                    setNewUserModal(false);
+                } else {
+                    editUser(v);
+                }
             })
             .catch(() => {
                 nome === '' && setNomeError(true);
@@ -103,7 +120,7 @@ export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
 
     return (
         <>
-            <FormStyled>
+            <FormStyled className={className}>
                 <Input
                     label="Nome"
                     inputType="text"
@@ -192,7 +209,7 @@ export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
                     <LabelStyled htmlFor="perfil">Perfil</LabelStyled>
                     <SelectStyled
                         id="perfil"
-                        name="perfilId"
+                        name="perfil"
                         value={perfil}
                         disabled={readOnly}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -208,31 +225,56 @@ export const FormUsuario = ({ usuario, usuarioId }: FormUsuarioProps) => {
                     </SelectStyled>
                 </ContainerSelect>
                 <ContainerButtons>
-                    <Button
-                        className="button1"
-                        type="button"
-                        onClickFunc={() => goBack('/configuracoes/usuarios')}
-                    >
-                        Voltar
-                    </Button>
-                    <Button
-                        className="button2"
-                        type="button"
-                        disabled={readOnly}
-                        onClickFunc={() => setIsModalOpen(!isModalOpen)}
-                    >
-                        Trocar Senha
-                    </Button>
-                    <Button
-                        className="button3"
-                        type="button"
-                        disabled={readOnly}
-                        onClickFunc={(e: React.MouseEvent<HTMLButtonElement>) =>
-                            handleSubmit(e)
-                        }
-                    >
-                        Atualizar
-                    </Button>
+                    {!novoUsuario ? (
+                        <>
+                            <Button
+                                className="button1"
+                                type="button"
+                                onClickFunc={() =>
+                                    goBack('/configuracoes/usuarios')
+                                }
+                            >
+                                Voltar
+                            </Button>
+                            <Button
+                                className="button2"
+                                type="button"
+                                disabled={readOnly}
+                                onClickFunc={() => setIsModalOpen(!isModalOpen)}
+                            >
+                                Trocar Senha
+                            </Button>
+                            <Button
+                                className="button3"
+                                type="button"
+                                disabled={readOnly}
+                                onClickFunc={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => handleSubmit(e)}
+                            >
+                                Atualizar
+                            </Button>
+                        </>
+                    ) : (
+                        <>
+                            <Button
+                                className="button1"
+                                type="button"
+                                onClickFunc={() => setNewUserModal(false)}
+                            >
+                                Cancelar
+                            </Button>
+                            <Button
+                                className="button2"
+                                type="button"
+                                onClickFunc={(
+                                    e: React.MouseEvent<HTMLButtonElement>
+                                ) => handleSubmit(e)}
+                            >
+                                Gravar
+                            </Button>
+                        </>
+                    )}
                 </ContainerButtons>
             </FormStyled>
             <ChangePassword
