@@ -39,7 +39,6 @@ interface AuthProviderData {
     setIdUser: (value: React.SetStateAction<number>) => void;
     user: Usuario;
     setUser: Dispatch<Usuario>;
-    userForgotPassword: (data: UserForgotPasswordData) => void;
 }
 
 interface DecodedToken {
@@ -100,7 +99,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 );
                 setUser(res.data);
                 notification.open({
-                    message: 'sucesso',
+                    message: 'Sucesso',
                     closeIcon: <X />,
                     style: {
                         WebkitBorderRadius: 4,
@@ -120,7 +119,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             .catch(() => {
                 setLoad(false);
                 notification.open({
-                    message: 'erro',
+                    message: 'Erro',
                     closeIcon: <X />,
                     style: {
                         WebkitBorderRadius: 4,
@@ -160,7 +159,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 console.error(err);
 
                 notification.open({
-                    message: 'erro',
+                    message: 'Erro',
                     closeIcon: <X />,
                     style: {
                         WebkitBorderRadius: 4,
@@ -182,7 +181,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 console.log(res);
 
                 notification.open({
-                    message: 'sucesso',
+                    message: 'Sucesso',
                     closeIcon: <X />,
                     style: {
                         WebkitBorderRadius: 4,
