@@ -1,80 +1,82 @@
-import { Routes, Route } from 'react-router-dom';
-import Login from '../components/Login';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import Login from '../pages/Login';
 import Dashboard from '../pages/Dashboard';
-import ProtectedRoute from './route';
-import Settings from '../pages/Settings';
 import Products from '../pages/Products';
 import Orders from '../pages/Orders';
 import Kanbans from '../pages/Kanbans';
 import Suppliers from '../pages/Suppliers';
 import Invoices from '../pages/Invoices';
-const Rotas = () => {
-    return (
-        <Routes>
-            <Route path="/">
-                <Route index Component={Login} />
-                <Route
-                    path="dashboard"
-                    element={
-                        <ProtectedRoute>
-                            <Dashboard />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="materiais"
-                    element={
-                        <ProtectedRoute>
-                            <Products />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="pedidos"
-                    element={
-                        <ProtectedRoute>
-                            <Orders />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="kanbans"
-                    element={
-                        <ProtectedRoute>
-                            <Kanbans />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="fornecedores"
-                    element={
-                        <ProtectedRoute>
-                            <Suppliers />
-                        </ProtectedRoute>
-                    }
-                />
-                <Route
-                    path="notas"
-                    element={
-                        <ProtectedRoute>
-                            <Invoices />
-                        </ProtectedRoute>
-                    }
-                />
+import Root from './root';
+import Users from '../pages/Settings/Users';
+import Profile from '../pages/Settings/Profile';
+import UserDetails from '../pages/Settings/UserDetails';
 
-                <Route path="configuracoes">
-                    <Route
-                        path="usuario"
-                        element={
-                            <ProtectedRoute>
-                                <Settings />
-                            </ProtectedRoute>
-                        }
-                    />
-                </Route>
-            </Route>
-        </Routes>
-    );
-};
+export const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Root />,
+        errorElement: <h1>Modulo não habilitado</h1>,
+        children: [
+            { index: true, element: <Navigate to="/login" /> },
+            {
+                path: 'dashboard',
+                element: <Dashboard />,
+            },
+            {
+                path: 'materiais',
+                element: <Products />,
+            },
+            {
+                path: 'pedidos',
+                element: <Orders />,
+            },
+            {
+                path: 'kanbans',
+                element: <Kanbans />,
+            },
+            {
+                path: 'fornecedores',
+                element: <Suppliers />,
+            },
+            {
+                path: 'notas',
+                element: <Invoices />,
+            },
+            {
+                path: 'configuracoes',
+                children: [
+                    {
+                        path: 'usuarios',
 
-export default Rotas;
+                        children: [
+                            {
+                                index: true,
+                                element: <Users />,
+                            },
+                            {
+                                path: ':usuarioId',
+                                element: <UserDetails />,
+                            },
+                        ],
+                    },
+                    {
+                        path: 'perfil',
+
+                        children: [
+                            { index: true, element: <Profile /> },
+                            {
+                                path: ':perfilId',
+                                element: <Profile />,
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+    {
+        path: '/login',
+        element: <Login />,
+        // action: loginAction,
+    },
+]);
