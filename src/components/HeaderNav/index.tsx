@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Container, MenuWrapper, MenuAnt } from './styles';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../providers/Auth';
@@ -16,6 +16,7 @@ import {
 } from 'phosphor-react';
 
 import type { MenuProps } from 'antd';
+import { useUsers } from '../../providers/User';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -41,8 +42,12 @@ function getItem(
 const HeaderNavAuth = () => {
     const history = useNavigate();
     const navLinks = useRef<HTMLAnchorElement[]>([]);
-    const { user, userLogoff } = useAuth();
+    const { user, userLogoff, idUser } = useAuth();
+    const { getUser } = useUsers();
 
+    useEffect(() => {
+        console.log(user);
+    }, [user]);
     const items: MenuItem[] = [
         getItem(
             <NavLink to="/dashboard">

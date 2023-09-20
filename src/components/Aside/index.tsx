@@ -138,14 +138,14 @@ const Aside = () => {
                 ),
                 getItem(
                     <NavLink
-                        to={'/configuracoes/usuario'}
+                        to={'/configuracoes/usuarios'}
                         ref={(el: HTMLAnchorElement) =>
                             navLinks.current.push(el)
                         }
                     >
                         Usuário
                     </NavLink>,
-                    'configuracoes/usuario',
+                    'configuracoes/usuarios',
                     <User weight="regular" size={24} color={'#272F51'} />
                 ),
             ]
