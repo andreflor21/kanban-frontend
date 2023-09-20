@@ -30,7 +30,7 @@ interface UserProviderData {
     deleteUser: (idUser: number) => void;
     editUser: (usuarioData: EditUser) => void;
     getUser: (idUser: number) => void;
-    getAllUsers: () => void;
+    getAllUsers: (setLoad: Dispatch<boolean>) => void;
     users: Usuario[];
     user: Usuario;
     currentUser: Usuario;
@@ -42,7 +42,7 @@ interface UserProviderData {
 const UserContext = createContext<UserProviderData>({} as UserProviderData);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-    const { token, idUser, user, setUser } = useAuth();
+    const { token, idUser, user, setUser, setUsername } = useAuth();
     const [users, setUsers] = useState<Usuario[]>([]);
     const [currentUser, setCurrentUser] = useState<Usuario>({} as Usuario);
 
@@ -51,7 +51,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => {
-        const senha = (Math.random() * Math.pow(10, 6)).toString();
+        const senha = Math.round(Math.random() * Math.pow(10, 6)).toString();
         const user: UsuarioData = {
             ...usuarioData,
             senha,
@@ -78,7 +78,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                     ),
                 });
                 setLoad(false);
-                navigate('/dashboard');
+                navigate('/configuracoes/usuarios');
             })
             .catch((err: AxiosError) => {
                 setLoad(false);
@@ -106,6 +106,11 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         })
             .then((response: AxiosResponse) => {
                 setUser(response.data.usuario);
+                localStorage.setItem(
+                    '@kanban/usuario',
+                    JSON.stringify(response.data.usuario.nome)
+                );
+                setUsername(response.data.usuario.nome);
                 notification.open({
                     message: 'Sucesso',
                     closeIcon: <X />,
@@ -151,13 +156,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
             });
     };
 
-    const getAllUsers = () => {
+    const getAllUsers = (setLoad: Dispatch<boolean>) => {
         api.get(`usuarios`, {
             headers: {
                 Authorization: 'Bearer ' + token,
             },
         })
-            .then((response: AxiosResponse) => setUsers([...response.data]))
+            .then((response: AxiosResponse) => {
+                setUsers([...response.data]);
+                setLoad(false);
+            })
             .catch((err) => {
                 notification.open({
                     message: 'Erro',
@@ -169,6 +177,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                         'Erro. Verifique sua conexão e tente novamente.',
                     icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
+                setLoad(false);
             });
     };
     const deleteUser = (idUser: number) => {

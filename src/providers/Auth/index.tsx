@@ -36,6 +36,8 @@ interface AuthProviderData {
     token: string;
     setAuth: (value: React.SetStateAction<string>) => void;
     idUser: number;
+    setUsername: (value: React.SetStateAction<string>) => void;
+    username: string;
     setIdUser: (value: React.SetStateAction<number>) => void;
     user: Usuario;
     setUser: Dispatch<Usuario>;
@@ -60,14 +62,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         }
         return '';
     });
+    const [username, setUsername] = useState<string>(() => {
+        const name = localStorage.getItem('@kanban/usuario');
 
-    const [user, setUser] = useState<Usuario>(() => {
-        const userStorage = localStorage.getItem('@kanban/user');
-
-        if (userStorage) {
-            return JSON.parse(userStorage);
+        if (name) {
+            return JSON.parse(name);
         }
+        return '';
     });
+
+    const [user, setUser] = useState<Usuario>({} as Usuario);
 
     const [idUser, setIdUser] = useState<number>(() => {
         const id = localStorage.getItem('@kanban/idUser');
@@ -92,11 +96,14 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
             })
             .then((res) => {
                 // const navigate = useNavigate();
-                setIdUser(res.data.id);
-                localStorage.setItem(
-                    '@kanban/usuario',
-                    JSON.stringify(res.data)
-                );
+                // setIdUser(res.data.id);
+                if (res.data.nome) {
+                    localStorage.setItem(
+                        '@kanban/usuario',
+                        JSON.stringify(res.data.nome)
+                    );
+                    setUsername(res.data.nome);
+                }
                 setUser(res.data);
                 notification.open({
                     message: 'Sucesso',
@@ -234,6 +241,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 user,
                 setUser,
                 userForgotPassword,
+                username,
+                setUsername,
             }}
         >
             {children}
