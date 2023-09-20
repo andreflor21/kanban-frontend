@@ -40,7 +40,9 @@ export const SelectStyled = styled.select`
     &::placeholder {
         color: var(--slate-400);
     }
-
+    &:disabled {
+        border: none;
+    }
     appearance: none;
 `;
 
@@ -80,6 +82,11 @@ export const ContainerSelect = styled.div`
         bottom: 0;
         z-index: 1;
     }
+    &.disabled {
+        &::after {
+            content: none;
+        }
+    }
 `;
 export const ErrorMessage = styled.span`
     font-family: var(--font-standard);
@@ -97,6 +104,30 @@ export const ErrorMessage = styled.span`
         }
         to {
             opacity: 1;
+        }
+    }
+`;
+
+export const ContainerButtons = styled.div`
+    display: grid;
+    width: calc(100% + 32px);
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 0px 32px;
+    grid-template-areas:
+        'button1 button2'
+        'button3 button3';
+    align-items: center;
+    justify-content: flex-start;
+    button {
+        &.button1 {
+            grid-area: button1;
+        }
+        &.button2 {
+            grid-area: button2;
+        }
+        &.button3 {
+            grid-area: button3;
         }
     }
 `;
