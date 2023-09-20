@@ -28,4 +28,5 @@ export interface UsuarioData {
     tokenReset?: string;
     tokenResetExpire?: string;
     perfilId?: number | string;
+    perfil?: number | string;
 }
