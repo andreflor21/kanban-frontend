@@ -67,11 +67,11 @@ export const ResponsiveMenu = styled.div`
     div {
         display: flex;
         align-items: center;
-        width: 100%;
         justify-content: space-between;
         p {
             text-wrap: nowrap;
-            margin-left: -64px;
+            margin-right: 1rem;
+            flex-grow: 1;
         }
     }
     @media screen and (min-width: 768px) {
@@ -101,7 +101,7 @@ export const ResponsiveMenuContent = styled.nav`
             opacity: 0;
         `}
 
-    @media screen and (min-width: 920px) {
+    @media screen and (min-width: 768px) {
         display: none;
     }
 `;

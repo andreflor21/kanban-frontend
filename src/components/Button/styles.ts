@@ -26,6 +26,7 @@ export const ButtonItem = styled.button`
 
     &:disabled {
         background-color: var(--slate-200);
+        cursor: default;
     }
 
     @media (min-width: 800px) {

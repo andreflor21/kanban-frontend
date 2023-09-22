@@ -33,8 +33,5 @@ const Root = styled(Checkbox.Root)`
     align-items: center;
     justify-content: center;
     margin-top: 0 !important;
-    &:disabled {
-        border: none;
-    }
 `;
 export { Container, LabelStyled, Indicator, Root };

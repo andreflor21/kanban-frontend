@@ -58,14 +58,13 @@ const Aside = () => {
                 to="/dashboard"
                 ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
             >
-                <span>Dashboard</span>
+                Dashboard
             </NavLink>,
             'dashboard',
             <NavLink
                 to="/dashboard"
                 ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
             >
-                {' '}
                 <House weight="regular" size={24} color={'#272F51'} />
             </NavLink>
         ),
@@ -155,7 +154,9 @@ const Aside = () => {
                 Sair
             </NavLink>,
             'sair',
-            <SignOut weight="regular" size={24} color={'#272F51'} />
+            <NavLink to="/" onClick={userLogoff}>
+                <SignOut weight="regular" size={24} color={'#272F51'} />
+            </NavLink>
         ),
     ];
 
