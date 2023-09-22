@@ -20,7 +20,7 @@ export interface UsuarioData {
     email?: string;
     senha?: string;
     cpf?: string;
-    id?: number | string;
+    id: number | string;
     dtNascimento?: string;
     codigo?: string;
     ativo?: boolean;

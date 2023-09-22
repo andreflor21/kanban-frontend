@@ -16,20 +16,23 @@ import { AxiosError, AxiosResponse } from 'axios';
 interface UserProviderProps {
     children: ReactNode;
 }
-interface EditUser extends UsuarioData {}
+interface EditUser extends Omit<UsuarioData, 'id'> {}
 interface ChangePasswordData {
     password: string;
     confirmPassword: string;
 }
 interface UserProviderData {
     newUser: (
-        usuarioData: UsuarioData,
+        usuarioData: EditUser,
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => void;
     deleteUser: (idUser: number) => void;
     editUser: (usuarioData: EditUser) => void;
-    getUser: (idUser: number) => void;
+    getUser: (
+        idUser: number,
+        setLoad: Dispatch<React.SetStateAction<boolean>>
+    ) => void;
     getAllUsers: (setLoad: Dispatch<boolean>) => void;
     users: Usuario[];
     user: Usuario;
@@ -37,6 +40,11 @@ interface UserProviderData {
     setCurrentUser: Dispatch<Usuario>;
     setUser: Dispatch<Usuario>;
     changePassword: (idUser: number, data: ChangePasswordData) => void;
+    resetPassword: (
+        token: string,
+        data: ChangePasswordData,
+        navigate: NavigateFunction
+    ) => void;
 }
 
 const UserContext = createContext<UserProviderData>({} as UserProviderData);
@@ -135,12 +143,16 @@ export const UserProvider = ({ children }: UserProviderProps) => {
             });
     };
 
-    const getUser = (idUser: number) => {
-        api.get(`usuarios/${idUser}`, {
-            headers: {
-                Authorization: 'Bearer ' + token,
-            },
-        })
+    const getUser = async (
+        idUser: number,
+        setLoad: Dispatch<React.SetStateAction<boolean>>
+    ) => {
+        await api
+            .get(`usuarios/${idUser}`, {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+            })
             .then((response) => setCurrentUser(response.data))
             .catch((err) => {
                 notification.open({
@@ -153,6 +165,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                         'Erro ao pesquisar. Verifique sua conexão e tente novamente.',
                     icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
+            })
+            .finally(() => {
+                setLoad(false);
             });
     };
 
@@ -248,6 +263,45 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                 });
             });
     };
+    const resetPassword = (
+        token: string,
+        data: ChangePasswordData,
+        navigate: NavigateFunction
+    ) => {
+        api.post(`usuarios/${token}`, { senha: data.password })
+            .then((res) => {
+                console.log(res);
+                notification.open({
+                    message: 'Sucesso',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: res.data.message,
+                    duration: 0,
+                    icon: (
+                        <CheckCircle
+                            style={{ color: '#22c55e' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            })
+            .catch((err) => {
+                console.error(err);
+
+                notification.open({
+                    message: 'Erro',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: err.response.data.message,
+                    icon: <WarningCircle style={{ color: '#ef4444' }} />,
+                });
+            })
+            .finally(() => navigate('/'));
+    };
     return (
         <UserContext.Provider
             value={{
@@ -262,6 +316,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                 setUser,
                 setCurrentUser,
                 changePassword,
+                resetPassword,
             }}
         >
             {children}

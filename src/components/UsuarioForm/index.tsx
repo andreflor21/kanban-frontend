@@ -18,6 +18,9 @@ import {
 import { Checkbox } from '../Checkbox';
 import { useNavigate } from 'react-router-dom';
 import ChangePassword from '../ChangePassword';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
+import api from '../../services/api';
 
 interface FormUsuarioProps {
     usuario: Usuario | null;
@@ -28,37 +31,55 @@ interface FormUsuarioProps {
 }
 
 export const FormUsuario = ({
-    usuario,
     usuarioId,
     novoUsuario = false,
     setNewUserModal = () => {},
     className,
 }: FormUsuarioProps) => {
-    const { idUser } = useAuth();
+    const { idUser, token } = useAuth();
     const { editUser, newUser } = useUsers();
     const navigate = useNavigate();
     const [readOnly] = useState(
         idUser !== parseInt(usuarioId) && usuarioId !== '' ? true : false
     );
-    useEffect(() => {
-        getPerfis();
-    }, []);
-
-    const { perfis, getPerfis } = usePerfil();
-    const [nome, setNome] = useState(usuario?.nome);
-    const [email, setEmail] = useState(usuario?.email);
-    const [codigo, setCodigo] = useState(usuario?.codigo);
-    const [ativo, setAtivo] = useState(usuario?.ativo);
-    const [cpf, setCpf] = useState(usuario?.cpf);
-    const [dtNascimento, setDtNascimento] = useState(usuario?.dtNascimento);
-    const [perfil, setPerfil] = useState(usuario?.perfil?.id);
+    const { perfis } = usePerfil();
+    const [load, setLoad] = useState(true);
+    const [nome, setNome] = useState<string | undefined>('');
+    const [email, setEmail] = useState<string | undefined>('');
+    const [codigo, setCodigo] = useState<string | undefined>('');
+    const [ativo, setAtivo] = useState<boolean | undefined>(false);
+    const [cpf, setCpf] = useState<string | undefined>('');
+    const [dtNascimento, setDtNascimento] = useState<string | undefined>('');
+    const [perfil, setPerfil] = useState<number | string | undefined>('');
     const [nomeError, setNomeError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [codigoError, setCodigoError] = useState(false);
     const [cpfError, setCpfError] = useState(false);
     const [dtNascimentoError, setDtNascimentoError] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [load, setLoad] = useState(false);
+    useEffect(() => {
+        if (usuarioId) {
+            api.get(`usuarios/${usuarioId}`, {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+            })
+                .then((response) => {
+                    console.info(response.data);
+                    setNome(response.data.nome);
+                    setEmail(response.data.email);
+                    setCodigo(response.data?.codigo);
+                    setAtivo(response.data.ativo);
+                    setCpf(response.data?.cpf);
+                    setDtNascimento(response.data?.dtNascimento);
+                    setPerfil(response.data.perfil.id);
+                })
+                .then(() => setLoad(!load))
+                .catch((err) => {
+                    console.error(err);
+                });
+        }
+    }, [usuarioId]);
 
     // console.log(nome, email, codigo, ativo, cpf, dtNascimento, perfil);
 
@@ -79,7 +100,7 @@ export const FormUsuario = ({
     const handleSubmit = async (e: React.MouseEvent) => {
         e.preventDefault();
 
-        const updateObject: UsuarioData = {
+        const updateObject: Omit<UsuarioData, 'id'> = {
             nome,
             email,
             codigo,
@@ -118,7 +139,13 @@ export const FormUsuario = ({
             });
     };
 
-    return (
+    return load ? (
+        <Spin
+            size="large"
+            style={{ margin: '5rem 12rem', color: '#34d399' }}
+            indicator={<LoadingOutlined spin />}
+        />
+    ) : (
         <>
             <FormStyled className={className}>
                 <Input
