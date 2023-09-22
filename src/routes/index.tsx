@@ -10,6 +10,7 @@ import Root from './root';
 import Users from '../pages/Settings/Users';
 import Profile from '../pages/Settings/Profile';
 import UserDetails from '../pages/Settings/UserDetails';
+import ResetPassword from '../pages/ResetPassword';
 
 export const router = createBrowserRouter([
     {
@@ -77,6 +78,11 @@ export const router = createBrowserRouter([
     {
         path: '/login',
         element: <Login />,
+        // action: loginAction,
+    },
+    {
+        path: '/redefinir-senha/:token',
+        element: <ResetPassword />,
         // action: loginAction,
     },
 ]);
