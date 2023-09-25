@@ -4,6 +4,10 @@ import { Rota } from './rota';
 export interface Perfil {
     id?: number | string;
     descricao: string;
-    usuarios?: Array<Usuario | Partial<Usuario>>[];
-    rotas?: Array<Rota | Partial<Rota>>[];
+    usuarios: Usuario[] | [];
+    rotas: Rota[] | [];
+}
+
+export interface PerfilData {
+    descricao: string;
 }

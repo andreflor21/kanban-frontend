@@ -21,7 +21,7 @@ export interface UsuarioData {
     senha?: string;
     cpf?: string;
     id: number | string;
-    dtNascimento?: string;
+    dtNascimento?: string | null;
     codigo?: string;
     ativo?: boolean;
     trocaSenha?: boolean;
