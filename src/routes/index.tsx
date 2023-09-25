@@ -9,8 +9,11 @@ import Invoices from '../pages/Invoices';
 import Root from './root';
 import Users from '../pages/Settings/Users';
 import Profile from '../pages/Settings/Profile';
-import UserDetails from '../pages/Settings/UserDetails';
+import UserDetails from '../pages/Settings/Users/UserDetails';
 import ResetPassword from '../pages/ResetPassword';
+import ProfileDetails from '../pages/Settings/Profile/ProfileDetails';
+import NewProfile from '../components/NewProfile';
+import ProfileForm from '../components/ProfileForm';
 
 export const router = createBrowserRouter([
     {
@@ -67,7 +70,25 @@ export const router = createBrowserRouter([
                             { index: true, element: <Profile /> },
                             {
                                 path: ':perfilId',
-                                element: <Profile />,
+                                element: <ProfileDetails />,
+                            },
+                            {
+                                path: 'novo',
+                                element: (
+                                    <ProfileForm
+                                        action="create"
+                                        title="Criar Perfil"
+                                    />
+                                ),
+                            },
+                            {
+                                path: 'duplicar',
+                                element: (
+                                    <ProfileForm
+                                        action="duplicate"
+                                        title="Duplicar Perfil"
+                                    />
+                                ),
                             },
                         ],
                     },
