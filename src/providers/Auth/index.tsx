@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                     ),
                 });
                 setLoad(false);
-                // getPerfis();
+                // getProfiles();
                 navigate('/dashboard');
             })
             .catch(() => {
@@ -159,7 +159,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
                 setIdUser(convertStrToNumber(decodedToken.sub));
                 setAuth(res.data.token);
                 getUser(res.data.user_id, res.data.token, setLoad, navigate);
-                // getPerfis();
+                // getProfiles();
             })
             .catch((err: AxiosError) => {
                 setLoad(false);

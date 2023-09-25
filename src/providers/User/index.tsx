@@ -33,7 +33,7 @@ interface UserProviderData {
         idUser: number,
         setLoad: Dispatch<React.SetStateAction<boolean>>
     ) => void;
-    getAllUsers: (setLoad: Dispatch<boolean>) => void;
+    getAllUsers: (setLoad?: Dispatch<boolean>) => void;
     users: Usuario[];
     user: Usuario;
     currentUser: Usuario;
@@ -55,13 +55,17 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     const [currentUser, setCurrentUser] = useState<Usuario>({} as Usuario);
 
     const newUser = (
-        usuarioData: UsuarioData,
+        usuarioData: EditUser,
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => {
         const senha = Math.round(Math.random() * Math.pow(10, 6)).toString();
-        const user: UsuarioData = {
+        const dtNascimento = usuarioData.dtNascimento
+            ? usuarioData.dtNascimento
+            : null;
+        const user: EditUser = {
             ...usuarioData,
+            dtNascimento,
             senha,
             trocaSenha: true,
         };
@@ -70,6 +74,8 @@ export const UserProvider = ({ children }: UserProviderProps) => {
             headers: { Authorization: 'Bearer ' + token },
         })
             .then((res: AxiosResponse) => {
+                console.log(res.data);
+
                 notification.open({
                     message: 'Sucesso',
                     closeIcon: <X />,
@@ -85,10 +91,11 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                         />
                     ),
                 });
+                setUsers([...users, res.data]);
                 setLoad(false);
-                navigate('/configuracoes/usuarios');
             })
             .catch((err: AxiosError) => {
+                console.error(err);
                 setLoad(false);
                 notification.open({
                     message: 'Erro',

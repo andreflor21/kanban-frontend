@@ -1,6 +1,6 @@
 import React, { Dispatch } from 'react';
 import { Modal } from 'antd';
-import { FormUsuario } from '../UsuarioForm';
+import { UserForm } from '../UserForm';
 
 interface NewUserProps {
     isModalOpen: boolean;
@@ -19,7 +19,7 @@ const NewUser = ({ isModalOpen, setIsModalOpen }: NewUserProps) => {
             onCancel={handleCancel}
             footer={false}
         >
-            <FormUsuario
+            <UserForm
                 usuario={null}
                 usuarioId={''}
                 novoUsuario

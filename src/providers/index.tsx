@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { AuthProvider } from './Auth';
 import { UserProvider } from './User';
-import { PerfilProvider } from './Perfil';
+import { PerfilProvider } from './Profile';
 
 interface ProviderProps {
     children: ReactNode;
