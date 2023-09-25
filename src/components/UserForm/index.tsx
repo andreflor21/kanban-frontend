@@ -1,7 +1,7 @@
 import * as yup from 'yup';
 import { Dispatch, useEffect, useState } from 'react';
 import { useAuth } from '../../providers/Auth';
-import { usePerfil } from '../../providers/Perfil';
+import { useProfile } from '../../providers/Profile';
 import { useUsers } from '../../providers/User';
 import { Usuario, UsuarioData } from '../../types/usuario';
 import { Perfil } from '../../types/perfil';
@@ -22,7 +22,7 @@ import { Spin } from 'antd';
 import { LoadingOutlined } from '@ant-design/icons';
 import api from '../../services/api';
 
-interface FormUsuarioProps {
+interface UserFormProps {
     usuario: Usuario | null;
     usuarioId: string;
     novoUsuario: boolean;
@@ -30,19 +30,19 @@ interface FormUsuarioProps {
     className?: string;
 }
 
-export const FormUsuario = ({
+export const UserForm = ({
     usuarioId,
     novoUsuario = false,
     setNewUserModal = () => {},
     className,
-}: FormUsuarioProps) => {
+}: UserFormProps) => {
     const { idUser, token } = useAuth();
     const { editUser, newUser } = useUsers();
     const navigate = useNavigate();
     const [readOnly] = useState(
         idUser !== parseInt(usuarioId) && usuarioId !== '' ? true : false
     );
-    const { perfis } = usePerfil();
+    const { profiles } = useProfile();
     const [load, setLoad] = useState(true);
     const [nome, setNome] = useState<string | undefined>('');
     const [email, setEmail] = useState<string | undefined>('');
@@ -50,7 +50,7 @@ export const FormUsuario = ({
     const [ativo, setAtivo] = useState<boolean | undefined>(false);
     const [cpf, setCpf] = useState<string | undefined>('');
     const [dtNascimento, setDtNascimento] = useState<string | undefined>('');
-    const [perfil, setPerfil] = useState<number | string | undefined>('');
+    const [perfil, setProfile] = useState<number | string | undefined>('');
     const [nomeError, setNomeError] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [codigoError, setCodigoError] = useState(false);
@@ -72,7 +72,7 @@ export const FormUsuario = ({
                     setAtivo(response.data.ativo);
                     setCpf(response.data?.cpf);
                     setDtNascimento(response.data?.dtNascimento);
-                    setPerfil(response.data.perfil.id);
+                    setProfile(response.data.perfil.id);
                 })
                 .then(() => setLoad(!load))
                 .catch((err) => {
@@ -139,7 +139,7 @@ export const FormUsuario = ({
             });
     };
 
-    return load ? (
+    return load && !novoUsuario ? (
         <Spin
             size="large"
             style={{ margin: '5rem 12rem', color: '#34d399' }}
@@ -240,11 +240,11 @@ export const FormUsuario = ({
                         value={perfil}
                         disabled={readOnly}
                         onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
-                            setPerfil(e.target.value);
+                            setProfile(e.target.value);
                         }}
                     >
                         <OptionStyled value="">Selecione o perfil</OptionStyled>
-                        {perfis.map((p: Perfil) => (
+                        {profiles.map((p: Perfil) => (
                             <OptionStyled key={p.id} value={p.id}>
                                 {p.descricao}
                             </OptionStyled>
