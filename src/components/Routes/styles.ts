@@ -8,44 +8,36 @@ export const Container = styled.div`
     grid-area: routes;
     margin: 0 4rem;
     justify-self: stretch;
-`;
-export const ListHeader = styled.div`
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    width: 100%;
-    background: var(--teal-100);
-    border-radius: 8px 8px 0px 0px;
-    border: 2px solid var(--zinc-700);
-    border-bottom: none;
-
-    &:first-child {
-        border-right: 2px solid var(--zinc-700);
-    }
-    > span {
-        width: 50%;
-        text-align: center;
-    }
-`;
-
-export const ListStyled = styled.ul`
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-around;
-    border: 2px solid var(--zinc-700);
-    background-color: var(--slate-200);
-    border-radius: 0px 0px 8px 8px;
-    width: 100%;
-    > li {
-        width: 100%;
-        margin: 0.5rem 0;
-        > div {
+    > div {
+        .ant-list-header {
             display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: space-around;
             width: 100%;
+            justify-content: space-between;
+            padding: 0.875rem 2rem;
+            font-family: var(--font-standard);
+        }
+        div > div > ul.ant-list-items {
+            li.ant-list-item {
+                padding-left: 2rem;
+                padding-right: 2rem;
+                div > div > h4.ant-list-item-meta-title {
+                    font-weight: 400;
+                    font-style: italic;
+                    font-family: var(--font-standard);
+                }
+
+                ul.ant-list-item-action {
+                    li > button.ant-switch {
+                        margin: 0 auto;
+                        &.ant-switch-checked {
+                            background: var(--emerald-400);
+                            &:hover {
+                                background: var(--green-500) !important;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 `;

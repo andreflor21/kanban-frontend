@@ -3,7 +3,7 @@ import Logo from '../../assets/logo.svg';
 import React, { ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { List, X } from 'phosphor-react';
-import { useAuth } from '../../providers/Auth';
+import { useUsers } from '../../providers/User';
 
 interface HeaderProps {
     auth?: boolean;
@@ -17,7 +17,7 @@ const Header = ({
     auth = false,
 }: HeaderProps) => {
     const [openMenu, setOpenMenu] = useState(false);
-    const { user } = useAuth();
+    const { user } = useUsers();
     return (
         <HeaderBar>
             <Link className="logo" to="/dashboard">

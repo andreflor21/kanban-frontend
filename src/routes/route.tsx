@@ -1,11 +1,11 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../providers/Auth';
+import { useUsers } from '../providers/User';
 import Aside from '../components/Aside';
 import Header from '../components/Header';
 import HeaderNavAuth from '../components/HeaderNav';
 
 const ProtectedRoute: React.FC<{ children: JSX.Element }> = ({ children }) => {
-    const { token } = useAuth();
+    const { token } = useUsers();
     const location = useLocation();
     return !token ? (
         <Navigate to={'/login'} state={{ from: location }} replace />

@@ -1,6 +1,5 @@
 import * as yup from 'yup';
 import { Dispatch, useEffect, useState } from 'react';
-import { useAuth } from '../../providers/Auth';
 import { useProfile } from '../../providers/Profile';
 import { useUsers } from '../../providers/User';
 import { Usuario, UsuarioData } from '../../types/usuario';
@@ -36,8 +35,7 @@ export const UserForm = ({
     setNewUserModal = () => {},
     className,
 }: UserFormProps) => {
-    const { idUser, token } = useAuth();
-    const { editUser, newUser } = useUsers();
+    const { editUser, newUser, idUser, token } = useUsers();
     const navigate = useNavigate();
     const [readOnly] = useState(
         idUser !== parseInt(usuarioId) && usuarioId !== '' ? true : false
@@ -65,7 +63,7 @@ export const UserForm = ({
                 },
             })
                 .then((response) => {
-                    console.info(response.data);
+                    // console.info(response.data);
                     setNome(response.data.nome);
                     setEmail(response.data.email);
                     setCodigo(response.data?.codigo);
@@ -127,6 +125,7 @@ export const UserForm = ({
                     newUser(v, setLoad, navigate);
                     setNewUserModal(false);
                 } else {
+                    console.log(v);
                     editUser(v);
                 }
             })

@@ -9,7 +9,7 @@ import {
 import { Perfil, PerfilData } from '../../types/perfil';
 import api from '../../services/api';
 import { NavigateFunction } from 'react-router-dom';
-import { useAuth } from '../Auth';
+import { useUsers } from '../User';
 import { notification } from 'antd';
 import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import { AxiosError, AxiosResponse } from 'axios';
@@ -24,12 +24,19 @@ interface PerfilProviderData {
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => void;
+    duplicateProfile: (
+        perfilData: PerfilData,
+        setLoad: Dispatch<boolean>,
+        navigate: NavigateFunction
+    ) => void;
     deleteProfile: (idPerfil: number) => void;
     editProfile: (perfilData: PerfilData, idPerfil: number) => void;
     getProfile: (idPerfil: number) => void;
     getProfiles: (setLoad?: Dispatch<boolean>) => void;
     profiles: Perfil[];
     profile: Perfil;
+    setProfiles: Dispatch<Perfil[]>;
+    setProfile: Dispatch<Perfil>;
 }
 
 const PerfilContext = createContext<PerfilProviderData>(
@@ -37,7 +44,7 @@ const PerfilContext = createContext<PerfilProviderData>(
 );
 
 export const PerfilProvider = ({ children }: PerfilProviderProps) => {
-    const { token } = useAuth();
+    const { token } = useUsers();
     const [profiles, setProfiles] = useState<Perfil[]>([]);
     const [profile, setProfile] = useState<Perfil>({} as Perfil);
 
@@ -59,18 +66,11 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                         WebkitBorderRadius: 4,
                     },
                     description:
-                        'Erro. Verifique sua conexão e tente novamente.',
+                        'Erro ao carregar perfis. Verifique sua conexão e tente novamente.',
                     icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
             });
     };
-
-    // useEffect(() => {
-    //     if (token) {
-    //         getProfiles();
-    //     }
-    //     // eslint-disable-next-line react-hooks/exhaustive-deps
-    // }, [token]);
 
     const getProfile = (idPerfil: number) => {
         api.get(`perfil/${idPerfil}`, {
@@ -121,7 +121,54 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                     ),
                 });
                 setLoad(false);
-                navigate('dashboard');
+                navigate('/configuracoes/perfil');
+            })
+            .catch((err: AxiosError) => {
+                setLoad(false);
+                notification.open({
+                    message: 'Erro',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description:
+                        'Erro no cadastro do perfil, verifique os dados e tente novamente.',
+                    icon: (
+                        <WarningCircle
+                            style={{ color: '#ef4444' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            });
+    };
+    const duplicateProfile = (
+        perfilData: PerfilData,
+        setLoad: Dispatch<boolean>,
+        navigate: NavigateFunction
+    ) => {
+        api.post('perfil/duplicar', perfilData, {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            },
+        })
+            .then((res: AxiosResponse) => {
+                notification.open({
+                    message: 'Sucesso',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: `Perfil criado com sucesso!`,
+                    icon: (
+                        <CheckCircle
+                            style={{ color: '#22c55e' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+                setLoad(false);
+                navigate(`/configuracoes/perfil/${res.data.id}`);
             })
             .catch((err: AxiosError) => {
                 setLoad(false);
@@ -223,6 +270,9 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                 newProfile,
                 editProfile,
                 deleteProfile,
+                setProfile,
+                setProfiles,
+                duplicateProfile,
             }}
         >
             {children}

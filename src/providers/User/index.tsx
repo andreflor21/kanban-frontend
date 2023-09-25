@@ -8,19 +8,36 @@ import {
 import { UsuarioData, Usuario } from '../../types/usuario';
 import api from '../../services/api';
 import { NavigateFunction, redirect } from 'react-router-dom';
-import { useAuth } from '../Auth';
+import jwt_decode from 'jwt-decode';
 import { notification } from 'antd';
 import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import { AxiosError, AxiosResponse } from 'axios';
+import { Perfil } from '../../types/perfil';
 
 interface UserProviderProps {
     children: ReactNode;
 }
 interface EditUser extends Omit<UsuarioData, 'id'> {}
+
+interface UserLogin {
+    email: string;
+    senha: string;
+}
+interface UserForgotPasswordData {
+    email: string;
+}
+
 interface ChangePasswordData {
     password: string;
     confirmPassword: string;
 }
+
+interface DecodedToken {
+    sub: string;
+    iat: string;
+    exp: number;
+}
+
 interface UserProviderData {
     newUser: (
         usuarioData: EditUser,
@@ -45,14 +62,57 @@ interface UserProviderData {
         data: ChangePasswordData,
         navigate: NavigateFunction
     ) => void;
+    userLogin: (
+        usuarioLogin: UserLogin,
+        setLoad: Dispatch<boolean>,
+        setProfiles: Dispatch<Perfil[]>,
+        navigate: NavigateFunction
+    ) => void;
+    userLogoff: () => void;
+    userForgotPassword: (data: UserForgotPasswordData) => void;
+    token: string;
+    setAuth: (value: React.SetStateAction<string>) => void;
+    idUser: number;
+    setUsername: (value: React.SetStateAction<string>) => void;
+    username: string;
+    setIdUser: (value: React.SetStateAction<number>) => void;
 }
 
 const UserContext = createContext<UserProviderData>({} as UserProviderData);
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-    const { token, idUser, user, setUser, setUsername } = useAuth();
     const [users, setUsers] = useState<Usuario[]>([]);
     const [currentUser, setCurrentUser] = useState<Usuario>({} as Usuario);
+    const convertStrToNumber = (str: string) => {
+        return parseInt(str);
+    };
+    const [auth, setAuth] = useState<string>(() => {
+        const token = localStorage.getItem('@kanban/token');
+
+        if (token) {
+            return JSON.parse(token);
+        }
+        return '';
+    });
+    const [username, setUsername] = useState<string>(() => {
+        const name = localStorage.getItem('@kanban/usuario');
+
+        if (name) {
+            return JSON.parse(name);
+        }
+        return '';
+    });
+
+    const [user, setUser] = useState<Usuario>({} as Usuario);
+
+    const [idUser, setIdUser] = useState<number>(() => {
+        const id = localStorage.getItem('@kanban/idUser');
+
+        if (id) {
+            return JSON.parse(id);
+        }
+        return 0;
+    });
 
     const newUser = (
         usuarioData: EditUser,
@@ -71,7 +131,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         };
 
         api.post('usuarios/novo', user, {
-            headers: { Authorization: 'Bearer ' + token },
+            headers: { Authorization: 'Bearer ' + auth },
         })
             .then((res: AxiosResponse) => {
                 console.log(res.data);
@@ -116,8 +176,9 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     };
 
     const editUser = (usuarioData: EditUser) => {
+        console.log(usuarioData);
         api.patch(`usuarios/${idUser}`, usuarioData, {
-            headers: { Authorization: 'Bearer ' + token },
+            headers: { Authorization: 'Bearer ' + auth },
         })
             .then((response: AxiosResponse) => {
                 setUser(response.data.usuario);
@@ -157,7 +218,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
         await api
             .get(`usuarios/${idUser}`, {
                 headers: {
-                    Authorization: 'Bearer ' + token,
+                    Authorization: 'Bearer ' + auth,
                 },
             })
             .then((response) => setCurrentUser(response.data))
@@ -181,11 +242,11 @@ export const UserProvider = ({ children }: UserProviderProps) => {
     const getAllUsers = (setLoad: Dispatch<boolean>) => {
         api.get(`usuarios`, {
             headers: {
-                Authorization: 'Bearer ' + token,
+                Authorization: 'Bearer ' + auth,
             },
         })
             .then((response: AxiosResponse) => {
-                setUsers([...response.data]);
+                setUsers(response.data);
                 setLoad(false);
             })
             .catch((err) => {
@@ -196,16 +257,17 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                         WebkitBorderRadius: 4,
                     },
                     description:
-                        'Erro. Verifique sua conexão e tente novamente.',
+                        'Erro ao carregar usuários. Verifique sua conexão e tente novamente.',
                     icon: <WarningCircle style={{ color: '#ef4444' }} />,
                 });
                 setLoad(false);
             });
     };
+
     const deleteUser = (idUser: number) => {
         api.delete(`usuarios/${idUser}`, {
             headers: {
-                Authorization: 'Bearer ' + token,
+                Authorization: 'Bearer ' + auth,
             },
         })
             .then((response) => {
@@ -232,12 +294,13 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                 });
             });
     };
+
     const changePassword = (idUser: number, data: ChangePasswordData) => {
         api.patch(
             `usuarios/${idUser}/nova-senha`,
             { senha: data.password },
             {
-                headers: { Authorization: 'Bearer ' + token },
+                headers: { Authorization: 'Bearer ' + auth },
             }
         )
             .then((res) => {
@@ -270,6 +333,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                 });
             });
     };
+
     const resetPassword = (
         token: string,
         data: ChangePasswordData,
@@ -309,6 +373,214 @@ export const UserProvider = ({ children }: UserProviderProps) => {
             })
             .finally(() => navigate('/'));
     };
+
+    const getUserLogin = async (
+        id: number | string,
+        token: string,
+        setLoad: Dispatch<boolean>,
+        setProfiles: Dispatch<Perfil[]>,
+        navigate: NavigateFunction
+    ) => {
+        await api
+            .get(`usuarios/${id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+            .then((res) => {
+                // const navigate = useNavigate();
+                // setIdUser(res.data.id);
+                if (res.data.nome) {
+                    localStorage.setItem(
+                        '@kanban/usuario',
+                        JSON.stringify(res.data.nome)
+                    );
+                    setUsername(res.data.nome);
+                }
+                setUser(res.data);
+            })
+            .then(() => {
+                api.get(`usuarios`, {
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                    },
+                })
+                    .then((response: AxiosResponse) => {
+                        setUsers(response.data);
+                        setLoad(false);
+                    })
+                    .catch((err) => {
+                        notification.open({
+                            message: 'Erro',
+                            closeIcon: <X />,
+                            style: {
+                                WebkitBorderRadius: 4,
+                            },
+                            description:
+                                'Erro ao carregar usuários. Verifique sua conexão e tente novamente.',
+                            icon: (
+                                <WarningCircle style={{ color: '#ef4444' }} />
+                            ),
+                        });
+                        setLoad(false);
+                    });
+            })
+            .then(() => {
+                api.get('perfil', {
+                    headers: {
+                        Authorization: 'Bearer ' + token,
+                    },
+                })
+                    .then((response: AxiosResponse) => {
+                        setProfiles(response.data);
+                        setLoad(false);
+                    })
+                    .catch((err: AxiosError) => {
+                        console.error(err);
+                        notification.open({
+                            message: 'Erro',
+                            closeIcon: <X />,
+                            style: {
+                                WebkitBorderRadius: 4,
+                            },
+                            description:
+                                'Erro ao carregar perfis. Verifique sua conexão e tente novamente.',
+                            icon: (
+                                <WarningCircle style={{ color: '#ef4444' }} />
+                            ),
+                        });
+                    });
+                notification.open({
+                    message: 'Sucesso',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: 'Login Efetuado com Sucesso!',
+                    icon: (
+                        <CheckCircle
+                            style={{ color: '#22c55e' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+                navigate('/dashboard');
+            })
+            .catch(() => {
+                setLoad(false);
+                notification.open({
+                    message: 'Erro',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description:
+                        'Erro no login. Verifique seu usuario e senha, tente novamente.',
+                    icon: (
+                        <WarningCircle
+                            style={{ color: '#ef4444' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            });
+    };
+
+    const userLogin = (
+        data: UserLogin,
+        setLoad: Dispatch<boolean>,
+        setProfiles: Dispatch<Perfil[]>,
+        navigate: NavigateFunction
+    ) => {
+        api.post('login', data)
+            .then((res: AxiosResponse) => {
+                localStorage.setItem(
+                    '@kanban/token',
+                    JSON.stringify(res.data.token)
+                );
+
+                const decodedToken: DecodedToken = jwt_decode(res.data.token);
+                localStorage.setItem('@kanban/idUser', res.data.user_id);
+                setIdUser(convertStrToNumber(decodedToken.sub));
+                setAuth(res.data.token);
+                getUserLogin(
+                    res.data.user_id,
+                    res.data.token,
+                    setLoad,
+                    setProfiles,
+                    navigate
+                );
+            })
+            .catch((err: AxiosError) => {
+                setLoad(false);
+                console.error(err);
+
+                notification.open({
+                    message: 'Erro',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description:
+                        'Erro no login. Verifique seu usuario e senha, tente novamente.',
+                    icon: (
+                        <WarningCircle
+                            style={{ color: '#ef4444' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            });
+    };
+
+    const userForgotPassword = (data: UserForgotPasswordData) => {
+        api.post('esqueci-senha', data)
+            .then((res) => {
+                console.log(res);
+
+                notification.open({
+                    message: 'Sucesso',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: res.data.message,
+                    icon: (
+                        <CheckCircle
+                            style={{ color: '#22c55e' }}
+                            weight="fill"
+                        />
+                    ),
+                    duration: 2,
+                });
+            })
+            .catch((err: AxiosError) => {
+                console.log(err);
+
+                notification.open({
+                    message: 'Falha ao recuperar senha',
+                    closeIcon: <X />,
+                    style: {
+                        WebkitBorderRadius: 4,
+                    },
+                    description: err.response?.data?.message,
+                    icon: (
+                        <WarningCircle
+                            style={{ color: '#ef4444' }}
+                            weight="fill"
+                        />
+                    ),
+                });
+            });
+    };
+
+    const userLogoff = () => {
+        setUser({} as Usuario);
+        setAuth('');
+        setIdUser(0);
+        localStorage.clear();
+    };
+
     return (
         <UserContext.Provider
             value={{
@@ -317,13 +589,22 @@ export const UserProvider = ({ children }: UserProviderProps) => {
                 deleteUser,
                 getUser,
                 getAllUsers,
-                currentUser,
-                users,
-                user,
                 setUser,
                 setCurrentUser,
                 changePassword,
                 resetPassword,
+                setAuth,
+                setIdUser,
+                setUsername,
+                currentUser,
+                users,
+                user,
+                token: auth,
+                userLogin,
+                userLogoff,
+                idUser,
+                userForgotPassword,
+                username,
             }}
         >
             {children}

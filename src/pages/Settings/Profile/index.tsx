@@ -7,7 +7,7 @@ import { Copy, Plus, Trash, WarningCircle } from 'phosphor-react';
 import Button from '../../../components/Button';
 import { List, Skeleton, Tooltip } from 'antd';
 import { Confirm } from '../../../components/Confirm';
-import { Container, ContainerButtons } from './styles';
+import { Container, ContainerButtons, LinkStyleld } from './styles';
 import NewProfile from '../../../components/NewProfile';
 
 // import { Container } from './styles';
@@ -19,8 +19,9 @@ const Profile = () => {
     const [duplicate, setDuplicate] = useState(false);
 
     useEffect(() => {
-        setLoad(false);
-    }, [profiles]);
+        // setLoad(false);
+        getProfiles(setLoad);
+    }, [load]);
 
     const handleDelete = (id: number) => {
         deleteProfile(id);
@@ -33,14 +34,14 @@ const Profile = () => {
             <Title>Perfil</Title>
             <Container>
                 <ContainerButtons>
-                    <Link to="novo">
-                        Novo Perfil
-                        <Plus />
-                    </Link>
-                    <Link to="duplicar">
-                        Duplicar Perfil
-                        <Copy />
-                    </Link>
+                    <LinkStyleld to="novo">
+                        <span>Novo Perfil</span>
+                        <Plus weight="bold" />
+                    </LinkStyleld>
+                    <LinkStyleld to="duplicar">
+                        <span>Duplicar Perfil</span>
+                        <Copy weight="fill" />
+                    </LinkStyleld>
                 </ContainerButtons>
                 <List
                     itemLayout="horizontal"

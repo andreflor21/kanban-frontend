@@ -15,9 +15,9 @@ const Users = () => {
     const [load, setLoad] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     useEffect(() => {
-        // getAllUsers(setLoad);
-        setLoad(false);
-    }, [users]);
+        getAllUsers(setLoad);
+        // setLoad(false);
+    }, [load]);
 
     const handleDelete = (id: number) => {
         deleteUser(id);

@@ -12,7 +12,6 @@ import { Usuario } from '../../types/usuario';
 import { notification } from 'antd';
 import api from '../../services/api';
 import { AxiosError, AxiosResponse } from 'axios';
-
 interface AuthProviderProps {
     children: ReactNode;
 }

@@ -1,6 +1,6 @@
 // import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useAuth } from '../../providers/Auth';
+import { useUsers } from '../../providers/User';
 import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -25,6 +25,7 @@ import Input from '../../components/Input';
 import Button from '../../components/Button';
 import { ForgotPassword } from '../../components/ForgotPassword';
 import { useNavigate } from 'react-router-dom';
+import { useProfile } from '../../providers/Profile';
 
 interface FormValues {
     email: string;
@@ -33,7 +34,8 @@ interface FormValues {
 const Login = () => {
     const [load, setLoad] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
-    const { userLogin } = useAuth();
+    const { userLogin } = useUsers();
+    const { setProfiles } = useProfile();
     const navigate = useNavigate();
     const schema = yup.object().shape({
         email: yup.string().required('Campo obrigatório'),
@@ -52,7 +54,7 @@ const Login = () => {
 
     const onSubmit = (data: FormValues) => {
         setLoad(true);
-        userLogin(data, setLoad, navigate);
+        userLogin(data, setLoad, setProfiles, navigate);
     };
     useEffect(() => {
         if (window.innerWidth < 768) {

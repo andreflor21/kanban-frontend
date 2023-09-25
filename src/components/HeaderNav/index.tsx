@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { Container, MenuWrapper, MenuAnt } from './styles';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../providers/Auth';
+import { useUsers } from '../../providers/User';
 import {
     FileText,
     Gear,
@@ -41,7 +41,7 @@ function getItem(
 const HeaderNavAuth = () => {
     const history = useNavigate();
     const navLinks = useRef<HTMLAnchorElement[]>([]);
-    const { user, userLogoff, idUser, username } = useAuth();
+    const { user, userLogoff, idUser, username } = useUsers();
     const items: MenuItem[] = [
         getItem(
             <NavLink to="/dashboard">

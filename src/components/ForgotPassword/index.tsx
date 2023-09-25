@@ -5,7 +5,7 @@ import * as yup from 'yup';
 import Input from '../Input';
 import { useForm } from 'react-hook-form';
 import { ButtonStyled, FormStyled } from './styles';
-import { useAuth } from '../../providers/Auth';
+import { useUsers } from '../../providers/User';
 import Button from '../Button';
 interface FormValues {
     email: string;
@@ -15,7 +15,7 @@ interface ForgotPasswordProps {
     children: React.ReactNode;
 }
 export const ForgotPassword = ({ children }: ForgotPasswordProps) => {
-    const { userForgotPassword } = useAuth();
+    const { userForgotPassword } = useUsers();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {

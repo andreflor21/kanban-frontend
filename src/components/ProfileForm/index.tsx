@@ -2,7 +2,7 @@ import React, { Dispatch, useState } from 'react';
 import * as yup from 'yup';
 import { Perfil } from '../../types/perfil';
 
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
     FormStyled,
     Container,
@@ -34,12 +34,20 @@ const ProfileForm = ({
     className,
     title,
 }: ProfileFormProps) => {
+    const { perfilId } = useParams();
     const navigate = useNavigate();
-    const [descricao, setDescricao] = useState<string>('');
     const [perfil, setPerfil] = useState<string>('');
     const [descricaoError, setDescricaoError] = useState<boolean>(false);
     const [load, setLoad] = useState(true);
-    const { newProfile, editProfile, profiles } = useProfile();
+    const { newProfile, editProfile, profiles, duplicateProfile } =
+        useProfile();
+
+    if (!profileId) {
+        profileId = perfilId;
+    }
+    const p = profiles.find((p) => p.id == profileId);
+    const [descricao, setDescricao] = useState(p?.descricao);
+
     const goBack = (path: string) => {
         navigate(path);
     };
@@ -48,6 +56,7 @@ const ProfileForm = ({
 
         const updateObject: PerfilData = {
             descricao,
+            perfil,
         };
 
         const schema = yup.object().shape({
@@ -63,7 +72,8 @@ const ProfileForm = ({
                 } else if (action === 'edit' && profileId) {
                     editProfile(v, parseInt(profileId));
                 } else if (action === 'duplicate') {
-                    console.log(action);
+                    console.log(action, v);
+                    duplicateProfile(v, setLoad, navigate);
                 }
             })
             .catch(() => {
@@ -124,7 +134,7 @@ const ProfileForm = ({
                         Gravar
                     </Button>
                 </FormStyled>
-                <Routes profileId={profileId} />
+                <Routes profileId={profileId} profile={p} />
                 <Button
                     type="button"
                     onClickFunc={() => goBack('/configuracoes/perfil')}

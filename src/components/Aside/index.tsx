@@ -9,7 +9,7 @@ import {
 } from './styles';
 import LogoImg from '../../assets/logo.svg';
 // import LogoAside from '../../asssets/svg/logo-white-aside.svg';
-import { useAuth } from '../../providers/Auth';
+import { useUsers } from '../../providers/User';
 import {
     FileText,
     Gear,
@@ -51,7 +51,7 @@ const Aside = () => {
     const { pathname } = useLocation();
     const [hovered, setHovered] = useState(false);
     const [current, setCurrent] = useState(pathname.substring(1));
-    const { userLogoff } = useAuth();
+    const { userLogoff } = useUsers();
     const items: MenuItem[] = [
         getItem(
             <NavLink

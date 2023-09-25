@@ -17,8 +17,10 @@ export const Container = styled.div`
     margin-left: 1rem;
     margin-top: 2rem;
     @media screen and (min-width: 768px) {
+        grid-template-columns: 1fr 2fr;
         margin-left: 12rem;
-        gap: 0px 32px;
+        gap: 0;
+        margin-bottom: 2rem;
     }
     > button {
         justify-self: flex-start;
