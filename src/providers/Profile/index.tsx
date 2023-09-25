@@ -6,7 +6,7 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { Perfil } from '../../types/perfil';
+import { Perfil, PerfilData } from '../../types/perfil';
 import api from '../../services/api';
 import { NavigateFunction } from 'react-router-dom';
 import { useAuth } from '../Auth';
@@ -19,17 +19,17 @@ interface PerfilProviderProps {
 }
 
 interface PerfilProviderData {
-    newPerfil: (
-        perfilData: Perfil,
+    newProfile: (
+        perfilData: PerfilData,
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => void;
-    deletePerfil: (idPerfil: number) => void;
-    editPerfil: (perfilData: Perfil, idPerfil: number) => void;
-    getPerfil: (idPerfil: number) => void;
-    getPerfis: () => void;
-    perfis: Perfil[];
-    perfil: Perfil;
+    deleteProfile: (idPerfil: number) => void;
+    editProfile: (perfilData: PerfilData, idPerfil: number) => void;
+    getProfile: (idPerfil: number) => void;
+    getProfiles: (setLoad?: Dispatch<boolean>) => void;
+    profiles: Perfil[];
+    profile: Perfil;
 }
 
 const PerfilContext = createContext<PerfilProviderData>(
@@ -38,17 +38,18 @@ const PerfilContext = createContext<PerfilProviderData>(
 
 export const PerfilProvider = ({ children }: PerfilProviderProps) => {
     const { token } = useAuth();
-    const [perfis, setPerfis] = useState<Perfil[]>([]);
-    const [perfil, setPerfil] = useState<Perfil>({} as Perfil);
+    const [profiles, setProfiles] = useState<Perfil[]>([]);
+    const [profile, setProfile] = useState<Perfil>({} as Perfil);
 
-    const getPerfis = () => {
+    const getProfiles = (setLoad: Dispatch<boolean>) => {
         api.get('perfil', {
             headers: {
                 Authorization: 'Bearer ' + token,
             },
         })
             .then((res: AxiosResponse) => {
-                setPerfis(res.data);
+                setProfiles(res.data);
+                setLoad(false);
             })
             .catch((err: AxiosError) => {
                 notification.open({
@@ -66,19 +67,19 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
 
     // useEffect(() => {
     //     if (token) {
-    //         getPerfis();
+    //         getProfiles();
     //     }
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [token]);
 
-    const getPerfil = (idPerfil: number) => {
+    const getProfile = (idPerfil: number) => {
         api.get(`perfil/${idPerfil}`, {
             headers: {
                 Authorization: 'Bearer ' + token,
             },
         })
             .then((res: AxiosResponse) => {
-                setPerfil(res.data);
+                setProfile(res.data);
             })
             .catch((err: AxiosError) => {
                 notification.open({
@@ -94,8 +95,8 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
             });
     };
 
-    const newPerfil = (
-        perfilData: Perfil,
+    const newProfile = (
+        perfilData: PerfilData,
         setLoad: Dispatch<boolean>,
         navigate: NavigateFunction
     ) => {
@@ -141,7 +142,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
                 });
             });
     };
-    const editPerfil = (perfilData: Perfil, idPerfil: number) => {
+    const editProfile = (perfilData: PerfilData, idPerfil: number) => {
         api.patch(`perfil/${idPerfil}`, perfilData, {
             headers: {
                 Authorization: 'Bearer ' + token,
@@ -182,7 +183,7 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
             });
     };
 
-    const deletePerfil = (idPerfil: number) => {
+    const deleteProfile = (idPerfil: number) => {
         api.delete(`perfil/${idPerfil}`, {
             headers: {
                 Authorization: 'Bearer ' + token,
@@ -215,13 +216,13 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
     return (
         <PerfilContext.Provider
             value={{
-                perfil,
-                perfis,
-                getPerfil,
-                getPerfis,
-                newPerfil,
-                editPerfil,
-                deletePerfil,
+                profile,
+                profiles,
+                getProfile,
+                getProfiles,
+                newProfile,
+                editProfile,
+                deleteProfile,
             }}
         >
             {children}
@@ -229,4 +230,4 @@ export const PerfilProvider = ({ children }: PerfilProviderProps) => {
     );
 };
 
-export const usePerfil = () => useContext(PerfilContext);
+export const useProfile = () => useContext(PerfilContext);
