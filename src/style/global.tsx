@@ -13,6 +13,7 @@ export default createGlobalStyle`
         --slate-400: #64748b;
         --zinc-700:#27272a;
         --indigo-700: #4338ca;
+        --blue-400:#1677ff;
         --blue-800:#1E40AF;
         --blue-900:#272F51;
         --orange-600:#ea580c;

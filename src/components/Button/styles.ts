@@ -21,7 +21,11 @@ export const ButtonItem = styled.button`
     flex-basis: fit-content;
     text-wrap: nowrap;
     &:hover {
-        background-color: var(--indigo-700);
+        background-color: var(--blue-400);
+        color: var(--gray-100);
+        &:disabled {
+            color: var(--emerald-400);
+        }
     }
 
     &:disabled {
