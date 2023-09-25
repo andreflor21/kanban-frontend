@@ -1,10 +1,13 @@
 import GlobalStyle from './style/global';
 import { useEffect } from 'react';
-import { usePerfil } from '../src/providers/Perfil';
+import { useProfile } from './providers/Profile';
+import { useUsers } from './providers/User';
 function App() {
-    const { getPerfis } = usePerfil();
+    const { getProfiles } = useProfile();
+    const { getAllUsers } = useUsers();
     useEffect(() => {
-        getPerfis();
+        getProfiles();
+        getAllUsers();
     }, []);
     return (
         <>
