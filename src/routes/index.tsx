@@ -12,8 +12,8 @@ import Profile from '../pages/Settings/Profile';
 import UserDetails from '../pages/Settings/Users/UserDetails';
 import ResetPassword from '../pages/ResetPassword';
 import ProfileDetails from '../pages/Settings/Profile/ProfileDetails';
-import NewProfile from '../components/NewProfile';
 import ProfileForm from '../components/ProfileForm';
+import Section from '../pages/Section';
 
 export const router = createBrowserRouter([
     {
@@ -40,7 +40,49 @@ export const router = createBrowserRouter([
             },
             {
                 path: 'fornecedores',
-                element: <Suppliers />,
+                children: [
+                    {
+                        index: true,
+                        element: <Suppliers />,
+                    },
+                    {
+                        path: ':fornId',
+                        element: <h1>Forn DETALHE</h1>,
+                    },
+                    {
+                        path: 'novo',
+                        element: <h1>SECAO DETALHE</h1>,
+                    },
+                    {
+                        path: 'tipos',
+                        children: [
+                            { index: true, element: <h1>Tipos de forn</h1> },
+                        ],
+                    },
+                ],
+            },
+            {
+                path: 'secoes',
+                children: [
+                    {
+                        index: true,
+                        element: <Section />,
+                    },
+                    {
+                        path: ':secaoId',
+                        element: <h1>SECAO DETALHE</h1>,
+                    },
+                    {
+                        path: 'novo',
+                        element: <h1>SECAO DETALHE</h1>,
+                    },
+                    {
+                        path: 'tipos',
+                        children: [
+                            { index: true, element: <h1>Tipos de secao</h1> },
+                        ],
+                    },
+                ],
             },
             {
                 path: 'notas',
@@ -92,6 +134,8 @@ export const router = createBrowserRouter([
                             },
                         ],
                     },
+                    { path: 'importar', element: <h1>Importar</h1> },
+                    { path: 'exportar', element: <h1>Exportar</h1> },
                 ],
             },
         ],
