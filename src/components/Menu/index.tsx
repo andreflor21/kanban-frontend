@@ -1,5 +1,7 @@
 import {
+    CirclesFour,
     CirclesThreePlus,
+    DotsNine,
     FileText,
     Gear,
     House,
@@ -16,28 +18,7 @@ import { NavLink } from 'react-router-dom';
 import { useRef } from 'react';
 import { useUsers } from '../../providers/User';
 import { MenuAnt } from './styles';
-
-type MenuItem = Required<MenuProps>['items'][number];
-
-function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-    type?: 'group',
-    title?: string,
-    disabled?: boolean
-): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type,
-        title,
-        disabled,
-    } as MenuItem;
-}
+import { MenuItem, getItem } from '../../services/utils';
 
 const Menu = ({ mode, className, items, ...rest }: MenuProps) => {
     const { userLogoff } = useUsers();
@@ -95,12 +76,7 @@ const Menu = ({ mode, className, items, ...rest }: MenuProps) => {
             </NavLink>
         ),
         getItem(
-            <NavLink
-                to="/secoes"
-                ref={(el: HTMLAnchorElement) => navLinks.current.push(el)}
-            >
-                Seções
-            </NavLink>,
+            'Seções',
             'secoes',
             <NavLink to="/secoes">
                 <CirclesThreePlus
@@ -108,7 +84,41 @@ const Menu = ({ mode, className, items, ...rest }: MenuProps) => {
                     size={24}
                     color={'#272F51'}
                 />
-            </NavLink>
+            </NavLink>,
+            [
+                getItem(
+                    <NavLink
+                        to="/secoes"
+                        ref={(el: HTMLAnchorElement) =>
+                            navLinks.current.push(el)
+                        }
+                    >
+                        Seções
+                    </NavLink>,
+                    'secoes-sub',
+                    <NavLink to="/secoes">
+                        <CirclesFour
+                            weight="regular"
+                            size={24}
+                            color={'#272F51'}
+                        />
+                    </NavLink>
+                ),
+                getItem(
+                    <NavLink
+                        to="/secoes/tipos"
+                        ref={(el: HTMLAnchorElement) =>
+                            navLinks.current.push(el)
+                        }
+                    >
+                        Tipos
+                    </NavLink>,
+                    'secoes-tipos',
+                    <NavLink to="/secoes/tipos">
+                        <DotsNine weight="bold" size={24} color={'#272F51'} />
+                    </NavLink>
+                ),
+            ]
         ),
         getItem(
             <NavLink
