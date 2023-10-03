@@ -8,14 +8,9 @@ import { useUsers } from '../../providers/User';
 interface HeaderProps {
     auth?: boolean;
     children: ReactNode;
-    whiteSchema?: boolean;
 }
 
-const Header = ({
-    children,
-    whiteSchema = false,
-    auth = false,
-}: HeaderProps) => {
+const Header = ({ children, auth = false }: HeaderProps) => {
     const [openMenu, setOpenMenu] = useState(false);
     const { user } = useUsers();
     return (
