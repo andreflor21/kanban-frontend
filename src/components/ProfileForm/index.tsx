@@ -1,4 +1,4 @@
-import React, { Dispatch, useState } from 'react';
+import React, { useState } from 'react';
 import * as yup from 'yup';
 import { Perfil } from '../../types/perfil';
 
@@ -38,7 +38,7 @@ const ProfileForm = ({
     const navigate = useNavigate();
     const [perfil, setPerfil] = useState<string>('');
     const [descricaoError, setDescricaoError] = useState<boolean>(false);
-    const [load, setLoad] = useState(true);
+    const [, setLoad] = useState(true);
     const { newProfile, editProfile, profiles, duplicateProfile } =
         useProfile();
 
@@ -55,7 +55,7 @@ const ProfileForm = ({
         e.preventDefault();
 
         const updateObject: PerfilData = {
-            descricao,
+            descricao: descricao as string,
             perfil,
         };
 
@@ -134,9 +134,10 @@ const ProfileForm = ({
                         Gravar
                     </Button>
                 </FormStyled>
-                <Routes profileId={profileId} profile={p} />
+                {profileId && <Routes profileId={profileId} profile={p} />}
                 <Button
                     type="button"
+                    className="voltar"
                     onClickFunc={() => goBack('/configuracoes/perfil')}
                 >
                     Voltar

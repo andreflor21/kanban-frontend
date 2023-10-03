@@ -14,20 +14,27 @@ export const ContainerButtons = styled.div`
     width: fit-content;
     align-items: center;
     justify-content: space-between;
-    gap: 0 2rem;
+    flex-direction: column;
+
+    /* gap: 0 2rem; */
     margin-bottom: 2rem;
     > button {
         width: fit-content;
         align-items: center;
         display: flex;
         justify-content: space-between;
-        gap: 0 1rem;
+        /* gap: 0 1rem; */
         font-weight: 300;
         padding: 6px 16px;
         font-family: var(--font-standard);
         @media screen and (min-width: 768px) {
             font-size: 1.25rem;
         }
+    }
+    @media screen and (min-width: 1024px) {
+        flex-direction: row;
+        gap: 0 2rem;
+        justify-content: space-between;
     }
 `;
 
@@ -41,15 +48,15 @@ export const LinkStyleld = styled(Link)`
     /* position: relative; */
     border-radius: 8px;
     font-size: 18px;
-    padding: 6px 32px;
+    padding: 6px 24px;
     transition: all 350ms;
     width: 100%;
     font-family: var(--font-secondary);
     font-weight: 400;
     /* max-width: 15rem; */
-    flex-grow: 1;
-    flex-shrink: 1;
-    flex-basis: fit-content;
+    /* flex-grow: 0; */
+    /* flex-shrink: 1; */
+    /* flex-basis: 224px; */
     display: flex;
     align-items: center;
     justify-content: space-between;

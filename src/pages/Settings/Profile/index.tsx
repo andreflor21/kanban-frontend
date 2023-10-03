@@ -1,22 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useProfile } from '../../../providers/Profile';
 import TitlePage from '../../../components/TitlePage';
 import Title from '../../../components/Title';
 import { Copy, Plus, Trash, WarningCircle } from 'phosphor-react';
-import Button from '../../../components/Button';
 import { List, Skeleton, Tooltip } from 'antd';
 import { Confirm } from '../../../components/Confirm';
 import { Container, ContainerButtons, LinkStyleld } from './styles';
-import NewProfile from '../../../components/NewProfile';
 
 // import { Container } from './styles';
 
 const Profile = () => {
     const { getProfiles, profiles, deleteProfile } = useProfile();
     const [load, setLoad] = useState(true);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [duplicate, setDuplicate] = useState(false);
 
     useEffect(() => {
         // setLoad(false);
@@ -59,7 +55,7 @@ const Profile = () => {
                                     okText="Excluir"
                                     placement="topRight"
                                     onConfirm={() =>
-                                        handleDelete(parseInt(p.id))
+                                        handleDelete(parseInt(p.id as string))
                                     }
                                     style={{ cursor: 'pointer' }}
                                     icon={

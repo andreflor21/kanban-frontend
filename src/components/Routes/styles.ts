@@ -6,7 +6,8 @@ export const Container = styled.div`
     align-items: center;
     justify-content: center;
     grid-area: routes;
-    margin: 0 4rem;
+    width: 95%;
+    /* margin: 0 4rem; */
     justify-self: stretch;
     > div {
         .ant-list-header {

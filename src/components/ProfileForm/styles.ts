@@ -3,23 +3,28 @@ import CaretDown from '../../assets/caretdown.svg';
 
 export const Container = styled.div`
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
-    gap: 0px 16px;
+    grid-template-columns: 1fr;
+    grid-template-rows: 0.1fr 0.8fr 0.1fr;
+    gap: 32px;
     grid-template-areas:
-        'form routes'
-        'button routes';
+        'form'
+        'routes'
+        'button';
     justify-content: center;
     align-content: center;
     justify-items: center;
     align-items: center;
 
-    margin-left: 1rem;
+    /* margin-left: 1rem; */
     margin-top: 2rem;
     @media screen and (min-width: 768px) {
         grid-template-columns: 1fr 2fr;
+        grid-template-rows: 1fr 1fr;
         margin-left: 12rem;
-        gap: 0;
+        gap: 2rem;
+        grid-template-areas:
+            'form routes'
+            'button routes';
         margin-bottom: 2rem;
     }
     > button {
@@ -27,15 +32,25 @@ export const Container = styled.div`
         width: fit-content;
         align-self: end;
         grid-area: button;
+        &.voltar {
+            margin-left: 1rem;
+            margin-bottom: 2rem;
+            @media screen and (min-width: 768px) {
+                margin-left: 0;
+                margin-bottom: 0;
+            }
+        }
     }
 `;
 export const FormStyled = styled.form`
     display: flex;
-    justify-self: stretch;
+
     align-self: flex-start;
     grid-area: form;
     flex-direction: column;
-
+    justify-self: stretch;
+    width: 80%;
+    margin: 0 auto;
     > span {
         font-style: normal;
         font-weight: normal;
@@ -52,6 +67,10 @@ export const FormStyled = styled.form`
         justify-self: center;
         width: fit-content;
         align-self: flex-start;
+    }
+    @media screen and (min-width: 768px) {
+        justify-self: stretch;
+        width: 100%;
     }
 `;
 
