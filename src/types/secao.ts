@@ -3,7 +3,7 @@ export interface Section {
     descricao: string;
     codigo: string;
     codigoMatrizFilial: string;
-    codigoERP: string | null;
+    codigoERP?: string;
     tipoSecao: {
         id: number;
         abreviacao: string;
@@ -15,9 +15,6 @@ export interface SectionData {
     descricao: string;
     codigo: string;
     codigoMatrizFilial: string;
-    codigoERP: string | null;
-    tipoSecao: {
-        abreviacao: string;
-        descricao: string;
-    };
+    codigoERP?: string;
+    tipoSecaoId: string;
 }

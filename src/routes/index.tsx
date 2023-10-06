@@ -14,6 +14,7 @@ import ResetPassword from 'pages/ResetPassword';
 import ProfileDetails from 'pages/Settings/Profile/ProfileDetails';
 import ProfileForm from 'components/ProfileForm';
 import Section from 'pages/Section';
+import SecitonForm from 'components/SectionForm';
 
 export const router = createBrowserRouter([
     {
@@ -70,11 +71,15 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: ':secaoId',
-                        element: <h1>SECAO DETALHE</h1>,
+                        element: (
+                            <SecitonForm title="Editar Seção" action="edit" />
+                        ),
                     },
                     {
                         path: 'novo',
-                        element: <h1>SECAO DETALHE</h1>,
+                        element: (
+                            <SecitonForm title="Nava Seção" action="create" />
+                        ),
                     },
                     {
                         path: 'tipos',

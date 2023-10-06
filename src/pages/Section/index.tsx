@@ -2,7 +2,13 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import TitlePage from 'components/TitlePage';
 import Title from 'components/Title';
-import { Plus, Trash, WarningCircle, CirclesThreePlus } from 'phosphor-react';
+import {
+    Plus,
+    Trash,
+    WarningCircle,
+    CirclesThreePlus,
+    DotsNine,
+} from 'phosphor-react';
 import { List, Skeleton, Tooltip } from 'antd';
 import { Confirm } from 'components/Confirm';
 import { Container, ContainerButtons, LinkStyleld } from './styles';
@@ -34,7 +40,7 @@ const Section = () => {
                     </LinkStyleld>
                     <LinkStyleld to="tipos">
                         <span>Tipos de seção</span>
-                        <CirclesThreePlus weight="fill" />
+                        <DotsNine weight="bold" />
                     </LinkStyleld>
                 </ContainerButtons>
                 <List
