@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useProfile } from '../../providers/Profile';
-import TitlePage from '../../components/TitlePage';
-import Title from '../../components/Title';
+import TitlePage from 'components/TitlePage';
+import Title from 'components/Title';
 import { Plus, Trash, WarningCircle, CirclesThreePlus } from 'phosphor-react';
 import { List, Skeleton, Tooltip } from 'antd';
-import { Confirm } from '../../components/Confirm';
+import { Confirm } from 'components/Confirm';
 import { Container, ContainerButtons, LinkStyleld } from './styles';
-import { useSection } from '../../providers/Sections';
+import { useSection } from 'providers/Sections';
 
 const Section = () => {
     const { getSections, sections, deleteSection } = useSection();

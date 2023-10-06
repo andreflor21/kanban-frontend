@@ -1,9 +1,9 @@
 import { HeaderBar, ResponsiveMenu, ResponsiveMenuContent } from './styles';
-import Logo from '../../assets/logo.svg';
+import Logo from 'assets/logo.svg';
 import React, { ReactNode, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { List, X } from 'phosphor-react';
-import { useUsers } from '../../providers/User';
+import { useUsers } from 'providers/User';
 
 interface HeaderProps {
     auth?: boolean;

@@ -14,7 +14,7 @@ import {
 import type { MenuProps } from 'antd';
 import { NavLink } from 'react-router-dom';
 import { useRef } from 'react';
-import { useUsers } from '../../providers/User';
+import { useUsers } from 'providers/User';
 import { MenuAnt } from './styles';
 
 type MenuItem = Required<MenuProps>['items'][number];

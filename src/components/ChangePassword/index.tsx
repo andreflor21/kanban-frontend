@@ -2,11 +2,11 @@ import React, { Dispatch } from 'react';
 import { Modal } from 'antd';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import Input from '../Input';
+import Input from 'components/Input';
 import { useForm } from 'react-hook-form';
 import { FormStyled } from './styles';
-import Button from '../Button';
-import { useUsers } from '../../providers/User';
+import Button from 'components/Button';
+import { useUsers } from 'providers/User';
 interface FormValues {
     password: string;
     confirmPassword: string;

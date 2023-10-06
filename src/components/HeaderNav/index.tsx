@@ -1,5 +1,5 @@
 import { Container } from './styles';
-import { useUsers } from '../../providers/User';
+import { useUsers } from 'providers/User';
 import Menu from '../Menu';
 
 const HeaderNavAuth = () => {

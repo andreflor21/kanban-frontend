@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useProfile } from '../../../providers/Profile';
-import TitlePage from '../../../components/TitlePage';
-import Title from '../../../components/Title';
+import { useProfile } from 'providers/Profile';
+import TitlePage from 'components/TitlePage';
+import Title from 'components/Title';
 import { Copy, Plus, Trash, WarningCircle } from 'phosphor-react';
 import { List, Skeleton, Tooltip } from 'antd';
-import { Confirm } from '../../../components/Confirm';
+import { Confirm } from 'components/Confirm';
 import { Container, ContainerButtons, LinkStyleld } from './styles';
 
 // import { Container } from './styles';

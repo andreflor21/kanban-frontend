@@ -1,19 +1,19 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom';
-import Login from '../pages/Login';
-import Dashboard from '../pages/Dashboard';
-import Products from '../pages/Products';
-import Orders from '../pages/Orders';
-import Kanbans from '../pages/Kanbans';
-import Suppliers from '../pages/Suppliers';
-import Invoices from '../pages/Invoices';
+import Login from 'pages/Login';
+import Dashboard from 'pages/Dashboard';
+import Products from 'pages/Products';
+import Orders from 'pages/Orders';
+import Kanbans from 'pages/Kanbans';
+import Suppliers from 'pages/Suppliers';
+import Invoices from 'pages/Invoices';
 import Root from './root';
-import Users from '../pages/Settings/Users';
-import Profile from '../pages/Settings/Profile';
-import UserDetails from '../pages/Settings/Users/UserDetails';
-import ResetPassword from '../pages/ResetPassword';
-import ProfileDetails from '../pages/Settings/Profile/ProfileDetails';
-import ProfileForm from '../components/ProfileForm';
-import Section from '../pages/Section';
+import Users from 'pages/Settings/Users';
+import Profile from 'pages/Settings/Profile';
+import UserDetails from 'pages/Settings/Users/UserDetails';
+import ResetPassword from 'pages/ResetPassword';
+import ProfileDetails from 'pages/Settings/Profile/ProfileDetails';
+import ProfileForm from 'components/ProfileForm';
+import Section from 'pages/Section';
 
 export const router = createBrowserRouter([
     {

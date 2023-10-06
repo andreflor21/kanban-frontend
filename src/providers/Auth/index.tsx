@@ -8,7 +8,7 @@ import {
 import { NavigateFunction } from 'react-router-dom';
 import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import jwt_decode from 'jwt-decode';
-import { Usuario } from '../../types/usuario';
+import { Usuario } from 'types/usuario';
 import { notification } from 'antd';
 import api from '../../services/api';
 import { AxiosError, AxiosResponse } from 'axios';

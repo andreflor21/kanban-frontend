@@ -6,7 +6,7 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { Perfil, PerfilData } from '../../types/perfil';
+import { Perfil, PerfilData } from 'types/perfil';
 import api from '../../services/api';
 import { NavigateFunction } from 'react-router-dom';
 import { useUsers } from '../User';

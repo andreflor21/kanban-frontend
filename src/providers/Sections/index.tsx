@@ -6,7 +6,7 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { Section, SectionData } from '../../types/secao';
+import { Section, SectionData } from 'types/secao';
 import api from '../../services/api';
 import { NavigateFunction } from 'react-router-dom';
 import { useUsers } from '../User';

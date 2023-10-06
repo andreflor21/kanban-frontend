@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { AsideContainer, Logo, ContainerLogo } from './styles';
-import LogoImg from '../../assets/logo.svg';
+import LogoImg from 'assets/logo.svg';
 import type { MenuProps } from 'antd';
-import Menu from '../Menu';
+import Menu from 'components/Menu';
 
 const Aside = () => {
     const { pathname } = useLocation();

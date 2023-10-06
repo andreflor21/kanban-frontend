@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
-import TitlePage from '../../../../components/TitlePage';
-import ProfileForm from '../../../../components/ProfileForm';
+import TitlePage from 'components/TitlePage';
+import ProfileForm from 'components/ProfileForm';
 
 const ProfileDetails = () => {
     const { perfilId } = useParams();

@@ -1,7 +1,7 @@
-import { UserForm } from '../../../../components/UserForm';
+import { UserForm } from 'components/UserForm';
 import { useParams } from 'react-router-dom';
-import TitlePage from '../../../../components/TitlePage';
-import Title from '../../../../components/Title';
+import TitlePage from 'components/TitlePage';
+import Title from 'components/Title';
 
 // import { Container } from './styles';
 

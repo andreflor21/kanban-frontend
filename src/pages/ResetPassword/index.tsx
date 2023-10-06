@@ -16,13 +16,13 @@ import {
     InnerWrapper,
     ListStyled,
 } from './styles';
-import Logo from '../../assets/logo.svg';
-import imgForgotPassword from '../../assets/forgot_password.svg';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import { ForgotPassword } from '../../components/ForgotPassword';
+import Logo from 'assets/logo.svg';
+import imgForgotPassword from 'assets/forgot_password.svg';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import { ForgotPassword } from 'components/ForgotPassword';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useUsers } from '../../providers/User';
+import { useUsers } from 'providers/User';
 
 interface FormValues {
     password: string;

@@ -1,9 +1,9 @@
 import * as yup from 'yup';
 import { Dispatch, useEffect, useState } from 'react';
-import { useProfile } from '../../providers/Profile';
-import { useUsers } from '../../providers/User';
-import { Usuario, UsuarioData } from '../../types/usuario';
-import { Perfil } from '../../types/perfil';
+import { useProfile } from 'providers/Profile';
+import { useUsers } from 'providers/User';
+import { Usuario, UsuarioData } from 'types/usuario';
+import { Perfil } from 'types/perfil';
 import Input from '../Input';
 import Button from '../Button';
 import {

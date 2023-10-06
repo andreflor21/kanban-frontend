@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { message, List, Skeleton, Tooltip } from 'antd';
 import { Trash, UserPlus, WarningCircle } from 'phosphor-react';
-import { useUsers } from '../../../providers/User';
-import Title from '../../../components/Title';
-import TitlePage from '../../../components/TitlePage';
-import NewUser from '../../../components/NewUser';
-import Button from '../../../components/Button';
-import { Confirm } from '../../../components/Confirm';
+import { useUsers } from 'providers/User';
+import Title from 'components/Title';
+import TitlePage from 'components/TitlePage';
+import NewUser from 'components/NewUser';
+import Button from 'components/Button';
+import { Confirm } from 'components/Confirm';
 import { Container } from './styles';
 
 const Users = () => {

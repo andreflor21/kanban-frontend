@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import CaretDown from '../../assets/caretdown.svg';
+import CaretDown from 'assets/caretdown.svg';
 
 export const FormStyled = styled.form`
     display: flex;

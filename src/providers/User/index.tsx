@@ -5,14 +5,14 @@ import {
     Dispatch,
     ReactNode,
 } from 'react';
-import { UsuarioData, Usuario } from '../../types/usuario';
+import { UsuarioData, Usuario } from 'types/usuario';
 import api from '../../services/api';
 import { NavigateFunction, redirect } from 'react-router-dom';
 import jwt_decode from 'jwt-decode';
 import { notification } from 'antd';
 import { CheckCircle, WarningCircle, X } from 'phosphor-react';
 import { AxiosError, AxiosResponse } from 'axios';
-import { Perfil } from '../../types/perfil';
+import { Perfil } from 'types/perfil';
 
 interface UserProviderProps {
     children: ReactNode;

@@ -1,6 +1,6 @@
 // import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useUsers } from '../../providers/User';
+import { useUsers } from 'providers/User';
 import { useEffect, useState } from 'react';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -19,13 +19,13 @@ import {
     InnerWrapper,
     ListStyled,
 } from './styles';
-import Logo from '../../assets/logo.svg';
-import imgLogin from '../../assets/img_login_desktop.svg';
-import Input from '../../components/Input';
-import Button from '../../components/Button';
-import { ForgotPassword } from '../../components/ForgotPassword';
+import Logo from 'assets/logo.svg';
+import imgLogin from 'assets/img_login_desktop.svg';
+import Input from 'components/Input';
+import Button from 'components/Button';
+import { ForgotPassword } from 'components/ForgotPassword';
 import { useNavigate } from 'react-router-dom';
-import { useProfile } from '../../providers/Profile';
+import { useProfile } from 'providers/Profile';
 
 interface FormValues {
     email: string;

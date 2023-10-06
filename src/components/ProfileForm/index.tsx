@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as yup from 'yup';
-import { Perfil } from '../../types/perfil';
+import { Perfil } from 'types/perfil';
 
 import { useNavigate, useParams } from 'react-router-dom';
 import {
@@ -13,7 +13,7 @@ import {
 } from './styles';
 import Input from '../Input';
 import Button from '../Button';
-import { useProfile } from '../../providers/Profile';
+import { useProfile } from 'providers/Profile';
 import TitlePage from '../TitlePage';
 import Title from '../Title';
 import Routes from '../Routes';

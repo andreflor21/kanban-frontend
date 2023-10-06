@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-// import LogoDark from '../../assets/logo_outline.svg';
+// import LogoDark from 'assets/logo_outline.svg';
 
 export const Container = styled.div`
     min-height: 100vh;

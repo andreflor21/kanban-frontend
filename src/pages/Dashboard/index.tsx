@@ -1,5 +1,5 @@
-import TitlePage from '../../components/TitlePage';
-import Title from '../../components/Title';
+import TitlePage from 'components/TitlePage';
+import Title from 'components/Title';
 
 const Dashboard = () => {
     return (

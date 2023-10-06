@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Container } from './styles';
-import { useUsers } from '../../providers/User';
+import { useUsers } from 'providers/User';
 import { List, Skeleton, Switch, Tooltip, notification } from 'antd';
 import api from '../../services/api';
-import { Perfil } from '../../types/perfil';
+import { Perfil } from 'types/perfil';
 import { Info, X } from 'phosphor-react';
-import { Rota } from '../../types/rota';
+import { Rota } from 'types/rota';
 interface RoutesProps {
     profileId?: string;
     profile?: Perfil;
