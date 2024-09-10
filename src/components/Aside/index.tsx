@@ -1,9 +1,9 @@
 import LogoImg from "@/assets/logo.svg"
 import Menu from "@/components/Menu"
-import type {MenuProps} from "antd"
-import {useState} from "react"
-import {useLocation} from "react-router-dom"
-import {AsideContainer, ContainerLogo, Logo} from "./styles"
+import type { MenuProps } from "antd"
+import { useState } from "react"
+import { useLocation } from "react-router-dom"
+import { AsideContainer, ContainerLogo, Logo } from "./styles"
 
 const Aside = () => {
 	const { pathname } = useLocation()
