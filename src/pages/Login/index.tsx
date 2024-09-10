@@ -48,13 +48,14 @@ const Login = () => {
 
 	const navigate = useNavigate()
 	const localStorageToken = localStorage.getItem("@kanban/token")
-	const decodedToken: DecodedToken = jwtDecode(localStorageToken ?? "")
+	const decodedToken: DecodedToken | undefined = localStorageToken?.length
+		? jwtDecode(localStorageToken)
+		: undefined
 	const query = useGetUserData({
-		id: decodedToken.sing.id,
+		id: decodedToken?.sing?.id,
 		token: localStorageToken,
 	})
 	const hasUser = !!query?.data?.id
-	console.log(query)
 
 	const {
 		register,

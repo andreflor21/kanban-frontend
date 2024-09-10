@@ -1,4 +1,5 @@
-import { type MenuItem, getItem } from "@/services/utils"
+import { getItem, type MenuItem } from "@/services/utils"
+import { useUserStore } from "@/stores/User/useUserStore"
 import type { MenuProps } from "antd"
 import {
 	CirclesFour,
@@ -20,11 +21,13 @@ import { NavLink } from "react-router-dom"
 import { MenuAnt } from "./styles"
 
 const Menu = ({ mode, className, items, ...rest }: MenuProps) => {
+	const logout = useUserStore((state) => state.logout)
 	const userLogoff = () => {
-		return null
+		logout()
 	}
 
 	const navLinks = useRef<HTMLAnchorElement[]>([])
+
 	const defaultItems: MenuItem[] = [
 		getItem(
 			<NavLink

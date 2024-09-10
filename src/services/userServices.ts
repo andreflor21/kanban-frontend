@@ -39,7 +39,7 @@ export async function handleForgotPassword(email: string) {
 	return await ApiInstance.post("forgot-password", { email })
 }
 type UseGetUserData = {
-	id: string | null
+	id: string | undefined
 	token: string | null
 }
 
