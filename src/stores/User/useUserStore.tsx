@@ -5,7 +5,7 @@ import api, {
 } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import type { User } from "@/types/usuario"
-import jwt_decode from "jwt-decode"
+import { jwtDecode } from "jwt-decode"
 import { create } from "zustand"
 
 type LoginBody = {
@@ -33,7 +33,7 @@ export type DecodedToken = {
 
 const getUserData = async (token: string): Promise<User | undefined> => {
 	try {
-		const decodedToken: DecodedToken = jwt_decode(token)
+		const decodedToken: DecodedToken = jwtDecode(token)
 		const headers = makeApiHeaders(token)
 		const res = await api.get<User>(`/users/${decodedToken.sing.id}`, {
 			headers,
