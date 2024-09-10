@@ -1,12 +1,12 @@
-import { Menu } from 'antd';
-import styled, { keyframes } from 'styled-components';
+import { Menu } from "antd"
+import styled, { keyframes } from "styled-components"
 
 interface IndicatorProps {
-    leftIndicator: string;
-    topIndicator: string;
+	leftIndicator: string
+	topIndicator: string
 }
 interface MenuProps {
-    inlineCollapsed: boolean;
+	inlineCollapsed: boolean
 }
 
 const appearFromNowhere = keyframes`
@@ -17,7 +17,7 @@ from{
 to{
     opacity: 1;
 }
-`;
+`
 
 export const AsideContainer = styled.aside`
     display: none;
@@ -75,7 +75,7 @@ export const AsideContainer = styled.aside`
 
         padding: 150px 12px 0;
     }
-`;
+`
 
 export const MenuWrapper = styled.nav`
     width: 100%;
@@ -182,7 +182,7 @@ export const MenuWrapper = styled.nav`
             transform: translateY(-2px);
         }
     }
-`;
+`
 
 export const Logo = styled.img`
     display: none;
@@ -194,7 +194,7 @@ export const Logo = styled.img`
         aspect-ratio: 1/1;
         align-self: center;
     }
-`;
+`
 
 export const ContainerLogo = styled.div`
     display: flex;
@@ -204,7 +204,7 @@ export const ContainerLogo = styled.div`
     padding: 0px 20px;
     position: absolute;
     top: 20px;
-`;
+`
 
 export const MenuAnt = styled(Menu)`
     height: 75%;
@@ -243,7 +243,7 @@ export const MenuAnt = styled(Menu)`
     }
     span {
         display: ${(props: MenuProps) =>
-            props.inlineCollapsed ? 'none' : 'inline-block'} !important;
+					props.inlineCollapsed ? "none" : "inline-block"} !important;
     }
 
     @media screen and (min-width: 720px) {
@@ -254,4 +254,4 @@ export const MenuAnt = styled(Menu)`
         padding-right: 0px;
         padding-bottom: 0px;
     }
-`;
+`

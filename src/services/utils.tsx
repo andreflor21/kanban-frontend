@@ -1,24 +1,25 @@
-import type { MenuProps } from 'antd';
-export type MenuItem = Required<MenuProps>['items'][number];
+import type { MenuProps } from "antd"
+
+export type MenuItem = Required<MenuProps>["items"][number]
 
 function getItem(
-    label: React.ReactNode,
-    key: React.Key,
-    icon?: React.ReactNode,
-    children?: MenuItem[],
-    type?: 'group',
-    title?: string,
-    disabled?: boolean
+	label: React.ReactNode,
+	key: React.Key,
+	icon?: React.ReactNode,
+	children?: MenuItem[],
+	type?: "group",
+	title?: string,
+	disabled?: boolean,
 ): MenuItem {
-    return {
-        key,
-        icon,
-        children,
-        label,
-        type,
-        title,
-        disabled,
-    } as MenuItem;
+	return {
+		key,
+		icon,
+		children,
+		label,
+		type,
+		title,
+		disabled,
+	} as MenuItem
 }
 
-export { getItem };
+export { getItem }

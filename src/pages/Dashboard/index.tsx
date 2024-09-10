@@ -1,13 +1,13 @@
-import TitlePage from 'components/TitlePage';
-import Title from 'components/Title';
+import Title from "@/components/Title"
+import TitlePage from "@/components/TitlePage"
 
 const Dashboard = () => {
-    return (
-        <>
-            <TitlePage title="Dashboard" />
-            <Title>Dashboard</Title>
-        </>
-    );
-};
+	return (
+		<>
+			<TitlePage title="Dashboard" />
+			<Title>Dashboard</Title>
+		</>
+	)
+}
 
-export default Dashboard;
+export default Dashboard

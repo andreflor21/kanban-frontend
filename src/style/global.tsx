@@ -1,6 +1,6 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components"
 interface GlobalProps {
-    themeDark: boolean;
+	themeDark: boolean
 }
 
 export default createGlobalStyle`
@@ -47,7 +47,7 @@ export default createGlobalStyle`
 
    body {
       background: ${(props: GlobalProps) =>
-          props.themeDark ? 'var(--gray-500)' : 'var(--gray-100)'};
+				props.themeDark ? "var(--gray-500)" : "var(--gray-100)"};
       font-family: var(--font-standard);
       /* padding-top: 56px; */
   ::-webkit-scrollbar {
@@ -87,4 +87,4 @@ export default createGlobalStyle`
     //   }
 
     // }
-`;
+`

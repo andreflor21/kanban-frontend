@@ -1,5 +1,5 @@
-import { Menu } from 'antd';
-import styled from 'styled-components';
+import { Menu } from "antd"
+import styled from "styled-components"
 
 export const Container = styled.div`
     display: flex;
@@ -38,7 +38,7 @@ export const Container = styled.div`
         justify-content: center;
         padding: 0;
     }
-`;
+`
 
 export const Links = styled.span`
     color: var(--black);
@@ -61,7 +61,7 @@ export const Links = styled.span`
         border-bottom: none;
         width: auto;
     }
-`;
+`
 
 export const MenuWrapper = styled.nav`
     width: 100%;
@@ -108,7 +108,7 @@ export const MenuWrapper = styled.nav`
     @media only screen and (min-width: 768px) {
         display: none;
     }
-`;
+`
 
 export const MenuAnt = styled(Menu)`
     margin-top: 70px;
@@ -118,4 +118,4 @@ export const MenuAnt = styled(Menu)`
     @media only screen and (min-width: 768px) {
         display: none;
     }
-`;
+`

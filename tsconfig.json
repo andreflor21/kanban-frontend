@@ -1,36 +1,26 @@
 {
-    "compilerOptions": {
-        "baseUrl": ".",
-        "paths": {
-            "@/*": ["src/*"],
-            "pages/*": ["src/pages/*"],
-            "components/*": ["src/components/*"],
-            "types/*": ["src/types/*"],
-            "providers/*": ["src/providers/*"],
-            "public/*": ["public/*"]
-        },
-        "types": ["node"],
-        "target": "ES2020",
-        "useDefineForClassFields": true,
-        "lib": ["ES2020", "DOM", "DOM.Iterable"],
-        "module": "ESNext",
-        "skipLibCheck": true,
-
-        /* Bundler mode */
-        "moduleResolution": "bundler",
-        "allowImportingTsExtensions": true,
-        "resolveJsonModule": true,
-        "isolatedModules": true,
-        "noEmit": true,
-        "jsx": "react-jsx",
-
-        /* Linting */
-        "strict": true,
-        "noUnusedLocals": true,
-        "noUnusedParameters": true,
-        "noFallthroughCasesInSwitch": true
-    },
-    "include": ["src"],
-
-    "references": [{ "path": "./tsconfig.node.json" }]
+	"compilerOptions": {
+		"target": "es5",
+		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"module": "esnext",
+		"allowJs": true,
+		"skipLibCheck": true,
+		"allowSyntheticDefaultImports": true,
+		"strictNullChecks": true,
+		"strictFunctionTypes": false,
+		"moduleResolution": "node",
+		"resolveJsonModule": true,
+		"isolatedModules": true,
+		"noEmit": true,
+		"jsx": "react-jsx",
+		"strict": true,
+		"noFallthroughCasesInSwitch": true,
+		"baseUrl": ".",
+		"paths": {
+			"@/*": ["src/*"]
+		},
+		"typeRoots": ["node_modules/@types", "./src/@types"]
+	},
+	"include": ["src/**/*"],
+	"files": ["src/main.tsx"]
 }

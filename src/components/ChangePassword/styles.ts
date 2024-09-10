@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 export const FormStyled = styled.form`
     display: flex;
     flex-direction: column;
@@ -7,4 +7,4 @@ export const FormStyled = styled.form`
         align-self: flex-end;
         width: fit-content;
     }
-`;
+`

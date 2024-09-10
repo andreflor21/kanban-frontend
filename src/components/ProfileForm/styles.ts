@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import CaretDown from 'assets/caretdown.svg';
+import CaretDown from "@/assets/caretdown.svg"
+import styled from "styled-components"
 
 export const Container = styled.div`
     display: grid;
@@ -41,7 +41,7 @@ export const Container = styled.div`
             }
         }
     }
-`;
+`
 export const FormStyled = styled.form`
     display: flex;
 
@@ -72,13 +72,8 @@ export const FormStyled = styled.form`
         justify-self: stretch;
         width: 100%;
     }
-`;
+`
 
-export const ButtonForm = styled.button`
-    margin-top: 2rem;
-    max-width: 200px;
-    position: relative;
-`;
 export const SelectStyled = styled.select`
     background: var(--gray-100);
     border: 2px solid var(--gray-500);
@@ -98,16 +93,17 @@ export const SelectStyled = styled.select`
         border: none;
     }
     appearance: none;
-`;
+`
 
 export const OptionStyled = styled.option`
     color: var(--black);
     width: 90%;
-    &::hover {
+
+    &:hover {
         background-color: var(--indigo-700);
         color: var(--gray-100);
     }
-`;
+`
 export const LabelStyled = styled.label`
     font-family: var(--font-standard);
     font-style: normal;
@@ -116,7 +112,7 @@ export const LabelStyled = styled.label`
     line-height: 19px;
     text-transform: capitalize;
     padding: 0.5rem;
-`;
+`
 
 export const ContainerSelect = styled.div`
     display: flex;
@@ -141,9 +137,9 @@ export const ContainerSelect = styled.div`
             content: none;
         }
     }
-`;
+`
 export const ErrorMessage = styled.span`
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     font-size: 0.8rem;
     color: tomato;
 
@@ -160,7 +156,7 @@ export const ErrorMessage = styled.span`
             opacity: 1;
         }
     }
-`;
+`
 
 export const ContainerButtons = styled.div`
     width: 100%;
@@ -191,4 +187,4 @@ export const ContainerButtons = styled.div`
     @media screen and (min-width: 768px) {
         gap: 0px 32px;
     }
-`;
+`

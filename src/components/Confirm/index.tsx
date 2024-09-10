@@ -1,10 +1,10 @@
-import React from 'react';
-import { Popconfirm, PopconfirmProps } from 'antd';
+import { Popconfirm, type PopconfirmProps } from "antd"
+import type React from "react"
 
 interface ConfirmProps extends PopconfirmProps {
-    children: React.ReactNode;
+	children: React.ReactNode
 }
 
 export const Confirm = ({ children, ...rest }: ConfirmProps) => (
-    <Popconfirm {...rest}>{children}</Popconfirm>
-);
+	<Popconfirm {...rest}>{children}</Popconfirm>
+)
