@@ -22,4 +22,11 @@ function getItem(
 	} as MenuItem
 }
 
-export { getItem }
+const makeApiHeaders = (token: string) => {
+	return {
+		"Content-Type": "application/json",
+		Authorization: `Bearer ${token}`,
+	}
+}
+
+export { getItem, makeApiHeaders }

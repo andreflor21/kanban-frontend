@@ -1,17 +1,12 @@
-import type { Perfil } from "@/types/perfil"
-import type { Usuario, UsuarioData } from "@/types/usuario"
-import { notification } from "antd"
-import type { AxiosError, AxiosResponse } from "axios"
+import type {DecodedToken} from "@/stores/User/useUserStore"
+import type {Perfil} from "@/types/perfil"
+import type {User, UsuarioData} from "@/types/usuario"
+import {notification} from "antd"
+import type {AxiosError, AxiosResponse} from "axios"
 import jwt_decode from "jwt-decode"
-import { CheckCircle, WarningCircle, X } from "phosphor-react"
-import {
-	type Dispatch,
-	type ReactNode,
-	createContext,
-	useContext,
-	useState,
-} from "react"
-import { type NavigateFunction, redirect } from "react-router-dom"
+import {CheckCircle, WarningCircle, X} from "phosphor-react"
+import {createContext, type Dispatch, type ReactNode, useContext, useState,} from "react"
+import {type NavigateFunction, redirect} from "react-router-dom"
 import api from "../../services/api"
 
 interface UserProviderProps {
@@ -33,12 +28,6 @@ interface ChangePasswordData {
 	confirmPassword: string
 }
 
-interface DecodedToken {
-	sub: string
-	iat: string
-	exp: number
-}
-
 interface UserProviderData {
 	newUser: (
 		usuarioData: EditUser,
@@ -52,11 +41,11 @@ interface UserProviderData {
 		setLoad: Dispatch<React.SetStateAction<boolean>>,
 	) => void
 	getAllUsers: (setLoad?: Dispatch<boolean>) => void
-	users: Usuario[]
-	user: Usuario
-	currentUser: Usuario
-	setCurrentUser: Dispatch<Usuario>
-	setUser: Dispatch<Usuario>
+	users: User[]
+	user: User
+	currentUser: User
+	setCurrentUser: Dispatch<User>
+	setUser: Dispatch<User>
 	changePassword: (idUser: number, data: ChangePasswordData) => void
 	resetPassword: (
 		token: string,
@@ -82,8 +71,8 @@ interface UserProviderData {
 const UserContext = createContext<UserProviderData>({} as UserProviderData)
 
 export const UserProvider = ({ children }: UserProviderProps) => {
-	const [users, setUsers] = useState<Usuario[]>([])
-	const [currentUser, setCurrentUser] = useState<Usuario>({} as Usuario)
+	const [users, setUsers] = useState<User[]>([])
+	const [currentUser, setCurrentUser] = useState<User>({} as User)
 	const convertStrToNumber = (str: string) => {
 		return Number.parseInt(str)
 	}
@@ -104,7 +93,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 		return ""
 	})
 
-	const [user, setUser] = useState<Usuario>({} as Usuario)
+	const [user, setUser] = useState<User>({} as User)
 
 	const [idUser, setIdUser] = useState<number>(() => {
 		const id = localStorage.getItem("@kanban/idUser")
@@ -472,7 +461,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 
 				const decodedToken: DecodedToken = jwt_decode(res.data.token)
 				localStorage.setItem("@kanban/idUser", res.data.user_id)
-				setIdUser(convertStrToNumber(decodedToken.sub))
+				setIdUser(convertStrToNumber(decodedToken.sing.id))
 				setAuth(res.data.token)
 				getUserLogin(
 					res.data.user_id,
@@ -532,7 +521,7 @@ export const UserProvider = ({ children }: UserProviderProps) => {
 	}
 
 	const userLogoff = () => {
-		setUser({} as Usuario)
+		setUser({} as User)
 		setAuth("")
 		setIdUser(0)
 		localStorage.clear()

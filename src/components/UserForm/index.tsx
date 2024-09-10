@@ -1,28 +1,21 @@
-import { useProfile } from "@/providers/Profile"
-import { useUsers } from "@/providers/User"
-import type { Perfil } from "@/types/perfil"
-import type { Usuario, UsuarioData } from "@/types/usuario"
-import { LoadingOutlined } from "@ant-design/icons"
-import { Spin } from "antd"
-import { type Dispatch, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import {useProfile} from "@/providers/Profile"
+import {useUsers} from "@/providers/User"
+import type {Perfil} from "@/types/perfil"
+import type {User, UsuarioData} from "@/types/usuario"
+import {LoadingOutlined} from "@ant-design/icons"
+import {Spin} from "antd"
+import {type Dispatch, useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom"
 import * as yup from "yup"
 import api from "../../services/api"
 import Button from "../Button"
 import ChangePassword from "../ChangePassword"
-import { Checkbox } from "../Checkbox"
+import {Checkbox} from "../Checkbox"
 import Input from "../Input"
-import {
-	ContainerButtons,
-	ContainerSelect,
-	FormStyled,
-	LabelStyled,
-	OptionStyled,
-	SelectStyled,
-} from "./styles"
+import {ContainerButtons, ContainerSelect, FormStyled, LabelStyled, OptionStyled, SelectStyled,} from "./styles"
 
 interface UserFormProps {
-	usuario: Usuario | null
+	usuario: User | null
 	usuarioId: string
 	novoUsuario: boolean
 	setNewUserModal: Dispatch<boolean>
