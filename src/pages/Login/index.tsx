@@ -7,7 +7,9 @@ import { ForgotPassword } from "@/components/ForgotPassword"
 import Input from "@/components/Input"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
-import { useUserStore } from "@/stores/User/useUserStore"
+import { useGetUserData } from "@/services/userServices"
+import { type DecodedToken, useUserStore } from "@/stores/User/useUserStore"
+import { jwtDecode } from "jwt-decode"
 import { useState } from "react"
 // import React from 'react';
 import { useForm } from "react-hook-form"
@@ -40,11 +42,20 @@ type FormValues = yup.InferType<typeof schema>
 const Login = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const { showNotification } = useGetNotification()
-	// const { setProfiles } = useProfile()
 	const userLogin = useUserStore((state) => state.userLogin)
-	const user = useUserStore((state) => state.user)
+	const setToken = useUserStore((state) => state.setToken)
+	const setUser = useUserStore((state) => state.setUser)
 
 	const navigate = useNavigate()
+	const localStorageToken = localStorage.getItem("@kanban/token")
+	const decodedToken: DecodedToken | undefined = localStorageToken?.length
+		? jwtDecode(localStorageToken)
+		: undefined
+	const query = useGetUserData({
+		id: decodedToken?.sing?.id,
+		token: localStorageToken,
+	})
+	const hasUser = !!query?.data?.id
 
 	const {
 		register,
@@ -53,6 +64,13 @@ const Login = () => {
 	} = useForm<FormValues>({
 		resolver: yupResolver(schema),
 	})
+
+	if (hasUser && localStorageToken) {
+		setUser(query.data)
+		setToken(localStorageToken)
+		navigate("/dashboard")
+		return null
+	}
 
 	const onSubmit = async (data: FormValues) => {
 		setIsLoading(true)
@@ -113,9 +131,6 @@ const Login = () => {
 						Login
 					</Button>
 				</FormStyled>
-				{/* <LinkStyled href="/esqueci-minha-senha">
-                        Esqueci minha senha
-                    </LinkStyled> */}
 				<ForgotPassword>Esqueci minha senha</ForgotPassword>
 			</ContainerForm>
 		</Container>

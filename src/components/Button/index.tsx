@@ -3,23 +3,23 @@ import { ButtonItem } from "./styles"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	onClickFunc?: (e: React.MouseEvent<HTMLButtonElement>) => void
-	// whiteSchema?: boolean;
 	children: React.ReactNode
 	type?: "button" | "submit" | "reset" | undefined
+	isLoading?: boolean
 }
 
 const Button = ({
 	onClickFunc,
 	type,
-	// whiteSchema = false,
 	children,
+	isLoading = false,
 	...rest
 }: ButtonProps) => {
 	return (
 		<ButtonItem
-			type={type}
-			// whiteSchema={whiteSchema}
+			htmlType={type}
 			onClick={onClickFunc}
+			loading={isLoading}
 			{...rest}
 		>
 			{children}

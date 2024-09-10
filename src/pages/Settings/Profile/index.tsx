@@ -1,16 +1,16 @@
-import {Confirm} from "@/components/Confirm"
+import { Confirm } from "@/components/Confirm"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import {List, Skeleton, Tooltip} from "antd"
-import {Copy, Plus, Trash, WarningCircle} from "phosphor-react"
-import {useState} from "react"
-import {Link} from "react-router-dom"
-import {Container, ContainerButtons, LinkStyleld} from "./styles" // import { Container } from './styles';
+import { List, Skeleton, Tooltip } from "antd"
+import { Copy, Plus, Trash, WarningCircle } from "phosphor-react"
+import { useState } from "react"
+import { Container, ContainerButtons, LinkStyleld } from "./styles" // import { Container } from './styles';
 
 // import { Container } from './styles';
 
 const Profile = () => {
 	// const { getProfiles, profiles, deleteProfile } = useProfile()
+	const profiles: unknown[] = []
 	const [load, setLoad] = useState(true)
 
 	// useEffect(() => {
@@ -45,18 +45,18 @@ const Profile = () => {
 					}}
 					dataSource={profiles}
 					pagination={{ position: "bottom", align: "end" }}
-					renderItem={(p) => (
+					renderItem={(p, index) => (
 						<List.Item
 							actions={[
 								<Confirm
-									key={p.id}
+									key={index}
 									title="Deseja excluir o usuário"
 									cancelText="Cancelar"
 									okText="Excluir"
 									placement="topRight"
-									onConfirm={() =>
-										handleDelete(Number.parseInt(p.id as string))
-									}
+									// onConfirm={() =>
+									// 	// handleDelete(Number.parseInt(p.id as string))
+									// }
 									style={{ cursor: "pointer" }}
 									icon={<WarningCircle size={24} color={"#ef4444"} />}
 								>
@@ -74,14 +74,14 @@ const Profile = () => {
 								paragraph={{ rows: 2 }}
 								style={{ width: "50%" }}
 							>
-								<List.Item.Meta
-									title={<Link to={`${p.id}`}>{p.descricao}</Link>}
-									description={`${
-										p.usuarios.length > 0
-											? `${p.usuarios.length} usuário(s) vinculado(s)`
-											: "Nenhum usuário vinculado"
-									}`}
-								/>
+								{/*<List.Item.Meta*/}
+								{/*	title={<Link to={`${p.id}`}>{p.descricao}</Link>}*/}
+								{/*	description={`${*/}
+								{/*		p.usuarios.length > 0*/}
+								{/*			? `${p.usuarios.length} usuário(s) vinculado(s)`*/}
+								{/*			: "Nenhum usuário vinculado"*/}
+								{/*	}`}*/}
+								{/*/>*/}
 							</Skeleton>
 						</List.Item>
 					)}

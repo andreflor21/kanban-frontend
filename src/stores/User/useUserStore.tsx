@@ -1,26 +1,19 @@
-import api, {
+import {
 	type ErrorExtended,
-	parseError,
 	UNEXPECTED_ERROR,
+	parseError,
 } from "@/services/api"
-import { makeApiHeaders } from "@/services/utils"
+import { type LoginBody, getUserData, userLogin } from "@/services/userServices"
 import type { User } from "@/types/usuario"
-import { jwtDecode } from "jwt-decode"
 import { create } from "zustand"
-
-type LoginBody = {
-	email: string
-	password: string
-}
-type LoginResponse = {
-	token: string
-}
 
 type UserStore = {
 	user: User | undefined
 	token: string | undefined
-	setUser: (user: User) => void
+	setUser: (user: User | undefined) => void
 	userLogin: (data: LoginBody) => Promise<Error | User>
+	setToken: (token: string) => void
+	logout: () => void
 }
 export type DecodedToken = {
 	sing: {
@@ -31,28 +24,14 @@ export type DecodedToken = {
 	exp: number
 }
 
-const getUserData = async (token: string): Promise<User | undefined> => {
-	try {
-		const decodedToken: DecodedToken = jwtDecode(token)
-		const headers = makeApiHeaders(token)
-		const res = await api.get<User>(`/users/${decodedToken.sing.id}`, {
-			headers,
-		})
-		return res.data
-	} catch (err) {
-		console.log("Erro ao obter o usuário")
-		return undefined
-	}
-}
-
 const makeLogin = async (data: LoginBody) => {
 	try {
-		const response = await api.post<LoginResponse>("login", data)
-		if (response.data.token) {
-			localStorage.setItem("@kanban/token", response.data.token)
-			const user = await getUserData(response.data.token)
+		const response = await userLogin(data)
+		if (response.token) {
+			localStorage.setItem("@kanban/token", response.token)
+			const user = await getUserData(response.token)
 			if (user) {
-				useUserStore.setState({ user: user, token: response.data.token })
+				useUserStore.setState({ user: user, token: response.token })
 				return user
 			}
 			return new Error(UNEXPECTED_ERROR)
@@ -67,6 +46,12 @@ const makeLogin = async (data: LoginBody) => {
 export const useUserStore = create<UserStore>((set) => ({
 	user: undefined,
 	token: undefined,
-	setUser: (user: User) => set(() => ({ user })),
-	userLogin: (data: LoginBody) => makeLogin(data),
+	setUser: (user) => set(() => ({ user })),
+	userLogin: (data) => makeLogin(data),
+	setToken: (token) => set(() => ({ token })),
+	logout: () =>
+		set(() => {
+			localStorage.removeItem("@kanban/token")
+			return { user: undefined, token: undefined }
+		}),
 }))

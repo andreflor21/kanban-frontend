@@ -1,17 +1,24 @@
-import {useUserStore} from "@/stores/User/useUserStore"
-import type {Perfil} from "@/types/perfil"
-import type {User, UsuarioData} from "@/types/usuario"
-import {LoadingOutlined} from "@ant-design/icons"
-import {Spin} from "antd"
-import {type Dispatch, useEffect, useState} from "react"
-import {useNavigate} from "react-router-dom"
+import { ApiInstance } from "@/services/api"
+import { useUserStore } from "@/stores/User/useUserStore"
+import type { Perfil } from "@/types/perfil"
+import type { User, UsuarioData } from "@/types/usuario"
+import { LoadingOutlined } from "@ant-design/icons"
+import { Spin } from "antd"
+import { type Dispatch, useEffect, useState } from "react"
+import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
-import api from "../../services/api"
 import Button from "../Button"
 import ChangePassword from "../ChangePassword"
-import {Checkbox} from "../Checkbox"
+import { Checkbox } from "../Checkbox"
 import Input from "../Input"
-import {ContainerButtons, ContainerSelect, FormStyled, LabelStyled, OptionStyled, SelectStyled,} from "./styles"
+import {
+	ContainerButtons,
+	ContainerSelect,
+	FormStyled,
+	LabelStyled,
+	OptionStyled,
+	SelectStyled,
+} from "./styles"
 
 interface UserFormProps {
 	usuario: User | null
@@ -39,10 +46,9 @@ export const UserForm = ({
 	}
 
 	const navigate = useNavigate()
-	const [readOnly] = useState(
-		idUser !== Number.parseInt(usuarioId) && usuarioId !== "",
-	)
+	const readOnly = !!usuarioId && idUser !== usuarioId
 	// const { profiles } = useProfile()
+	const profiles: unknown[] = []
 	const [load, setLoad] = useState(true)
 	const [nome, setNome] = useState<string | undefined>("")
 	const [email, setEmail] = useState<string | undefined>("")
@@ -59,21 +65,20 @@ export const UserForm = ({
 	const [isModalOpen, setIsModalOpen] = useState(false)
 	useEffect(() => {
 		if (usuarioId) {
-			api
-				.get(`usuarios/${usuarioId}`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
+			ApiInstance.get<User>(`usuarios/${usuarioId}`, {
+				headers: {
+					Authorization: `Bearer ${token}`,
+				},
+			})
 				.then((response) => {
 					// console.info(response.data);
-					setNome(response.data.nome)
-					setEmail(response.data.email)
-					setCodigo(response.data?.codigo)
-					setAtivo(response.data.ativo)
-					setCpf(response.data?.cpf)
-					setDtNascimento(response.data?.dtNascimento)
-					setProfile(response.data.perfil.id)
+					setNome(response.name)
+					setEmail(response.email)
+					// setCodigo(response.id)
+					// setAtivo(response.data.ativo)
+					// setCpf(response?.cpf)
+					// setDtNascimento(response.data?.dtNascimento)
+					// setProfile(response.data.perfil.id)
 				})
 				.then(() => setLoad(!load))
 				.catch((err) => {
@@ -121,11 +126,11 @@ export const UserForm = ({
 			.validate({ ...updateObject })
 			.then((v) => {
 				if (novoUsuario) {
-					newUser(v, setLoad, navigate)
+					// newUser(v, setLoad, navigate)
 					setNewUserModal(false)
 				} else {
 					console.log(v)
-					editUser(v)
+					// editUser(v)
 				}
 			})
 			.catch(() => {

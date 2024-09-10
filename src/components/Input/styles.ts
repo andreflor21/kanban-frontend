@@ -1,22 +1,22 @@
+import { spacing } from "@/style/global"
 import styled from "styled-components"
 
 interface InputStyledProps {
 	error: boolean
 }
 
-export const InputStyled = styled.input`
+export const InputStyled = styled.input<InputStyledProps>`
     background: var(--gray-100);
-    border: 2px solid
+    border: ${spacing.nano}solid
         ${({ error }: InputStyledProps) =>
 					error ? "var(--red-500)" : "var(--gray-500)"};
     box-sizing: border-box;
-    border-radius: 8px;
+    border-radius: ${spacing.xxxs};
     width: 100%;
     font-size: 1rem;
-    font-family: var(--font-standard);
-    padding: 8px 16px;
+    font-family: var(--font-standard), sans-serif;
+    padding: ${spacing.xxxs} ${spacing.xxs};
     transition: all 300ms;
-    //box-shadow: var(--shadow);
     outline: none;
     &::placeholder {
         color: var(--slate-400);
@@ -34,7 +34,7 @@ export const InputPasswordStyled = styled.input`
     box-sizing: border-box;
     width: 100%;
     font-size: 1rem;
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     outline: none;
     transition: all 300ms;
     &::placeholder {
@@ -42,7 +42,7 @@ export const InputPasswordStyled = styled.input`
     }
 `
 export const LabelStyled = styled.label`
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;
@@ -67,9 +67,8 @@ export const ContainerInner = styled.div`
     border: 2px solid var(--gray-500);
     box-sizing: border-box;
     border-radius: 8px;
-    width: 100%;
     font-size: 1rem;
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     padding: 8px 16px;
     transition: all 300ms;
     outline: none;
@@ -83,7 +82,7 @@ export const Button = styled.button`
     justify-content: center;
 `
 export const ErrorMessage = styled.span`
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     font-size: 0.8rem;
     color: var(--red-500);
 

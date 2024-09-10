@@ -35,13 +35,9 @@ export const AsideContainer = styled.aside`
         border-radius: 0;
     }
     div {
-        /* width: 90%; */
         margin: 0 auto;
     }
     h3 {
-        /* position: absolute;
-        top: 32px;
-        left: 50%; */
         font-size: 2rem;
         color: var(--blue-900);
         animation: ${appearFromNowhere} 1s;
@@ -52,7 +48,7 @@ export const AsideContainer = styled.aside`
         border-radius: 0 24px 24px 0;
         justify-content: flex-start;
 
-        width: 128px;
+        width: 120px;
 
         &.hovered {
             width: 300px;
@@ -77,7 +73,7 @@ export const AsideContainer = styled.aside`
     }
 `
 
-export const MenuWrapper = styled.nav`
+export const MenuWrapper = styled.nav<IndicatorProps>`
     width: 100%;
     height: 75%;
     display: flex;
@@ -128,7 +124,7 @@ export const MenuWrapper = styled.nav`
 
     .indicator {
         position: absolute;
-        left: ${(props: IndicatorProps) => props.leftIndicator};
+        left: ${(props) => props.leftIndicator};
         top: 21px;
         background-color: transparent;
         height: 50px;
@@ -156,7 +152,7 @@ export const MenuWrapper = styled.nav`
             position: relative;
             z-index: 450;
             margin-bottom: 18px;
-            margin-right: 0px;
+            margin-right: 0;
 
             svg {
                 fill: var(--blue-900);
@@ -206,7 +202,7 @@ export const ContainerLogo = styled.div`
     top: 20px;
 `
 
-export const MenuAnt = styled(Menu)`
+export const MenuAnt = styled(Menu)<MenuProps>`
     height: 75%;
     display: flex;
     flex-direction: row;
@@ -216,7 +212,7 @@ export const MenuAnt = styled(Menu)`
     border: none;
     background-color: transparent;
     border-inline-end: none !important;
-    font-family: var(--font-standard) !important;
+    font-family: var(--font-standard), sans-serif !important;
     div {
         display: flex !important;
         align-items: center;
@@ -242,8 +238,7 @@ export const MenuAnt = styled(Menu)`
         }
     }
     span {
-        display: ${(props: MenuProps) =>
-					props.inlineCollapsed ? "none" : "inline-block"} !important;
+        display: ${(props) => (props.inlineCollapsed ? "none" : "inline-block")} !important;
     }
 
     @media screen and (min-width: 720px) {
