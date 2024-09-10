@@ -4,3 +4,23 @@
     padding: 2rem;
     text-align: center;
 }
+
+:root{
+    --black: #0c090b;
+    --gray-100: #f3f4f6;
+    --gray-500:#374151;
+    --slate-200: #cbd5e1;
+    --slate-400: #64748b;
+    --zinc-700:#27272a;
+    --indigo-700: #4338ca;
+    --blue-400:#1677ff;
+    --blue-800:#1E40AF;
+    --blue-900:#272F51;
+    --orange-600:#ea580c;
+    --emerald-400: #34d399;
+    --green-500: #22c55e;
+    --red-500: #ef4444;
+    --teal-100:#ccfbf1;
+    --font-standard: "Poppins", sans-serif;
+    --font-secondary: 'Mulish', sans-serif;
+}
