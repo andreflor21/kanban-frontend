@@ -5,7 +5,7 @@ import {List, Skeleton, Tooltip} from "antd"
 import {Copy, Plus, Trash, WarningCircle} from "phosphor-react"
 import {useState} from "react"
 import {Link} from "react-router-dom"
-import {Container, ContainerButtons, LinkStyleld} from "./styles"
+import {Container, ContainerButtons, LinkStyleld} from "./styles" // import { Container } from './styles';
 
 // import { Container } from './styles';
 
