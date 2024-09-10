@@ -10,8 +10,9 @@ import { create } from "zustand"
 type UserStore = {
 	user: User | undefined
 	token: string | undefined
-	setUser: (user: User) => void
+	setUser: (user: User | undefined) => void
 	userLogin: (data: LoginBody) => Promise<Error | User>
+	setToken: (token: string) => void
 }
 export type DecodedToken = {
 	sing: {
@@ -44,6 +45,7 @@ const makeLogin = async (data: LoginBody) => {
 export const useUserStore = create<UserStore>((set) => ({
 	user: undefined,
 	token: undefined,
-	setUser: (user: User) => set(() => ({ user })),
-	userLogin: (data: LoginBody) => makeLogin(data),
+	setUser: (user) => set(() => ({ user })),
+	userLogin: (data) => makeLogin(data),
+	setToken: (token) => set(() => ({ token })),
 }))

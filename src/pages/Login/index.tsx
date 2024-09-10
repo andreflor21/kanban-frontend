@@ -7,8 +7,9 @@ import { ForgotPassword } from "@/components/ForgotPassword"
 import Input from "@/components/Input"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
+import { getUserData } from "@/services/userServices"
 import { useUserStore } from "@/stores/User/useUserStore"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 // import React from 'react';
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
@@ -40,11 +41,29 @@ type FormValues = yup.InferType<typeof schema>
 const Login = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const { showNotification } = useGetNotification()
-	// const { setProfiles } = useProfile()
 	const userLogin = useUserStore((state) => state.userLogin)
+	const setToken = useUserStore((state) => state.setToken)
+	const setUser = useUserStore((state) => state.setUser)
+	const token = useUserStore((state) => state.token)
 	const user = useUserStore((state) => state.user)
 
 	const navigate = useNavigate()
+
+	const localStorageToken = localStorage.getItem("@kanban/token")
+
+	const handleValidateToken = useCallback(async () => {
+		if (localStorageToken) {
+			const user = await getUserData(localStorageToken)
+			setUser(user)
+			setToken(localStorageToken)
+		}
+	}, [localStorageToken, setUser, setToken])
+
+	useEffect(() => {
+		if (!token && localStorageToken) {
+			handleValidateToken()
+		}
+	}, [token, localStorageToken, handleValidateToken])
 
 	const {
 		register,
@@ -53,6 +72,10 @@ const Login = () => {
 	} = useForm<FormValues>({
 		resolver: yupResolver(schema),
 	})
+	if (user) {
+		navigate("/dashboard")
+		return null
+	}
 
 	const onSubmit = async (data: FormValues) => {
 		setIsLoading(true)

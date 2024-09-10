@@ -59,13 +59,10 @@ export const ForgotPassword = ({ children }: ForgotPasswordProps) => {
 		register,
 		handleSubmit,
 		formState: { errors, isValid },
-		watch,
 	} = useForm<FormValues>({
 		resolver: yupResolver(schema),
 		mode: "onChange",
 	})
-
-	console.log(watch("email"))
 
 	return (
 		<>

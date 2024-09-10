@@ -6,6 +6,7 @@ import { Navigate, Outlet } from "react-router-dom"
 
 const Root = () => {
 	const token = useUserStore((state) => state.token)
+
 	console.log(token)
 	return token ? (
 		<>
