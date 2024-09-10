@@ -1,20 +1,7 @@
-import api, {
-	type ErrorExtended,
-	parseError,
-	UNEXPECTED_ERROR,
-} from "@/services/api"
-import { makeApiHeaders } from "@/services/utils"
+import { type ErrorExtended, parseError, UNEXPECTED_ERROR, } from "@/services/api"
+import { getUserData, type LoginBody, userLogin } from "@/services/userServices"
 import type { User } from "@/types/usuario"
-import { jwtDecode } from "jwt-decode"
 import { create } from "zustand"
-
-type LoginBody = {
-	email: string
-	password: string
-}
-type LoginResponse = {
-	token: string
-}
 
 type UserStore = {
 	user: User | undefined
@@ -31,23 +18,9 @@ export type DecodedToken = {
 	exp: number
 }
 
-const getUserData = async (token: string): Promise<User | undefined> => {
-	try {
-		const decodedToken: DecodedToken = jwtDecode(token)
-		const headers = makeApiHeaders(token)
-		const res = await api.get<User>(`/users/${decodedToken.sing.id}`, {
-			headers,
-		})
-		return res.data
-	} catch (err) {
-		console.log("Erro ao obter o usuário")
-		return undefined
-	}
-}
-
 const makeLogin = async (data: LoginBody) => {
 	try {
-		const response = await api.post<LoginResponse>("login", data)
+		const response = await userLogin(data)
 		if (response.data.token) {
 			localStorage.setItem("@kanban/token", response.data.token)
 			const user = await getUserData(response.data.token)

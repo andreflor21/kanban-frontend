@@ -113,9 +113,6 @@ const Login = () => {
 						Login
 					</Button>
 				</FormStyled>
-				{/* <LinkStyled href="/esqueci-minha-senha">
-                        Esqueci minha senha
-                    </LinkStyled> */}
 				<ForgotPassword>Esqueci minha senha</ForgotPassword>
 			</ContainerForm>
 		</Container>

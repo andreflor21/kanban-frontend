@@ -1,6 +1,7 @@
+import { Button } from "antd"
 import styled from "styled-components"
 
-export const ButtonItem = styled.button`
+export const ButtonItem = styled(Button)`
     cursor: pointer;
     outline: none;
     border: none;
@@ -19,6 +20,7 @@ export const ButtonItem = styled.button`
     flex-shrink: 1;
     flex-basis: fit-content;
     text-wrap: nowrap;
+    
     &:hover {
         background-color: var(--blue-400);
         color: var(--gray-100);
