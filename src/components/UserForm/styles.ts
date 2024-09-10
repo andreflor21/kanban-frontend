@@ -1,4 +1,4 @@
-import CaretDown from "assets/caretdown.svg"
+import CaretDown from "@/assets/caretdown.svg"
 import styled from "styled-components"
 
 export const FormStyled = styled.form`

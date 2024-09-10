@@ -1,5 +1,5 @@
-import ProfileForm from "components/ProfileForm"
-import TitlePage from "components/TitlePage"
+import ProfileForm from "@/components/ProfileForm"
+import TitlePage from "@/components/TitlePage"
 import { useParams } from "react-router-dom"
 
 const ProfileDetails = () => {

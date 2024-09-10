@@ -1,6 +1,6 @@
-import Logo from "assets/logo.svg"
+import Logo from "@/assets/logo.svg"
+import { useUsers } from "@/providers/User"
 import { List, X } from "phosphor-react"
-import { useUsers } from "providers/User"
 import React, { type ReactNode, useState } from "react"
 import { Link } from "react-router-dom"
 import { HeaderBar, ResponsiveMenu, ResponsiveMenuContent } from "./styles"

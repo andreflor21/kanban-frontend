@@ -1,5 +1,6 @@
-import Title from "components/Title"
-import TitlePage from "components/TitlePage"
+import Title from "@/components/Title"
+import TitlePage from "@/components/TitlePage"
+
 const Orders = () => {
 	return (
 		<>

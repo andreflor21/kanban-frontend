@@ -1,8 +1,9 @@
-import Aside from "components/Aside"
-import Header from "components/Header"
-import HeaderNavAuth from "components/HeaderNav"
-import { useUsers } from "providers/User"
+import Aside from "@/components/Aside"
+import Header from "@/components/Header"
+import HeaderNavAuth from "@/components/HeaderNav"
+import { useUsers } from "@/providers/User"
 import { Navigate, Outlet } from "react-router-dom"
+
 const Root = () => {
 	const { token } = useUsers()
 	return token ? (

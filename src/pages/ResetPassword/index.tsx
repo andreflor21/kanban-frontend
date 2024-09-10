@@ -1,6 +1,6 @@
+import imgForgotPassword from "@/assets/forgot_password.svg"
+import Logo from "@/assets/logo.svg"
 import { yupResolver } from "@hookform/resolvers/yup"
-import imgForgotPassword from "assets/forgot_password.svg"
-import Logo from "assets/logo.svg"
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"

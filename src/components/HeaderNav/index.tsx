@@ -1,4 +1,4 @@
-import { useUsers } from "providers/User"
+import { useUsers } from "@/providers/User"
 import Menu from "../Menu"
 import { Container } from "./styles"
 

@@ -1,3 +1,5 @@
+import { useUsers } from "@/providers/User"
+import { type MenuItem, getItem } from "@/services/utils"
 import type { MenuProps } from "antd"
 import {
 	CirclesFour,
@@ -14,10 +16,8 @@ import {
 	User,
 	Users,
 } from "phosphor-react"
-import { useUsers } from "providers/User"
 import { useRef } from "react"
 import { NavLink } from "react-router-dom"
-import { type MenuItem, getItem } from "../../services/utils"
 import { MenuAnt } from "./styles"
 
 const Menu = ({ mode, className, items, ...rest }: MenuProps) => {
