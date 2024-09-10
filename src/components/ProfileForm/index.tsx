@@ -23,6 +23,7 @@ interface ProfileFormProps {
 	action: "create" | "duplicate" | "edit"
 	className?: string
 	title: string
+	newProfile?: boolean
 }
 interface PerfilData {
 	descricao: string
