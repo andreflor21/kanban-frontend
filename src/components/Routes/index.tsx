@@ -1,11 +1,11 @@
-import { useUsers } from "@/providers/User"
-import type { Perfil } from "@/types/perfil"
-import type { Rota } from "@/types/rota"
-import { List, Skeleton, Switch, Tooltip, notification } from "antd"
-import { Info, X } from "phosphor-react"
-import React, { useEffect, useState } from "react"
+import {useUserStore} from "@/stores/User/useUserStore"
+import type {Perfil} from "@/types/perfil"
+import type {Rota} from "@/types/rota"
+import {List, notification, Skeleton, Switch, Tooltip} from "antd"
+import {Info, X} from "phosphor-react"
+import React, {useEffect, useState} from "react"
 import api from "../../services/api"
-import { Container } from "./styles"
+import {Container} from "./styles"
 
 interface RoutesProps {
 	profileId?: string
@@ -21,7 +21,7 @@ const colors = {
 }
 
 const Routes = ({ profileId, profile }: RoutesProps) => {
-	const { token } = useUsers()
+	const token = useUserStore((state) => state.token)
 	const [activeRoutes, setActiveRoutes] = useState<Rota[]>([])
 	const [load, setLoad] = useState(true)
 

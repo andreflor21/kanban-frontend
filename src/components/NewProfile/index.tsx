@@ -1,5 +1,5 @@
-import { Modal } from "antd"
-import React, { type Dispatch } from "react"
+import {Modal} from "antd"
+import React, {type Dispatch} from "react"
 import ProfileForm from "../ProfileForm"
 
 interface NewProfileProps {

@@ -13,9 +13,8 @@ export const ButtonItem = styled.button`
     padding: 6px 32px;
     transition: all 350ms;
     width: 100%;
-    font-family: var(--font-secondary);
+    font-family: var(--font-secondary), sans-serif;
     font-weight: 400;
-    /* max-width: 15rem; */
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: fit-content;
@@ -30,7 +29,7 @@ export const ButtonItem = styled.button`
 
     &:disabled {
         background-color: var(--slate-200);
-        cursor: default;
+        cursor: not-allowed;
     }
 
     @media (min-width: 800px) {

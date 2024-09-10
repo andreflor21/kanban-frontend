@@ -1,4 +1,3 @@
-import { useSection } from "@/providers/Sections"
 import type { Section } from "@/types/secao"
 import type React from "react"
 import { useState } from "react"
@@ -48,8 +47,15 @@ const SecitonForm = ({
 	const [codigoERPError, setcodigoERPError] = useState<boolean>(false)
 	const [tipoError, setTipoError] = useState<boolean>(false)
 	const [, setLoad] = useState(true)
-	const { newSection, editSection, sections } = useSection()
+	// const { newSection, editSection, sections } = useSection()
 
+	const sections: unknown[] = []
+	const editSection = () => {
+		console.log("editSection")
+	}
+	const newSection = () => {
+		console.log("newSection")
+	}
 	if (!sectionId) {
 		sectionId = secaoId
 	}

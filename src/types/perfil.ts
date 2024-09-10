@@ -1,10 +1,10 @@
 import type { Rota } from "./rota"
-import type { Usuario } from "./usuario"
+import type { User } from "./usuario"
 
 export interface Perfil {
 	id?: number | string
 	descricao: string
-	usuarios: Usuario[] | []
+	usuarios: User[] | []
 	rotas: Rota[] | []
 }
 

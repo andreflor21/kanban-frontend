@@ -1,28 +1,20 @@
-import { useProfile } from "@/providers/Profile"
-import { useUsers } from "@/providers/User"
-import type { Perfil } from "@/types/perfil"
-import type { Usuario, UsuarioData } from "@/types/usuario"
-import { LoadingOutlined } from "@ant-design/icons"
-import { Spin } from "antd"
-import { type Dispatch, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import {useUserStore} from "@/stores/User/useUserStore"
+import type {Perfil} from "@/types/perfil"
+import type {User, UsuarioData} from "@/types/usuario"
+import {LoadingOutlined} from "@ant-design/icons"
+import {Spin} from "antd"
+import {type Dispatch, useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom"
 import * as yup from "yup"
 import api from "../../services/api"
 import Button from "../Button"
 import ChangePassword from "../ChangePassword"
-import { Checkbox } from "../Checkbox"
+import {Checkbox} from "../Checkbox"
 import Input from "../Input"
-import {
-	ContainerButtons,
-	ContainerSelect,
-	FormStyled,
-	LabelStyled,
-	OptionStyled,
-	SelectStyled,
-} from "./styles"
+import {ContainerButtons, ContainerSelect, FormStyled, LabelStyled, OptionStyled, SelectStyled,} from "./styles"
 
 interface UserFormProps {
-	usuario: Usuario | null
+	usuario: User | null
 	usuarioId: string
 	novoUsuario: boolean
 	setNewUserModal: Dispatch<boolean>
@@ -35,12 +27,22 @@ export const UserForm = ({
 	setNewUserModal = () => {},
 	className,
 }: UserFormProps) => {
-	const { editUser, newUser, idUser, token } = useUsers()
+	// const { editUser, newUser, idUser, token } = useUsers()
+	const user = useUserStore((state) => state.user)
+	const token = useUserStore((state) => state.token)
+	const idUser = user?.id
+	const editUser = () => {
+		console.log("editUser")
+	}
+	const newUser = () => {
+		console.log("newUser")
+	}
+
 	const navigate = useNavigate()
 	const [readOnly] = useState(
 		idUser !== Number.parseInt(usuarioId) && usuarioId !== "",
 	)
-	const { profiles } = useProfile()
+	// const { profiles } = useProfile()
 	const [load, setLoad] = useState(true)
 	const [nome, setNome] = useState<string | undefined>("")
 	const [email, setEmail] = useState<string | undefined>("")

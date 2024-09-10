@@ -1,5 +1,5 @@
 import Logo from "@/assets/logo.svg"
-import { useUsers } from "@/providers/User"
+import { useUserStore } from "@/stores/User/useUserStore"
 import { List, X } from "phosphor-react"
 import React, { type ReactNode, useState } from "react"
 import { Link } from "react-router-dom"
@@ -12,7 +12,7 @@ interface HeaderProps {
 
 const Header = ({ children, auth = false }: HeaderProps) => {
 	const [openMenu, setOpenMenu] = useState(false)
-	const { user } = useUsers()
+	const user = useUserStore((state) => state.user)
 	return (
 		<HeaderBar>
 			<Link className="logo" to="/dashboard">
@@ -31,7 +31,7 @@ const Header = ({ children, auth = false }: HeaderProps) => {
 						<List size={32} />
 					) : (
 						<div>
-							<p>{`Olá, ${user?.nome}`}</p>
+							<p>{`Olá, ${user?.name}`}</p>
 							<X size={32} />
 						</div>
 					)}

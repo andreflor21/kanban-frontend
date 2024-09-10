@@ -1,10 +1,8 @@
+import type { Perfil } from "@/types/perfil"
 import type React from "react"
 import { useState } from "react"
-import * as yup from "yup"
-
-import { useProfile } from "@/providers/Profile"
-import type { Perfil } from "@/types/perfil"
 import { useNavigate, useParams } from "react-router-dom"
+import * as yup from "yup"
 import Button from "../Button"
 import Input from "../Input"
 import Routes from "../Routes"
@@ -25,6 +23,7 @@ interface ProfileFormProps {
 	action: "create" | "duplicate" | "edit"
 	className?: string
 	title: string
+	newProfile?: boolean
 }
 interface PerfilData {
 	descricao: string
@@ -41,7 +40,8 @@ const ProfileForm = ({
 	const [perfil, setPerfil] = useState<string>("")
 	const [descricaoError, setDescricaoError] = useState<boolean>(false)
 	const [, setLoad] = useState(true)
-	const { newProfile, editProfile, profiles, duplicateProfile } = useProfile()
+	// const { newProfile, editProfile, profiles, duplicateProfile } = useProfile()
+	const profiles = []
 
 	if (!profileId) {
 		profileId = perfilId
