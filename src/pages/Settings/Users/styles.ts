@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const Container = styled.div`
     margin-left: 1rem;
@@ -20,4 +20,4 @@ export const Container = styled.div`
             font-size: 1.25rem;
         }
     }
-`;
+`

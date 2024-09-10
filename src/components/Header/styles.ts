@@ -1,7 +1,7 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components"
 
 interface ResponsiveMenuProps {
-    openMenu: boolean;
+	openMenu: boolean
 }
 export const HeaderBar = styled.header`
     width: 100%;
@@ -51,7 +51,7 @@ export const HeaderBar = styled.header`
             height: 42px;
         }
     }
-`;
+`
 
 export const ResponsiveMenu = styled.div`
     display: flex;
@@ -77,7 +77,7 @@ export const ResponsiveMenu = styled.div`
     @media screen and (min-width: 768px) {
         display: none;
     }
-`;
+`
 
 export const ResponsiveMenuContent = styled.nav`
     display: flex;
@@ -95,8 +95,8 @@ export const ResponsiveMenuContent = styled.nav`
     transition: all 400ms;
 
     ${(props: ResponsiveMenuProps) =>
-        !props.openMenu &&
-        css`
+			!props.openMenu &&
+			css`
             right: -1000px;
             opacity: 0;
         `}
@@ -104,4 +104,4 @@ export const ResponsiveMenuContent = styled.nav`
     @media screen and (min-width: 768px) {
         display: none;
     }
-`;
+`

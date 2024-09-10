@@ -1,8 +1,8 @@
-import { Menu } from 'antd';
-import styled from 'styled-components';
+import { Menu } from "antd"
+import styled from "styled-components"
 
 interface MenuProps {
-    inlineCollapsed: boolean;
+	inlineCollapsed: boolean
 }
 
 export const MenuAnt = styled(Menu)`
@@ -52,7 +52,7 @@ export const MenuAnt = styled(Menu)`
         }
         span {
             display: ${(props: MenuProps) =>
-                props.inlineCollapsed ? 'none' : 'inline-block'} !important;
+							props.inlineCollapsed ? "none" : "inline-block"} !important;
         }
 
         @media screen and (min-width: 720px) {
@@ -64,4 +64,4 @@ export const MenuAnt = styled(Menu)`
             padding-bottom: 0px;
         }
     }
-`;
+`

@@ -1,5 +1,5 @@
-import { Link } from 'react-router-dom';
-import styled from 'styled-components';
+import { Link } from "react-router-dom"
+import styled from "styled-components"
 
 export const Container = styled.div`
     margin-left: 1rem;
@@ -7,7 +7,7 @@ export const Container = styled.div`
     @media screen and (min-width: 768px) {
         margin-left: 12rem;
     }
-`;
+`
 
 export const ContainerButtons = styled.div`
     display: flex;
@@ -36,7 +36,7 @@ export const ContainerButtons = styled.div`
         gap: 0 2rem;
         justify-content: space-between;
     }
-`;
+`
 
 export const LinkStyleld = styled(Link)`
     cursor: pointer;
@@ -78,4 +78,4 @@ export const LinkStyleld = styled(Link)`
     @media (min-width: 800px) {
         font-size: 22px;
     }
-`;
+`

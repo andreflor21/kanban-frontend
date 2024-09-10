@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const ButtonItem = styled.button`
     cursor: pointer;
@@ -36,4 +36,4 @@ export const ButtonItem = styled.button`
     @media (min-width: 800px) {
         font-size: 22px;
     }
-`;
+`
