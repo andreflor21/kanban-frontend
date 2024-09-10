@@ -1,6 +1,5 @@
-import type React from "react"
-import type { ReactNode } from "react"
-import { ButtonItem } from "./styles"
+import type React, {ReactNode} from "react"
+import {ButtonItem} from "./styles"
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	onClickFunc?: (e: React.MouseEvent<HTMLButtonElement>) => void

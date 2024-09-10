@@ -1,12 +1,12 @@
-import {yupResolver} from "@hookform/resolvers/yup"
-import {Modal} from "antd"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { Modal } from "antd"
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"
-import React, {type Dispatch} from "react"
-import {useForm} from "react-hook-form"
+import React, { type Dispatch } from "react"
+import { useForm } from "react-hook-form"
 import * as yup from "yup"
-import {FormStyled} from "./styles"
+import { FormStyled } from "./styles"
 
 interface FormValues {
 	password: string

@@ -1,17 +1,17 @@
 import imgLogin from "@/assets/img_login_desktop.svg"
 import Logo from "@/assets/logo.svg"
-import {yupResolver} from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 import Button from "@/components/Button"
-import {ForgotPassword} from "@/components/ForgotPassword"
+import { ForgotPassword } from "@/components/ForgotPassword"
 import Input from "@/components/Input"
-import {useGetNotification} from "@/hooks/useGetNotification"
-import {type ErrorExtended, parseError} from "@/services/api"
-import {useUserStore} from "@/stores/User/useUserStore"
-import {useState} from "react"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { type ErrorExtended, parseError } from "@/services/api"
+import { useUserStore } from "@/stores/User/useUserStore"
+import { useState } from "react"
 // import React from 'react';
-import {useForm} from "react-hook-form"
-import {useNavigate} from "react-router-dom"
+import { useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
 import {
 	Container,

@@ -1,24 +1,17 @@
-import { useUserStore } from "@/stores/User/useUserStore"
-import type { Perfil } from "@/types/perfil"
-import type { User, UsuarioData } from "@/types/usuario"
-import { LoadingOutlined } from "@ant-design/icons"
-import { Spin } from "antd"
-import { type Dispatch, useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import {useUserStore} from "@/stores/User/useUserStore"
+import type {Perfil} from "@/types/perfil"
+import type {User, UsuarioData} from "@/types/usuario"
+import {LoadingOutlined} from "@ant-design/icons"
+import {Spin} from "antd"
+import {type Dispatch, useEffect, useState} from "react"
+import {useNavigate} from "react-router-dom"
 import * as yup from "yup"
 import api from "../../services/api"
 import Button from "../Button"
 import ChangePassword from "../ChangePassword"
-import { Checkbox } from "../Checkbox"
+import {Checkbox} from "../Checkbox"
 import Input from "../Input"
-import {
-	ContainerButtons,
-	ContainerSelect,
-	FormStyled,
-	LabelStyled,
-	OptionStyled,
-	SelectStyled,
-} from "./styles"
+import {ContainerButtons, ContainerSelect, FormStyled, LabelStyled, OptionStyled, SelectStyled,} from "./styles"
 
 interface UserFormProps {
 	usuario: User | null

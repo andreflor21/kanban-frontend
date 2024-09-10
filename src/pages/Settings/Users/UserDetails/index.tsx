@@ -1,6 +1,6 @@
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import { useParams } from "react-router-dom"
+import {useParams} from "react-router-dom"
 
 // import { Container } from './styles';
 

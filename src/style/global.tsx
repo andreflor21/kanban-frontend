@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components"
+
 interface GlobalProps {
 	themeDark: boolean
 }

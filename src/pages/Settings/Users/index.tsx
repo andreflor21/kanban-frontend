@@ -1,13 +1,13 @@
 import Button from "@/components/Button"
-import {Confirm} from "@/components/Confirm"
+import { Confirm } from "@/components/Confirm"
 import NewUser from "@/components/NewUser"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import {List, Skeleton, Tooltip} from "antd"
-import {Trash, UserPlus, WarningCircle} from "phosphor-react"
-import {useEffect, useState} from "react"
-import {Link} from "react-router-dom"
-import {Container} from "./styles"
+import { List, Skeleton, Tooltip } from "antd"
+import { Trash, UserPlus, WarningCircle } from "phosphor-react"
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import { Container } from "./styles"
 
 const Users = () => {
 	// const { getAllUsers, users, deleteUser } = useUsers()
@@ -24,10 +24,10 @@ const Users = () => {
 	}
 	const [load, setLoad] = useState(true)
 	const [isModalOpen, setIsModalOpen] = useState(false)
-	useEffect(() => {
-		getAllUsers(setLoad)
-		// setLoad(false);
-	}, [getAllUsers])
+	// useEffect(() => {
+	// 	getAllUsers(setLoad)
+	// 	// setLoad(false);
+	// }, [getAllUsers])
 
 	const handleDelete = (id: number) => {
 		deleteUser(id)

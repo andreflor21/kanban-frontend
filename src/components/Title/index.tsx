@@ -1,5 +1,5 @@
-import type { ReactNode } from "react"
-import { TitleStyled } from "./styles"
+import type {ReactNode} from "react"
+import {TitleStyled} from "./styles"
 
 interface TitleProps {
 	children: ReactNode
