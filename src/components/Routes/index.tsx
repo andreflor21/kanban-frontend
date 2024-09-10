@@ -1,11 +1,11 @@
-import {useUserStore} from "@/stores/User/useUserStore"
-import type {Perfil} from "@/types/perfil"
-import type {Rota} from "@/types/rota"
-import {List, notification, Skeleton, Switch, Tooltip} from "antd"
-import {Info, X} from "phosphor-react"
-import React, {useEffect, useState} from "react"
-import api from "../../services/api"
-import {Container} from "./styles"
+import { useUserStore } from "@/stores/User/useUserStore"
+import type { Perfil } from "@/types/perfil"
+import type { Rota } from "@/types/rota"
+import { List, notification, Skeleton, Switch, Tooltip } from "antd"
+import { Info, X } from "phosphor-react"
+import React, { useEffect, useState } from "react"
+import { ApiInstance } from "../../services/api"
+import { Container } from "./styles"
 
 interface RoutesProps {
 	profileId?: string
@@ -27,12 +27,11 @@ const Routes = ({ profileId, profile }: RoutesProps) => {
 
 	useEffect(() => {
 		if (profileId) {
-			api
-				.get(`perfil/${profileId}/rotas`, {
-					headers: { Authorization: `Bearer ${token}` },
-				})
+			ApiInstance.get<Rota[]>(`perfil/${profileId}/rotas`, {
+				headers: { Authorization: `Bearer ${token}` },
+			})
 				.then((res) => {
-					setActiveRoutes(res.data)
+					setActiveRoutes(res)
 					setLoad(false)
 				})
 				.catch((e) => console.error(e))
@@ -45,41 +44,37 @@ const Routes = ({ profileId, profile }: RoutesProps) => {
 		)
 		setActiveRoutes(updatedRotas)
 		if (checked) {
-			api
-				.post(
-					`perfil/${profileId}/rota/${routeId}`,
-					{},
-					{
-						headers: { Authorization: `Bearer ${token}` },
-					},
-				)
-				.then(() =>
-					notification.open({
-						message: "Info",
-						closeIcon: <X />,
-						style: {
-							WebkitBorderRadius: 4,
-						},
-						description: "Rota Habilitada",
-						icon: <Info style={{ color: "var(--blue-400)" }} />,
-					}),
-				)
-		} else {
-			api
-				.delete(`perfil/${profileId}/rota/${routeId}`, {
+			ApiInstance.post(
+				`perfil/${profileId}/rota/${routeId}`,
+				{},
+				{
 					headers: { Authorization: `Bearer ${token}` },
-				})
-				.then(() =>
-					notification.open({
-						message: "Info",
-						closeIcon: <X />,
-						style: {
-							WebkitBorderRadius: 4,
-						},
-						description: "Rota Desabilitada",
-						icon: <Info style={{ color: "var(--blue-400)" }} />,
-					}),
-				)
+				},
+			).then(() =>
+				notification.open({
+					message: "Info",
+					closeIcon: <X />,
+					style: {
+						WebkitBorderRadius: 4,
+					},
+					description: "Rota Habilitada",
+					icon: <Info style={{ color: "var(--blue-400)" }} />,
+				}),
+			)
+		} else {
+			ApiInstance.delete(`perfil/${profileId}/rota/${routeId}`, {
+				headers: { Authorization: `Bearer ${token}` },
+			}).then(() =>
+				notification.open({
+					message: "Info",
+					closeIcon: <X />,
+					style: {
+						WebkitBorderRadius: 4,
+					},
+					description: "Rota Desabilitada",
+					icon: <Info style={{ color: "var(--blue-400)" }} />,
+				}),
+			)
 		}
 	}
 

@@ -1,4 +1,4 @@
-import type {MenuProps} from "antd"
+import type { MenuProps } from "antd"
 
 export type MenuItem = Required<MenuProps>["items"][number]
 
@@ -22,7 +22,7 @@ function getItem(
 	} as MenuItem
 }
 
-const makeApiHeaders = (token: string) => {
+const makeApiHeaders = (token: string | null) => {
 	return {
 		"Content-Type": "application/json",
 		Authorization: `Bearer ${token}`,

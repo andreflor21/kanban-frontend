@@ -5,7 +5,19 @@ const api = axios.create({
 	baseURL: "http://localhost:3000/",
 })
 
-export default api
+type BffApiOptions = {
+	headers?: Record<string, string>
+	responseType?: "json" | "blob"
+}
+
+export const ApiInstance = {
+	get: async <R>(uri: string, options?: BffApiOptions) =>
+		await api.get<R>(uri, options).then((res) => res.data),
+	post: async <D, R>(uri: string, data: D, options?: BffApiOptions) =>
+		await api.post<R>(uri, data, options).then((res) => res.data),
+	delete: async <R>(uri: string, options?: BffApiOptions) =>
+		await api.delete<R>(uri, options).then((res) => res.data),
+}
 
 export type ErrorExtended = Error | undefined | ValidationError | AxiosError
 
