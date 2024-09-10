@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const ButtonItem = styled.button`
     cursor: pointer;
@@ -13,16 +13,26 @@ export const ButtonItem = styled.button`
     padding: 6px 32px;
     transition: all 350ms;
     width: 100%;
-    /* max-width: 15rem; */
+    font-family: var(--font-secondary), sans-serif;
+    font-weight: 400;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: fit-content;
+    text-wrap: nowrap;
     &:hover {
-        background-color: var(--indigo-700);
+        background-color: var(--blue-400);
+        color: var(--gray-100);
+        &:disabled {
+            color: var(--emerald-400);
+        }
     }
 
     &:disabled {
         background-color: var(--slate-200);
+        cursor: not-allowed;
     }
 
     @media (min-width: 800px) {
         font-size: 22px;
     }
-`;
+`

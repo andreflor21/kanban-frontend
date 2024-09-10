@@ -1,6 +1,7 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components"
+
 interface GlobalProps {
-    themeDark: boolean;
+	themeDark: boolean
 }
 
 export default createGlobalStyle`
@@ -13,6 +14,7 @@ export default createGlobalStyle`
         --slate-400: #64748b;
         --zinc-700:#27272a;
         --indigo-700: #4338ca;
+        --blue-400:#1677ff;
         --blue-800:#1E40AF;
         --blue-900:#272F51;
         --orange-600:#ea580c;
@@ -46,7 +48,7 @@ export default createGlobalStyle`
 
    body {
       background: ${(props: GlobalProps) =>
-          props.themeDark ? 'var(--gray-500)' : 'var(--gray-100)'};
+				props.themeDark ? "var(--gray-500)" : "var(--gray-100)"};
       font-family: var(--font-standard);
       /* padding-top: 56px; */
   ::-webkit-scrollbar {
@@ -86,4 +88,4 @@ export default createGlobalStyle`
     //   }
 
     // }
-`;
+`

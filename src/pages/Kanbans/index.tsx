@@ -1,13 +1,13 @@
-import Title from '../../components/Title';
-import TitlePage from '../../components/TitlePage';
+import Title from "@/components/Title"
+import TitlePage from "@/components/TitlePage"
 
 const Kanbans = () => {
-    return (
-        <>
-            <TitlePage title="Kanbans" />
-            <Title>Kanbans</Title>
-        </>
-    );
-};
+	return (
+		<>
+			<TitlePage title="Kanbans" />
+			<Title>Kanbans</Title>
+		</>
+	)
+}
 
-export default Kanbans;
+export default Kanbans

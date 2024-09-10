@@ -1,20 +1,22 @@
-import { ReactNode } from 'react';
-import { AuthProvider } from './Auth';
-import { UserProvider } from './User';
-import { PerfilProvider } from './Perfil';
+import type { ReactNode } from "react"
+
+// import { AuthProvider } from './Auth';
 
 interface ProviderProps {
-    children: ReactNode;
+	children: ReactNode
 }
 
 const Providers = ({ children }: ProviderProps) => {
-    return (
-        <AuthProvider>
-            <UserProvider>
-                <PerfilProvider>{children}</PerfilProvider>
-            </UserProvider>
-        </AuthProvider>
-    );
-};
+	return children
+	// return (<></>
+	// 	// <AuthProvider>
+	// 	// <UserProvider>
+	// 	// <PerfilProvider>
+	// 	// <SectionProvider>{children}</SectionProvider>
+	// 	// </PerfilProvider>
+	// 	// </UserProvider>
+	// 	// </AuthProvider>
+	// )
+}
 
-export default Providers;
+export default Providers

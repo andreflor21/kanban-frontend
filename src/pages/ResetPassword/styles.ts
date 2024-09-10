@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-// import LogoDark from '../../assets/logo_outline.svg';
+import styled from "styled-components"
+// import LogoDark from 'assets/logo_outline.svg';
 
 export const Container = styled.div`
     min-height: 100vh;
@@ -14,7 +14,7 @@ export const Container = styled.div`
         align-items: flex-start;
         background-color: var(--gray-100);
     }
-`;
+`
 export const ContainerLogo = styled.div`
     display: flex;
     flex-direction: column-reverse;
@@ -27,13 +27,13 @@ export const ContainerLogo = styled.div`
         width: 100%;
         margin: 45px 0 0 45px;
     }
-`;
+`
 
 export const Wrapper = styled.div`
     width: 100%;
     display: flex;
     flex-direction: column;
-`;
+`
 export const InnerWrapper = styled.div`
     display: none;
     @media only screen and (min-width: 768px) {
@@ -50,7 +50,7 @@ export const InnerWrapper = styled.div`
         justify-content: space-around;
         flex-direction: row-reverse;
     }
-`;
+`
 
 export const ListStyled = styled.ul`
     display: flex;
@@ -72,19 +72,21 @@ export const ListStyled = styled.ul`
         text-align: justify;
         text-wrap: nowrap;
     }
-`;
+`
 
 export const ImgStyled = styled.img`
     align-self: center;
-    margin-top: 2rem;
+    margin-top: 6rem;
     width: 100%;
     padding: 2rem;
     max-height: 480px;
     @media only screen and (min-width: 1920px) {
         max-height: 680px;
         padding: 0;
+        width: 50%;
+        margin: 6rem auto;
     }
-`;
+`
 export const ContainerForm = styled.div`
     display: flex;
     flex-direction: column;
@@ -99,10 +101,10 @@ export const ContainerForm = styled.div`
     @media only screen and (min-width: 1440px) {
         width: 50%;
     }
-`;
+`
 export const LogoStyled = styled.img`
     height: 5rem;
-`;
+`
 
 export const Title = styled.h2`
     font-family: var(--font-standard);
@@ -114,7 +116,7 @@ export const Title = styled.h2`
         padding-left: 2rem;
         padding-bottom: 0;
     }
-`;
+`
 
 export const FormStyled = styled.form`
     display: flex;
@@ -127,7 +129,7 @@ export const FormStyled = styled.form`
     @media only screen and (min-width: 768px) {
         width: 75%;
     }
-`;
+`
 
 export const TextStyled = styled.h3`
     font-family: var(--font-standard);
@@ -141,7 +143,7 @@ export const TextStyled = styled.h3`
     @media only screen and (min-width: 768px) {
         padding-left: 36px;
     }
-`;
+`
 
 export const LinkStyled = styled.a`
     color: var(--gray-100);
@@ -155,4 +157,4 @@ export const LinkStyled = styled.a`
     &:active {
         color: var(--gray-100);
     }
-`;
+`

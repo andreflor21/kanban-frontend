@@ -1,15 +1,15 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App.tsx';
-import Providers from './providers';
+import React from "react"
+import ReactDOM from "react-dom/client"
+import {RouterProvider} from "react-router-dom"
+import App from "./App"
+import {router} from "./routes"
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
-    <React.StrictMode>
-        <BrowserRouter>
-            <Providers>
-                <App />
-            </Providers>
-        </BrowserRouter>
-    </React.StrictMode>
-);
+const root = document.getElementById("root")
+if (!root) throw new Error("Root element not found")
+
+ReactDOM.createRoot(root).render(
+	<>
+		<RouterProvider router={router} />
+		<App />
+	</>,
+)

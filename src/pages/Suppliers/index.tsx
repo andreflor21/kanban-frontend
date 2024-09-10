@@ -1,12 +1,13 @@
-import Title from '../../components/Title';
-import TitlePage from '../../components/TitlePage';
-const Suppliers = () => {
-    return (
-        <>
-            <TitlePage title="Suppliers" />
-            <Title>Suppliers</Title>
-        </>
-    );
-};
+import Title from "@/components/Title"
+import TitlePage from "@/components/TitlePage"
 
-export default Suppliers;
+const Suppliers = () => {
+	return (
+		<>
+			<TitlePage title="Suppliers" />
+			<Title>Suppliers</Title>
+		</>
+	)
+}
+
+export default Suppliers
