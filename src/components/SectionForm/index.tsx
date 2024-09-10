@@ -1,8 +1,7 @@
-import { useSection } from "@/providers/Sections"
-import type { Section } from "@/types/secao"
+import type {Section} from "@/types/secao"
 import type React from "react"
-import { useState } from "react"
-import { useNavigate, useParams } from "react-router-dom"
+import {useState} from "react"
+import {useNavigate, useParams} from "react-router-dom"
 import * as yup from "yup"
 import Button from "../Button"
 import Input from "../Input"
@@ -48,8 +47,15 @@ const SecitonForm = ({
 	const [codigoERPError, setcodigoERPError] = useState<boolean>(false)
 	const [tipoError, setTipoError] = useState<boolean>(false)
 	const [, setLoad] = useState(true)
-	const { newSection, editSection, sections } = useSection()
+	// const { newSection, editSection, sections } = useSection()
 
+	const sections: unknown[] = []
+	const editSection = () => {
+		console.log("editSection")
+	}
+	const newSection = () => {
+		console.log("newSection")
+	}
 	if (!sectionId) {
 		sectionId = secaoId
 	}

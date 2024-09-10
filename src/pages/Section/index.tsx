@@ -3,23 +3,29 @@ import { List, Skeleton, Tooltip } from "antd"
 import { Confirm } from "@/components/Confirm"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import { useSection } from "@/providers/Sections"
 import { DotsNine, Plus, Trash, WarningCircle } from "phosphor-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Container, ContainerButtons, LinkStyleld } from "./styles"
 
 const Section = () => {
-	const { getSections, sections, deleteSection } = useSection()
+	// const { getSections, sections, deleteSection } = useSection()
+	const sections: unknown[] = []
+	const getSections = () => {
+		console.log("getSections")
+	}
+	const deleteSection = () => {
+		console.log("deleteSection")
+	}
 	const [load, setLoad] = useState(true)
 
-	useEffect(() => {
-		// setLoad(false);
-		getSections(setLoad)
-	}, [getSections])
+	// useEffect(() => {
+	// setLoad(false);
+	// getSections(setLoad)
+	// }, [getSections])
 
 	const handleDelete = (id: string) => {
-		deleteSection(id)
+		// deleteSection(id)
 		console.log(id)
 		// message.success('Usuário excluido');
 	}

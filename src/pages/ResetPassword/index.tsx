@@ -1,12 +1,11 @@
 import imgForgotPassword from "@/assets/forgot_password.svg"
 import Logo from "@/assets/logo.svg"
-import { yupResolver } from "@hookform/resolvers/yup"
+import {yupResolver} from "@hookform/resolvers/yup"
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"
-import { useUsers } from "@/providers/User"
-import { useForm } from "react-hook-form"
-import { useNavigate, useParams } from "react-router-dom"
+import {useForm} from "react-hook-form"
+import {useNavigate, useParams} from "react-router-dom"
 import * as yup from "yup"
 import {
 	Container,
@@ -28,7 +27,9 @@ interface FormValues {
 const ResetPassword = () => {
 	const { token } = useParams()
 	// const [load, setLoad] = useState<boolean>(false)
-	const { resetPassword } = useUsers()
+	const resetPassword = () => {
+		console.log("resetPassword")
+	}
 	const navigate = useNavigate()
 	const schema = yup.object().shape({
 		password: yup.string().required("Campo obrigatório"),

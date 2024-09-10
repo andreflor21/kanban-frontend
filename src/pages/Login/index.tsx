@@ -1,18 +1,17 @@
 import imgLogin from "@/assets/img_login_desktop.svg"
 import Logo from "@/assets/logo.svg"
-import { yupResolver } from "@hookform/resolvers/yup"
+import {yupResolver} from "@hookform/resolvers/yup"
 
 import Button from "@/components/Button"
-import { ForgotPassword } from "@/components/ForgotPassword"
+import {ForgotPassword} from "@/components/ForgotPassword"
 import Input from "@/components/Input"
-import { useGetNotification } from "@/hooks/useGetNotification"
-import { useProfile } from "@/providers/Profile"
-import { type ErrorExtended, parseError } from "@/services/api"
-import { useUserStore } from "@/stores/User/useUserStore"
-import { useState } from "react"
+import {useGetNotification} from "@/hooks/useGetNotification"
+import {type ErrorExtended, parseError} from "@/services/api"
+import {useUserStore} from "@/stores/User/useUserStore"
+import {useState} from "react"
 // import React from 'react';
-import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import {useForm} from "react-hook-form"
+import {useNavigate} from "react-router-dom"
 import * as yup from "yup"
 import {
 	Container,
@@ -41,10 +40,9 @@ type FormValues = yup.InferType<typeof schema>
 const Login = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const { showNotification } = useGetNotification()
-	const { setProfiles } = useProfile()
+	// const { setProfiles } = useProfile()
 	const userLogin = useUserStore((state) => state.userLogin)
 	const user = useUserStore((state) => state.user)
-	console.log({ user })
 
 	const navigate = useNavigate()
 
@@ -58,9 +56,9 @@ const Login = () => {
 
 	const onSubmit = async (data: FormValues) => {
 		setIsLoading(true)
-		// userLogin(data, setLoad, setProfiles, navigate)
 		try {
 			await userLogin(data)
+			navigate("/dashboard")
 		} catch (error) {
 			const parsedError = parseError(error as ErrorExtended)
 			showNotification({

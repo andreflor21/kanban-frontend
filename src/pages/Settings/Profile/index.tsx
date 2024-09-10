@@ -1,26 +1,25 @@
-import { Confirm } from "@/components/Confirm"
+import {Confirm} from "@/components/Confirm"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import { useProfile } from "@/providers/Profile"
-import { List, Skeleton, Tooltip } from "antd"
-import { Copy, Plus, Trash, WarningCircle } from "phosphor-react"
-import { useEffect, useState } from "react"
-import { Link } from "react-router-dom"
-import { Container, ContainerButtons, LinkStyleld } from "./styles"
+import {List, Skeleton, Tooltip} from "antd"
+import {Copy, Plus, Trash, WarningCircle} from "phosphor-react"
+import {useState} from "react"
+import {Link} from "react-router-dom"
+import {Container, ContainerButtons, LinkStyleld} from "./styles"
 
 // import { Container } from './styles';
 
 const Profile = () => {
-	const { getProfiles, profiles, deleteProfile } = useProfile()
+	// const { getProfiles, profiles, deleteProfile } = useProfile()
 	const [load, setLoad] = useState(true)
 
-	useEffect(() => {
-		// setLoad(false);
-		getProfiles(setLoad)
-	}, [getProfiles])
+	// useEffect(() => {
+	// 	// setLoad(false);
+	// 	getProfiles(setLoad)
+	// }, [getProfiles])
 
 	const handleDelete = (id: number) => {
-		deleteProfile(id)
+		// deleteProfile(id)
 		console.log(id)
 		// message.success('Usuário excluido');
 	}

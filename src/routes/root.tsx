@@ -1,11 +1,11 @@
 import Aside from "@/components/Aside"
 import Header from "@/components/Header"
 import HeaderNavAuth from "@/components/HeaderNav"
-import { useUsers } from "@/providers/User"
-import { Navigate, Outlet } from "react-router-dom"
+import {useUserStore} from "@/stores/User/useUserStore"
+import {Navigate, Outlet} from "react-router-dom"
 
 const Root = () => {
-	const { token } = useUsers()
+	const token = useUserStore((state) => state.token)
 	return token ? (
 		<>
 			<Header>

@@ -1,23 +1,14 @@
+import type {Perfil} from "@/types/perfil"
 import type React from "react"
-import { useState } from "react"
+import {useState} from "react"
+import {useNavigate, useParams} from "react-router-dom"
 import * as yup from "yup"
-
-import { useProfile } from "@/providers/Profile"
-import type { Perfil } from "@/types/perfil"
-import { useNavigate, useParams } from "react-router-dom"
 import Button from "../Button"
 import Input from "../Input"
 import Routes from "../Routes"
 import Title from "../Title"
 import TitlePage from "../TitlePage"
-import {
-	Container,
-	ContainerSelect,
-	FormStyled,
-	LabelStyled,
-	OptionStyled,
-	SelectStyled,
-} from "./styles"
+import {Container, ContainerSelect, FormStyled, LabelStyled, OptionStyled, SelectStyled,} from "./styles"
 
 interface ProfileFormProps {
 	profile?: Perfil | null
@@ -41,7 +32,8 @@ const ProfileForm = ({
 	const [perfil, setPerfil] = useState<string>("")
 	const [descricaoError, setDescricaoError] = useState<boolean>(false)
 	const [, setLoad] = useState(true)
-	const { newProfile, editProfile, profiles, duplicateProfile } = useProfile()
+	// const { newProfile, editProfile, profiles, duplicateProfile } = useProfile()
+	const profiles = []
 
 	if (!profileId) {
 		profileId = perfilId

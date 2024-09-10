@@ -1,13 +1,12 @@
 import Button from "@/components/Button"
 import Input from "@/components/Input"
-import { useUsers } from "@/providers/User"
-import { yupResolver } from "@hookform/resolvers/yup"
-import { Modal } from "antd"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {Modal} from "antd"
 import type React from "react"
-import { useState } from "react"
-import { useForm } from "react-hook-form"
+import {useState} from "react"
+import {useForm} from "react-hook-form"
 import * as yup from "yup"
-import { ButtonStyled, FormStyled } from "./styles"
+import {ButtonStyled, FormStyled} from "./styles"
 
 interface FormValues {
 	email: string
@@ -17,7 +16,10 @@ interface ForgotPasswordProps {
 	children: React.ReactNode
 }
 export const ForgotPassword = ({ children }: ForgotPasswordProps) => {
-	const { userForgotPassword } = useUsers()
+	// const { userForgotPassword } = useUsers()
+	const userForgotPassword = (data: FormValues) => {
+		console.log(data)
+	}
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const showModal = () => {

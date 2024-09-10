@@ -1,13 +1,12 @@
-import { yupResolver } from "@hookform/resolvers/yup"
-import { Modal } from "antd"
+import {yupResolver} from "@hookform/resolvers/yup"
+import {Modal} from "antd"
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"
-import { useUsers } from "@/providers/User"
-import React, { type Dispatch } from "react"
-import { useForm } from "react-hook-form"
+import React, {type Dispatch} from "react"
+import {useForm} from "react-hook-form"
 import * as yup from "yup"
-import { FormStyled } from "./styles"
+import {FormStyled} from "./styles"
 
 interface FormValues {
 	password: string
@@ -26,8 +25,10 @@ function ChangePassword({
 	isModalOpen,
 	setIsModalOpen,
 }: ChangePasswordProps) {
-	const { changePassword } = useUsers()
-
+	// const { changePassword } = useUsers()
+	const changePassword = (idUser: number, data: FormValues) => {
+		console.log(idUser, data)
+	}
 	const onSubmit = (data: FormValues) => {
 		setIsModalOpen(false)
 		changePassword(idUser, data)
