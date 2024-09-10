@@ -1,4 +1,4 @@
-import {Popconfirm, type PopconfirmProps} from "antd"
+import { Popconfirm, type PopconfirmProps } from "antd"
 import type React from "react"
 
 interface ConfirmProps extends PopconfirmProps {
