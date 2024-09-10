@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const ButtonStyled = styled.button`
     color: var(--gray-100);
@@ -15,7 +15,7 @@ export const ButtonStyled = styled.button`
     &:active {
         color: var(--gray-100);
     }
-`;
+`
 export const FormStyled = styled.form`
     display: flex;
     flex-direction: column;
@@ -24,4 +24,4 @@ export const FormStyled = styled.form`
         align-self: flex-end;
         width: fit-content;
     }
-`;
+`

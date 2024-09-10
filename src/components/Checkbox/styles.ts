@@ -1,5 +1,5 @@
-import { styled } from 'styled-components';
-import * as Checkbox from '@radix-ui/react-checkbox';
+import * as Checkbox from "@radix-ui/react-checkbox"
+import {styled} from "styled-components"
 
 const Container = styled.div`
     display: flex;
@@ -7,7 +7,7 @@ const Container = styled.div`
     position: relative;
     align-items: center;
     padding: 0.5rem 0;
-`;
+`
 
 const LabelStyled = styled.label`
     font-family: var(--font-standard);
@@ -18,12 +18,12 @@ const LabelStyled = styled.label`
     line-height: 19px;
     text-transform: capitalize;
     padding: 0.5rem;
-`;
+`
 const Indicator = styled(Checkbox.Indicator)`
     color: ${(props: Checkbox.CheckboxProps) =>
-        !props.checked ? 'var(--indigo-700)' : 'var(--gray-100)'};
+			!props.checked ? "var(--indigo-700)" : "var(--gray-100)"};
     margin-top: 0;
-`;
+`
 const Root = styled(Checkbox.Root)`
     background-color: var(--gray-100);
     width: 25px;
@@ -33,5 +33,5 @@ const Root = styled(Checkbox.Root)`
     align-items: center;
     justify-content: center;
     margin-top: 0 !important;
-`;
-export { Container, LabelStyled, Indicator, Root };
+`
+export { Container, LabelStyled, Indicator, Root }

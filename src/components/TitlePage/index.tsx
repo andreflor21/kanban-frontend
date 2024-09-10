@@ -1,10 +1,10 @@
-import Helmet from 'react-helmet';
+import Helmet from "react-helmet"
 
 interface TitlePageProps {
-    title: string;
+	title: string
 }
 const TitlePage = ({ title }: TitlePageProps) => {
-    return <Helmet title={`Kanban | ${title}`} />;
-};
+	return <Helmet title={`Kanban | ${title}`} />
+}
 
-export default TitlePage;
+export default TitlePage

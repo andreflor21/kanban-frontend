@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from "styled-components"
 
 export const TitleStyled = styled.h1`
     font-family: var(--font-secondary);
@@ -15,4 +15,4 @@ export const TitleStyled = styled.h1`
         z-index: 2;
         position: relative;
     }
-`;
+`

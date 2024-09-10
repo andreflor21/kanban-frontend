@@ -1,5 +1,5 @@
-import styled from 'styled-components';
-import CaretDown from '../../assets/caretdown.svg';
+import CaretDown from "@/assets/caretdown.svg"
+import styled from "styled-components"
 
 export const FormStyled = styled.form`
     display: flex;
@@ -8,7 +8,7 @@ export const FormStyled = styled.form`
     width: 90%;
     @media only screen and (min-width: 768px) {
         margin: 2rem auto 1rem 12rem;
-        width: 30%;
+        width: 40%;
     }
 
     > span {
@@ -18,13 +18,18 @@ export const FormStyled = styled.form`
         line-height: 19px;
         padding: 0.5rem;
     }
-`;
+
+    &.modal {
+        margin: 0 auto;
+        width: 80%;
+    }
+`
 
 export const ButtonForm = styled.button`
     margin-top: 2rem;
     max-width: 200px;
     position: relative;
-`;
+`
 export const SelectStyled = styled.select`
     background: var(--gray-100);
     border: 2px solid var(--gray-500);
@@ -40,9 +45,11 @@ export const SelectStyled = styled.select`
     &::placeholder {
         color: var(--slate-400);
     }
-
+    &:disabled {
+        border: none;
+    }
     appearance: none;
-`;
+`
 
 export const OptionStyled = styled.option`
     color: var(--black);
@@ -51,7 +58,7 @@ export const OptionStyled = styled.option`
         background-color: var(--indigo-700);
         color: var(--gray-100);
     }
-`;
+`
 export const LabelStyled = styled.label`
     font-family: var(--font-standard);
     font-style: normal;
@@ -60,7 +67,7 @@ export const LabelStyled = styled.label`
     line-height: 19px;
     text-transform: capitalize;
     padding: 0.5rem;
-`;
+`
 
 export const ContainerSelect = styled.div`
     display: flex;
@@ -80,7 +87,12 @@ export const ContainerSelect = styled.div`
         bottom: 0;
         z-index: 1;
     }
-`;
+    &.disabled {
+        &::after {
+            content: none;
+        }
+    }
+`
 export const ErrorMessage = styled.span`
     font-family: var(--font-standard);
     font-size: 0.8rem;
@@ -99,4 +111,35 @@ export const ErrorMessage = styled.span`
             opacity: 1;
         }
     }
-`;
+`
+
+export const ContainerButtons = styled.div`
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+
+    grid-template-areas:
+        'button1 button2'
+        'button3 button3';
+    align-items: center;
+    justify-content: flex-start;
+    button {
+        &.button1 {
+            grid-area: button1;
+            padding: 6px 16px;
+        }
+        &.button2 {
+            grid-area: button2;
+            padding: 6px 16px;
+        }
+        &.button3 {
+            grid-area: button3;
+            padding: 6px 16px;
+        }
+    }
+    gap: 0px 16px;
+    @media screen and (min-width: 768px) {
+        gap: 0px 32px;
+    }
+`
