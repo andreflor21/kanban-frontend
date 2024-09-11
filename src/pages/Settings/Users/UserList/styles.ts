@@ -1,4 +1,4 @@
-import { spacing } from "@/style/global"
+import { BREAKPOINTS, spacing } from "@/style/global"
 import styled from "styled-components"
 
 export const ActionsWrapper = styled.div`
@@ -19,8 +19,7 @@ export const ActionsWrapper = styled.div`
 export const TableWrapper = styled.div`
     padding: 0;
     
-    @media (min-width: 768px) {
-padding: 0 ${spacing.md} 0 0; 
-       
+    @media (min-width: ${BREAKPOINTS.MD}) {
+        padding: 0 ${spacing.md} 0 0;
     }
 `

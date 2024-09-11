@@ -1,13 +1,21 @@
 import { type Profile, useGetProfiles } from "@/services/profileServices"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import type { User } from "@/types/usuario"
-import { Popconfirm, Table, type TableColumnsType, Tag, Tooltip } from "antd"
+import {
+	Modal,
+	Popconfirm,
+	Table,
+	type TableColumnsType,
+	Tag,
+	Tooltip,
+} from "antd"
 
+import { UserForm } from "@/components/NewUser/UserForm"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { Pencil, Trash } from "phosphor-react"
 import type React from "react"
-import { Link } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
 type DataType =
@@ -28,9 +36,10 @@ const TagInfo = ({ active }: { active: boolean }) => {
 const getDataToShow = (
 	data: User[] | undefined,
 	profiles: Profile[] | undefined,
+	query: string,
 ): DataType[] => {
 	if (!data || !profiles) return []
-	return data.map((user) => ({
+	const values = data.map((user) => ({
 		id: user.id,
 		name: user.name,
 		email: user.email,
@@ -39,21 +48,27 @@ const getDataToShow = (
 			profiles.find((p) => p.id === user.profileId)?.description ??
 			"Desconhecido",
 	}))
-}
-
-type DeleteConfig = {
-	isDeleting: boolean
+	if (!query?.length) return values
+	return values.filter((user) =>
+		user.name.toLowerCase().includes(query.toLowerCase()),
+	)
 }
 
 export const UserList = () => {
 	const { data: users, isLoading: isLoadingUsers, query } = useGetAllUsers()
 	const { data: profiles, isLoading: isLoadingProfiles } = useGetProfiles()
+	const [searchParams, setSearchParams] = useSearchParams()
+	const querySearch = searchParams.get("user") ?? ""
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
 
 	const isLoading = isLoadingUsers || isLoadingProfiles
 
-	const dataToShow = getDataToShow(users?.users, profiles?.profiles)
+	const dataToShow = getDataToShow(
+		users?.users,
+		profiles?.profiles,
+		querySearch,
+	)
 
 	const handleDelete = async (id: string): Promise<void> => {
 		try {
@@ -72,6 +87,22 @@ export const UserList = () => {
 				type: "ERROR",
 			})
 		}
+	}
+
+	const onEdit = (id: string) => {
+		setSearchParams((params) => {
+			params.set("user_edit", id)
+			return params
+		})
+	}
+	const isModalOpen = searchParams.get("user_edit") ?? false
+	const userToEdit =
+		users?.users.find((u) => u.id === searchParams.get("user_edit")) ?? null
+	const handleCancel = () => {
+		setSearchParams((params) => {
+			params.delete("user_edit")
+			return params
+		})
 	}
 
 	const getColumns = (): TableColumnsType<DataType> => {
@@ -98,6 +129,7 @@ export const UserList = () => {
 				dataIndex: "active",
 				key: "active",
 				responsive: ["md"],
+				width: 150,
 				onFilter: (value, record) => record?.active === value,
 				filters: [
 					{
@@ -118,9 +150,10 @@ export const UserList = () => {
 				render: (_, record) => (
 					<S.ActionsWrapper key={record?.id}>
 						<Tooltip title={`Editar ${record?.name ?? ""}`}>
-							<Link to={`/users/${record?.id ?? ""} `}>
-								<Pencil />
-							</Link>
+							<Pencil
+								color={"#1677ff"}
+								onClick={() => onEdit(record?.id ?? "")}
+							/>
 						</Tooltip>
 						<Tooltip title={`Deletar ${record?.name ?? ""}`}>
 							<Popconfirm
@@ -133,10 +166,6 @@ export const UserList = () => {
 							>
 								<Trash className={"delete"} />
 							</Popconfirm>
-							{/*<Trash*/}
-							{/*	className={"delete"}*/}
-							{/*	onClick={() => handleDelete(record?.id ?? "")}*/}
-							{/*/>*/}
 						</Tooltip>
 					</S.ActionsWrapper>
 				),
@@ -154,6 +183,19 @@ export const UserList = () => {
 				pagination={false}
 				virtual={true}
 			/>
+			<Modal
+				title="Editar Usuário"
+				open={!!isModalOpen}
+				onCancel={handleCancel}
+				footer={false}
+			>
+				<UserForm
+					usuario={userToEdit}
+					usuarioId={userToEdit?.id ?? ""}
+					className="modal"
+					onCancel={handleCancel}
+				/>
+			</Modal>
 		</S.TableWrapper>
 	)
 }

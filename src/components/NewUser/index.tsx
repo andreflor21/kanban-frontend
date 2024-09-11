@@ -21,7 +21,7 @@ const NewUser = ({ isModalOpen, setIsModalOpen }: NewUserProps) => {
 			<UserForm
 				usuario={null}
 				usuarioId={""}
-				setNewUserModal={setIsModalOpen}
+				onCancel={handleCancel}
 				className="modal"
 			/>
 		</Modal>

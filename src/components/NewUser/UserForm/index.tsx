@@ -3,7 +3,10 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
+import {
+	type UserSchema,
+	userSchema,
+} from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetProfiles } from "@/services/profileServices"
 import { useGetUsersActions } from "@/services/userServices"
@@ -12,7 +15,7 @@ import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
-import { type Dispatch, useState } from "react"
+import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { useNavigate } from "react-router-dom"
 import { ContainerButtons, FormStyled } from "./styles"
@@ -20,15 +23,17 @@ import { ContainerButtons, FormStyled } from "./styles"
 interface UserFormProps {
 	usuario: User | null
 	usuarioId: string
-	setNewUserModal: Dispatch<boolean>
+	onCancel: () => void
 	className?: string
 }
 
 export const UserForm = ({
 	usuarioId,
-	setNewUserModal = () => {},
+	onCancel,
 	className,
+	usuario,
 }: UserFormProps) => {
+	console.log(usuario)
 	const [isLoading, setIsLoading] = useState(false)
 	const { createUser } = useGetUsersActions()
 	const user = useUserStore((state) => state.user)
@@ -46,20 +51,28 @@ export const UserForm = ({
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const initialValues: UserSchema = {
-		name: "",
-		email: "",
+		name: usuario?.name ?? "",
+		email: usuario?.email ?? "",
 		password: "",
-		cpf: "",
-		birthdate: "",
-		profileId: "",
-		active: true,
-		code: "",
+		cpf: usuario?.cpf ?? "",
+		birthdate: usuario?.birthdate ?? "",
+		profileId: usuario?.profileId ?? "",
+		active: usuario?.active ?? true,
+		code: usuario?.code ?? "",
+		// email: "",
+		// password: "",
+		// cpf: "",
+		// birthdate: "",
+		// profileId: "",
+		// active: true,
+		// code: "",
 	}
+	console.log({ initialValues })
 
 	const methods = useForm<UserSchema>({
 		mode: "onChange",
 		resolver: yupResolver(userSchema),
-		defaultValues: initialValues,
+		values: initialValues,
 	})
 
 	const goBack = (path: string) => {
@@ -72,7 +85,7 @@ export const UserForm = ({
 		try {
 			await createUser(values)
 			setIsLoading(false)
-			setNewUserModal(false)
+			onCancel()
 		} catch (err) {
 			console.error(err)
 			setIsLoading(false)
@@ -162,11 +175,7 @@ export const UserForm = ({
 
 				<ContainerButtons>
 					<>
-						<Button
-							className="button1"
-							type="button"
-							onClickFunc={() => setNewUserModal(false)}
-						>
+						<Button className="button1" type="button" onClickFunc={onCancel}>
 							Cancelar
 						</Button>
 						<Button

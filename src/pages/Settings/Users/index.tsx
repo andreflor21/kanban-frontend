@@ -1,5 +1,6 @@
 import Button from "@/components/Button"
 import NewUser from "@/components/NewUser"
+import { PageHeader } from "@/components/PageHeader"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
 import { UserList } from "@/pages/Settings/Users/UserList"
@@ -37,13 +38,21 @@ const Users = () => {
 			<TitlePage title="Configurações" />
 			<Title>Usuários</Title>
 			<Container>
-				<Button
-					icon={<UserPlus />}
-					type="button"
-					onClickFunc={() => setIsModalOpen(!isModalOpen)}
-				>
-					Novo Usuário
-				</Button>
+				<PageHeader
+					searchQuery={"user"}
+					placeholder={"Buscar usuário"}
+					rightContent={
+						<>
+							<Button
+								icon={<UserPlus />}
+								type="button"
+								onClickFunc={() => setIsModalOpen(!isModalOpen)}
+							>
+								Novo Usuário
+							</Button>
+						</>
+					}
+				/>
 				<NewUser isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
 				<UserList />
 			</Container>

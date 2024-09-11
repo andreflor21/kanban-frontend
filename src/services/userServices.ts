@@ -1,4 +1,9 @@
-import { ApiInstance, type ErrorExtended, parseError, UNEXPECTED_ERROR, } from "@/services/api"
+import {
+	ApiInstance,
+	type ErrorExtended,
+	UNEXPECTED_ERROR,
+	parseError,
+} from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { type DecodedToken, useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"

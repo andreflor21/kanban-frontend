@@ -107,3 +107,7 @@ export const spacing = {
 	giant: "80px",
 	huge: "160px",
 } as const
+
+export const BREAKPOINTS = {
+	MD: "768px",
+} as const
