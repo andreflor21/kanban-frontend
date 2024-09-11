@@ -129,7 +129,7 @@ const ProfileForm = ({
 						Gravar
 					</Button>
 				</FormStyled>
-				{profileId && <Routes profileId={profileId} profile={p} />}
+				<Routes profileId={profileId} profile={p} />
 				<Button
 					type="button"
 					className="voltar"

@@ -6,6 +6,8 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	children: React.ReactNode
 	type?: "button" | "submit" | "reset" | undefined
 	isLoading?: boolean
+	icon?: React.ReactNode
+	iconPosition?: "start" | "end"
 }
 
 const Button = ({
@@ -13,10 +15,14 @@ const Button = ({
 	type,
 	children,
 	isLoading = false,
+	icon,
+	iconPosition = "start",
 	...rest
 }: ButtonProps) => {
 	return (
 		<ButtonItem
+			icon={icon}
+			iconPosition={iconPosition}
 			htmlType={type}
 			onClick={onClickFunc}
 			loading={isLoading}
