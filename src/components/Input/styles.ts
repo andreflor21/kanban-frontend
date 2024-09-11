@@ -7,9 +7,9 @@ interface InputStyledProps {
 
 export const InputStyled = styled.input<InputStyledProps>`
     background: var(--gray-100);
-    border: ${spacing.nano}solid
+    border: ${spacing.nano} solid
         ${({ error }: InputStyledProps) =>
-					error ? "var(--red-500)" : "var(--gray-500)"};
+					error ? "var(--red-500)" : "var(--gray-200)"};
     box-sizing: border-box;
     border-radius: ${spacing.xxxs};
     width: 100%;
@@ -27,6 +27,14 @@ export const InputStyled = styled.input<InputStyledProps>`
     &::-webkit-calendar-picker-indicator {
         opacity: 0.4;
     }
+	&::-webkit-outer-spin-button,
+	&::-webkit-inner-spin-button {
+		-webkit-appearance: none;
+		margin: 0;
+	}
+	[type=number] {
+		-moz-appearance: textfield;
+	}
 `
 export const InputPasswordStyled = styled.input`
     background-color: var(--gray-100);
@@ -49,6 +57,12 @@ export const LabelStyled = styled.label`
     line-height: 19px;
     text-transform: capitalize;
     padding: 0.5rem;
+	display: flex;
+	
+	>svg{
+		color:#E80202;
+		margin-left: ${spacing.micro};
+	}
 `
 export const ContainerInput = styled.div`
     display: flex;

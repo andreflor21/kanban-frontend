@@ -10,6 +10,8 @@ export default createGlobalStyle`
         --black: #0c090b;
         --gray-100: #f3f4f6;
         --gray-500:#374151;
+		--gray-300:#485262;
+		--gray-200:#e5e7eb;
         --slate-200: #cbd5e1;
         --slate-400: #64748b;
         --zinc-700:#27272a;
@@ -104,4 +106,8 @@ export const spacing = {
 	xxxl: "72px",
 	giant: "80px",
 	huge: "160px",
+} as const
+
+export const BREAKPOINTS = {
+	MD: "768px",
 } as const

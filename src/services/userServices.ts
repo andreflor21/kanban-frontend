@@ -5,7 +5,7 @@ import {
 	parseError,
 } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
-import type { DecodedToken } from "@/stores/User/useUserStore"
+import { type DecodedToken, useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
 import { useQuery } from "@tanstack/react-query"
 import { jwtDecode } from "jwt-decode"
@@ -52,4 +52,62 @@ export const useGetUserData = ({ id, token }: UseGetUserData) => {
 			ApiInstance.get<User>(url, { headers: makeApiHeaders(token) }),
 		enabled: !!id && !!token,
 	})
+}
+
+type CreateUserBody = {
+	name: string
+	email: string
+	password: string
+	cpf: string
+	code: string
+	profileId: string
+	birthdate?: string
+	active: boolean
+}
+
+export const useGetUsersActions = () => {
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+
+	const createUser = async (data: CreateUserBody) => {
+		try {
+			return await ApiInstance.post<CreateUserBody, User>("/users/new", data, {
+				headers,
+			})
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			throw new Error(parsedError ?? UNEXPECTED_ERROR)
+		}
+	}
+
+	const deleteUser = async (id: string) => {
+		try {
+			return await ApiInstance.delete(`/users/${id}/delete`, { headers })
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			throw new Error(parsedError ?? UNEXPECTED_ERROR)
+		}
+	}
+
+	return { createUser, deleteUser }
+}
+
+type UsersResponse = {
+	users: User[]
+}
+
+export const useGetAllUsers = () => {
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+	const url = "/users"
+
+	const query = useQuery<UsersResponse>({
+		queryKey: [url],
+		queryFn: () => ApiInstance.get<UsersResponse>(url, { headers }),
+		enabled: !!token,
+	})
+
+	const { data, isLoading, error } = query
+
+	return { data, isLoading, error, query }
 }
