@@ -3,9 +3,13 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
+import {
+	type UserSchema,
+	userSchema,
+} from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetProfiles } from "@/services/profileServices"
+import { useGetUsersActions } from "@/services/userServices"
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
@@ -31,12 +35,18 @@ export const UserForm = ({
 	className,
 }: UserFormProps) => {
 	console.log(novoUsuario)
-	// const { editUser, newUser, idUser, token } = useUsers()
+	const [isLoading, setIsLoading] = useState(false)
+	const { createUser } = useGetUsersActions()
 	const user = useUserStore((state) => state.user)
 	const token = useUserStore((state) => state.token)
 	const idUser = user?.id
-	const { data: profiles2 } = useGetProfiles()
-	console.log(profiles2)
+	const { data: profiles } = useGetProfiles()
+	const profileOptions =
+		profiles?.profiles?.map((profile) => ({
+			value: profile.id,
+			label: profile.description,
+		})) ?? []
+
 	const editUser = () => {
 		console.log("editUser")
 	}
@@ -47,20 +57,7 @@ export const UserForm = ({
 	const navigate = useNavigate()
 	const readOnly = !!usuarioId && idUser !== usuarioId
 	// const { profiles } = useProfile()
-	const profiles: unknown[] = []
-	const [load, setLoad] = useState(true)
-	const [nome, setNome] = useState<string | undefined>("")
-	const [email, setEmail] = useState<string | undefined>("")
-	const [codigo, setCodigo] = useState<string | undefined>("")
-	const [ativo, setAtivo] = useState<boolean | undefined>(false)
-	const [cpf, setCpf] = useState<string | undefined>("")
-	const [dtNascimento, setDtNascimento] = useState<string | undefined>("")
-	const [perfil, setProfile] = useState<number | string | undefined>("")
-	const [nomeError, setNomeError] = useState(false)
-	const [emailError, setEmailError] = useState(false)
-	const [codigoError, setCodigoError] = useState(false)
-	const [cpfError, setCpfError] = useState(false)
-	const [dtNascimentoError, setDtNascimentoError] = useState(false)
+
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
 	const initialValues: UserSchema = {
@@ -68,8 +65,8 @@ export const UserForm = ({
 		email: "",
 		password: "",
 		cpf: "",
-		dtNascimento: "",
-		perfil: "",
+		birthdate: "",
+		profileId: "",
 		active: true,
 		code: "",
 	}
@@ -151,15 +148,23 @@ export const UserForm = ({
 	// 		})
 	// }
 	console.log(methods.watch())
-	console.log(profiles2)
-	const profileOptions =
-		profiles2?.profiles?.map((profile) => ({
-			value: profile.id,
-			label: profile.description,
-		})) ?? []
+
+	const handleSubmit = async () => {
+		const values = methods.getValues()
+		setIsLoading(true)
+		try {
+			await createUser(values)
+			setIsLoading(false)
+			setNewUserModal(false)
+		} catch (err) {
+			console.error(err)
+			setIsLoading(false)
+		}
+	}
+
 	// console.log(profileOptions)
 
-	return load && !novoUsuario ? (
+	return isLoading && !novoUsuario ? (
 		<Spin
 			size="large"
 			style={{ margin: "5rem 12rem", color: "#34d399" }}
@@ -194,6 +199,15 @@ export const UserForm = ({
 					{...methods.register("email")}
 				/>
 				<Input
+					type={"text"}
+					required
+					label="Senha"
+					placeholder="Insira uma senha"
+					errorMessage={methods.formState.errors.password?.message}
+					disabled={readOnly}
+					{...methods.register("password")}
+				/>
+				<Input
 					required
 					label="CPF"
 					type="text"
@@ -213,7 +227,6 @@ export const UserForm = ({
 					inputType="text"
 					placeholder="XXXXX"
 					errorMessage={methods.formState.errors.code?.message}
-					error={codigoError}
 					disabled={readOnly}
 					{...methods.register("code")}
 				/>
@@ -221,9 +234,9 @@ export const UserForm = ({
 					label="Data de Nascimento"
 					inputType="date"
 					placeholder="DD/MM/YYYY"
-					errorMessage={methods.formState.errors.dtNascimento?.message}
+					errorMessage={methods.formState.errors.birthdate?.message}
 					disabled={readOnly}
-					{...methods.register("dtNascimento")}
+					{...methods.register("birthdate")}
 				/>
 				<Checkbox
 					label="Ativo"
@@ -273,9 +286,8 @@ export const UserForm = ({
 							<Button
 								className="button2"
 								type="button"
-								onClickFunc={(e: React.MouseEvent<HTMLButtonElement>) =>
-									handleSubmit(e)
-								}
+								onClickFunc={handleSubmit}
+								disabled={!methods.formState.isValid || isLoading}
 							>
 								Gravar
 							</Button>

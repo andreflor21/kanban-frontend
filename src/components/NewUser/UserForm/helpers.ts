@@ -15,9 +15,9 @@ export const userSchema = yup.object().shape({
 			}
 			return true
 		}),
-	dtNascimento: yup.string(),
+	birthdate: yup.string().required("Campo Obrigatório"),
 	profileId: yup.string().required("Campo Obrigatório"),
-	active: yup.boolean(),
+	active: yup.boolean().required("Campo Obrigatório"),
 	code: yup.string().required("Campo Obrigatório"),
 })
 
