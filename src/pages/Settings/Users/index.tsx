@@ -2,6 +2,7 @@ import Button from "@/components/Button"
 import NewUser from "@/components/NewUser"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
+import { UserList } from "@/pages/Settings/Users/UserList"
 import { UserPlus } from "phosphor-react"
 import { useState } from "react"
 import { Container } from "./styles"
@@ -44,6 +45,7 @@ const Users = () => {
 					Novo Usuário
 				</Button>
 				<NewUser isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+				<UserList />
 			</Container>
 		</>
 	)

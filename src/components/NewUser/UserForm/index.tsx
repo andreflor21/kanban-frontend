@@ -3,10 +3,7 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import {
-	type UserSchema,
-	userSchema,
-} from "@/components/NewUser/UserForm/helpers"
+import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetProfiles } from "@/services/profileServices"
 import { useGetUsersActions } from "@/services/userServices"
@@ -23,22 +20,18 @@ import { ContainerButtons, FormStyled } from "./styles"
 interface UserFormProps {
 	usuario: User | null
 	usuarioId: string
-	novoUsuario: boolean
 	setNewUserModal: Dispatch<boolean>
 	className?: string
 }
 
 export const UserForm = ({
 	usuarioId,
-	novoUsuario = false,
 	setNewUserModal = () => {},
 	className,
 }: UserFormProps) => {
-	console.log(novoUsuario)
 	const [isLoading, setIsLoading] = useState(false)
 	const { createUser } = useGetUsersActions()
 	const user = useUserStore((state) => state.user)
-	const token = useUserStore((state) => state.token)
 	const idUser = user?.id
 	const { data: profiles } = useGetProfiles()
 	const profileOptions =
@@ -47,16 +40,8 @@ export const UserForm = ({
 			label: profile.description,
 		})) ?? []
 
-	const editUser = () => {
-		console.log("editUser")
-	}
-	const newUser = () => {
-		console.log("newUser")
-	}
-
 	const navigate = useNavigate()
 	const readOnly = !!usuarioId && idUser !== usuarioId
-	// const { profiles } = useProfile()
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -76,78 +61,10 @@ export const UserForm = ({
 		resolver: yupResolver(userSchema),
 		defaultValues: initialValues,
 	})
-	// useEffect(() => {
-	// 	if (usuarioId) {
-	// 		ApiInstance.get<User>(`usuarios/${usuarioId}`, {
-	// 			headers: {
-	// 				Authorization: `Bearer ${token}`,
-	// 			},
-	// 		})
-	// 			.then((response) => {
-	// 				// console.info(response.data);
-	// 				setNome(response.name)
-	// 				setEmail(response.email)
-	// 				// setCodigo(response.id)
-	// 				// setAtivo(response.data.ativo)
-	// 				// setCpf(response?.cpf)
-	// 				// setDtNascimento(response.data?.dtNascimento)
-	// 				// setProfile(response.data.perfil.id)
-	// 			})
-	// 			.then(() => setLoad(!load))
-	// 			.catch((err) => {
-	// 				console.error(err)
-	// 			})
-	// 	}
-	// }, [usuarioId, load, token])
-
-	// console.log(nome, email, codigo, ativo, cpf, dtNascimento, perfil);
 
 	const goBack = (path: string) => {
 		navigate(path)
 	}
-	// const handleSubmit = async (e: React.MouseEvent) => {
-	// 	e.preventDefault()
-	//
-	// 	const updateObject: Omit<UsuarioData, "id"> = {
-	// 		nome,
-	// 		email,
-	// 		codigo,
-	// 		ativo,
-	// 		cpf,
-	// 		dtNascimento: dtNascimento,
-	// 		perfil: perfil,
-	// 	}
-	//
-	// 	const schema = yup.object().shape({
-	// 		nome: yup.string(),
-	// 		email: yup.string(),
-	// 		codigo: yup.string(),
-	// 		ativo: yup.boolean(),
-	// 		cpf: yup.string(),
-	// 		dtNascimento: yup.string(),
-	// 		perfil: yup.number(),
-	// 	})
-	//
-	// 	await schema
-	// 		.validate({ ...updateObject })
-	// 		.then((v) => {
-	// 			if (novoUsuario) {
-	// 				// newUser(v, setLoad, navigate)
-	// 				setNewUserModal(false)
-	// 			} else {
-	// 				console.log(v)
-	// 				// editUser(v)
-	// 			}
-	// 		})
-	// 		.catch(() => {
-	// 			nome === "" && setNomeError(true)
-	// 			email === "" && setEmailError(true)
-	// 			codigo === "" && setCodigoError(true)
-	// 			cpf === "" && setCpfError(true)
-	// 			dtNascimento === undefined && setDtNascimentoError(true)
-	// 		})
-	// }
-	console.log(methods.watch())
 
 	const handleSubmit = async () => {
 		const values = methods.getValues()
@@ -162,9 +79,7 @@ export const UserForm = ({
 		}
 	}
 
-	// console.log(profileOptions)
-
-	return isLoading && !novoUsuario ? (
+	return isLoading ? (
 		<Spin
 			size="large"
 			style={{ margin: "5rem 12rem", color: "#34d399" }}
@@ -242,57 +157,56 @@ export const UserForm = ({
 					label="Ativo"
 					checked={methods.watch("active")}
 					disabled={readOnly}
-					onCheckedChange={(checked) => methods.setValue("active", checked)}
+					onCheckedChange={(checked) => methods.setValue("active", !!checked)}
 				/>
 
 				<ContainerButtons>
-					{!novoUsuario ? (
-						<>
-							<Button
-								className="button1"
-								type="button"
-								onClickFunc={() => goBack("/configuracoes/usuarios")}
-							>
-								Voltar
-							</Button>
-							<Button
-								className="button2"
-								type="button"
-								disabled={readOnly}
-								onClickFunc={() => setIsModalOpen(!isModalOpen)}
-							>
-								Trocar Senha
-							</Button>
-							<Button
-								className="button3"
-								type="button"
-								disabled={readOnly}
-								onClickFunc={(e: React.MouseEvent<HTMLButtonElement>) =>
-									handleSubmit(e)
-								}
-							>
-								Atualizar
-							</Button>
-						</>
-					) : (
-						<>
-							<Button
-								className="button1"
-								type="button"
-								onClickFunc={() => setNewUserModal(false)}
-							>
-								Cancelar
-							</Button>
-							<Button
-								className="button2"
-								type="button"
-								onClickFunc={handleSubmit}
-								disabled={!methods.formState.isValid || isLoading}
-							>
-								Gravar
-							</Button>
-						</>
-					)}
+					<>
+						<Button
+							className="button1"
+							type="button"
+							onClickFunc={() => setNewUserModal(false)}
+						>
+							Cancelar
+						</Button>
+						<Button
+							className="button2"
+							type="button"
+							onClickFunc={handleSubmit}
+							disabled={!methods.formState.isValid || isLoading}
+						>
+							Gravar
+						</Button>
+					</>
+					{/*{!novoUsuario ? (*/}
+					{/*	<>*/}
+					{/*		<Button*/}
+					{/*			className="button1"*/}
+					{/*			type="button"*/}
+					{/*			onClickFunc={() => goBack("/configuracoes/usuarios")}*/}
+					{/*		>*/}
+					{/*			Voltar*/}
+					{/*		</Button>*/}
+					{/*		<Button*/}
+					{/*			className="button2"*/}
+					{/*			type="button"*/}
+					{/*			disabled={readOnly}*/}
+					{/*			onClickFunc={() => setIsModalOpen(!isModalOpen)}*/}
+					{/*		>*/}
+					{/*			Trocar Senha*/}
+					{/*		</Button>*/}
+					{/*		<Button*/}
+					{/*			className="button3"*/}
+					{/*			type="button"*/}
+					{/*			disabled={readOnly}*/}
+					{/*			onClickFunc={handleSubmit}*/}
+					{/*		>*/}
+					{/*			Atualizar*/}
+					{/*		</Button>*/}
+					{/*	</>*/}
+					{/*) : (*/}
+					{/*	*/}
+					{/*)}*/}
 				</ContainerButtons>
 			</FormStyled>
 			<ChangePassword

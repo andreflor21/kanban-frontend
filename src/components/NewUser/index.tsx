@@ -7,7 +7,6 @@ interface NewUserProps {
 	setIsModalOpen: Dispatch<boolean>
 }
 
-// import { Container } from './styles';
 const NewUser = ({ isModalOpen, setIsModalOpen }: NewUserProps) => {
 	const handleCancel = () => {
 		setIsModalOpen(false)
@@ -22,7 +21,6 @@ const NewUser = ({ isModalOpen, setIsModalOpen }: NewUserProps) => {
 			<UserForm
 				usuario={null}
 				usuarioId={""}
-				novoUsuario
 				setNewUserModal={setIsModalOpen}
 				className="modal"
 			/>

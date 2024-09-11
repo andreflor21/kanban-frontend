@@ -4,7 +4,7 @@ import { useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
 import { useQuery } from "@tanstack/react-query"
 
-type Profile = {
+export type Profile = {
 	description: string
 	id: string
 	routers: Array<unknown>

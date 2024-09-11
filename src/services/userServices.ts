@@ -1,9 +1,4 @@
-import {
-	ApiInstance,
-	type ErrorExtended,
-	UNEXPECTED_ERROR,
-	parseError,
-} from "@/services/api"
+import { ApiInstance, type ErrorExtended, parseError, UNEXPECTED_ERROR, } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { type DecodedToken, useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
@@ -80,5 +75,34 @@ export const useGetUsersActions = () => {
 		}
 	}
 
-	return { createUser }
+	const deleteUser = async (id: string) => {
+		try {
+			return await ApiInstance.delete(`/users/${id}/delete`, { headers })
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			throw new Error(parsedError ?? UNEXPECTED_ERROR)
+		}
+	}
+
+	return { createUser, deleteUser }
+}
+
+type UsersResponse = {
+	users: User[]
+}
+
+export const useGetAllUsers = () => {
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+	const url = "/users"
+
+	const query = useQuery<UsersResponse>({
+		queryKey: [url],
+		queryFn: () => ApiInstance.get<UsersResponse>(url, { headers }),
+		enabled: !!token,
+	})
+
+	const { data, isLoading, error } = query
+
+	return { data, isLoading, error, query }
 }
