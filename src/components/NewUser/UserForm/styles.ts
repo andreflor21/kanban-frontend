@@ -37,7 +37,7 @@ export const SelectStyled = styled.select`
     border-radius: 4px;
     width: 100%;
     font-size: 1rem;
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     padding: 0.5rem;
     position: relative;
     z-index: 1;
@@ -54,13 +54,13 @@ export const SelectStyled = styled.select`
 export const OptionStyled = styled.option`
     color: var(--black);
     width: 90%;
-    &::hover {
+    &:hover {
         background-color: var(--indigo-700);
         color: var(--gray-100);
     }
 `
 export const LabelStyled = styled.label`
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     font-style: normal;
     font-weight: normal;
     font-size: 16px;

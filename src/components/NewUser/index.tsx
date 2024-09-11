@@ -1,6 +1,6 @@
+import { UserForm } from "@/components/NewUser/UserForm"
 import { Modal } from "antd"
 import React, { type Dispatch } from "react"
-import { UserForm } from "../UserForm"
 
 interface NewUserProps {
 	isModalOpen: boolean

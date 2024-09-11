@@ -1,4 +1,5 @@
-import { Eye, EyeSlash } from "phosphor-react"
+import { Tooltip } from "antd"
+import { Asterisk, Eye, EyeSlash } from "phosphor-react"
 import type React from "react"
 import { forwardRef, useState } from "react"
 import {
@@ -12,8 +13,9 @@ import {
 } from "./styles"
 
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+	required?: boolean
 	label?: string
-	inputType: string
+	inputType?: string
 	errorMessage?: string
 	error?: boolean
 	className?: string
@@ -28,6 +30,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 			placeholder,
 			error = false,
 			className,
+			required = false,
 			...rest
 		}: InputProps,
 		ref,
@@ -35,7 +38,16 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 		const [visible, setVisible] = useState(false)
 		return (
 			<ContainerInput>
-				{label && <LabelStyled htmlFor="">{label}</LabelStyled>}
+				{label && (
+					<LabelStyled htmlFor="">
+						{label}
+						{required && (
+							<Tooltip title={"Campo obrigatório"}>
+								<Asterisk size={10} />
+							</Tooltip>
+						)}
+					</LabelStyled>
+				)}
 
 				{inputType === "password" ? (
 					<ContainerInner>
@@ -58,6 +70,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 					<InputStyled
 						className={className}
 						type={inputType}
+						error={error}
 						placeholder={placeholder}
 						{...rest}
 						ref={ref}
