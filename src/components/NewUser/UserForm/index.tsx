@@ -3,10 +3,7 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import {
-	type UserSchema,
-	userSchema,
-} from "@/components/NewUser/UserForm/helpers"
+import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
@@ -66,13 +63,29 @@ export const UserForm = ({
 		mode: "onChange",
 		resolver: yupResolver(userSchema),
 		values: initialValues,
+		context: {
+			isEditing,
+		},
 	})
 
 	const handleEdit = async () => {
 		const values = methods.getValues()
 		setIsLoading(true)
+		const body: Partial<UserSchema> = {}
+		const keys = Object.keys(values) as (keyof UserSchema)[]
+
+		for (const key of keys) {
+			if (key === "active") {
+				body[key] = values[key]
+				continue
+			}
+			if (values[key]) {
+				body[key] = values[key]
+			}
+		}
+
 		try {
-			await updateUser(usuarioId, values)
+			await updateUser(usuarioId, body)
 			await query.refetch()
 			showNotification({
 				message: "Usuário atualizado com sucesso",
@@ -89,6 +102,7 @@ export const UserForm = ({
 			})
 		} finally {
 			setIsLoading(false)
+			methods.reset()
 		}
 	}
 
@@ -113,6 +127,7 @@ export const UserForm = ({
 			})
 		} finally {
 			setIsLoading(false)
+			methods.reset()
 		}
 	}
 
@@ -149,14 +164,16 @@ export const UserForm = ({
 					errorMessage={methods.formState.errors.email?.message}
 					{...methods.register("email")}
 				/>
-				<Input
-					type={"text"}
-					required
-					label="Senha"
-					placeholder="Insira uma senha"
-					errorMessage={methods.formState.errors.password?.message}
-					{...methods.register("password")}
-				/>
+				{!isEditing && (
+					<Input
+						type={"text"}
+						required
+						label="Senha"
+						placeholder="Insira uma senha"
+						errorMessage={methods.formState.errors.password?.message}
+						{...methods.register("password")}
+					/>
+				)}
 				<Input
 					required
 					label="CPF"

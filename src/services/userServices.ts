@@ -37,7 +37,7 @@ export const useGetUserData = ({ id, token }: UseGetUserData) => {
 	const enabled = !!id && !!token && isTokenValid
 
 	return useQuery<User>({
-		queryKey: ["user", url],
+		queryKey: ["user", id],
 		queryFn: () =>
 			ApiInstance.get<User>(url, { headers: makeApiHeaders(token) }),
 		enabled: enabled,
@@ -47,7 +47,7 @@ export const useGetUserData = ({ id, token }: UseGetUserData) => {
 type CreateUserBody = {
 	name: string
 	email: string
-	password: string
+	password?: string
 	cpf: string
 	code?: string
 	profileId: string
@@ -79,10 +79,10 @@ export const useGetUsersActions = () => {
 		}
 	}
 
-	const updateUser = async (id: string, data: CreateUserBody) => {
+	const updateUser = async (id: string, data: Partial<CreateUserBody>) => {
 		const url = `/users/${id}/edit`
 		try {
-			return await ApiInstance.patch<CreateUserBody, User>(url, data, {
+			return await ApiInstance.patch<Partial<CreateUserBody>, User>(url, data, {
 				headers,
 			})
 		} catch (err) {

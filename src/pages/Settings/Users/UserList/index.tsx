@@ -1,12 +1,12 @@
-import { type Profile, useGetProfiles } from "@/services/profileServices"
+import { useGetProfiles } from "@/services/profileServices"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import type { User } from "@/types/usuario"
-import { Modal, Popconfirm, Table, type TableColumnsType, Tag } from "antd"
+import { Modal, Popconfirm, Table, type TableColumnsType } from "antd"
 
 import { UserForm } from "@/components/NewUser/UserForm"
-import { StatusTag } from "@/components/StatusTag"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { UserDetails } from "@/pages/Settings/Users/UserList/UserDetails"
+import { getDataToShow } from "@/pages/Settings/Users/UserList/helpers"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useUserStore } from "@/stores/User/useUserStore"
 import { Eye, Pencil, Trash } from "phosphor-react"
@@ -26,49 +26,6 @@ export type TableDataType =
 			user: User
 	  }
 	| undefined
-
-const ProfileTag = ({ profile }: { profile: string }) => {
-	const color = profile.toLowerCase() === "admin" ? "purple" : "default"
-	return <Tag color={color}>{profile}</Tag>
-}
-
-const getDataToShow = (
-	data: User[] | undefined,
-	profiles: Profile[] | undefined,
-	query: string,
-	currentUser: User | undefined,
-): TableDataType[] => {
-	if (!data || !profiles) return []
-	const values = data.map((user) => {
-		const userProfile = profiles.find((p) => p.id === user.profileId)
-		const isCurrentUser = user.id === currentUser?.id
-		return {
-			user: user,
-			id: user.id,
-			name: user.name,
-			email: user.email,
-			active: <StatusTag key={user.id} active={user.active} />,
-			profileTag: (
-				<ProfileTag
-					profile={userProfile?.description ?? "Desconhecido"}
-					key={user.id}
-				/>
-			),
-			profileId: user.profileId,
-			nameDisplay: (
-				<S.UserWrapper key={user.id}>
-					{user.name}
-					{isCurrentUser && <Tag color={"green"}>Você</Tag>}
-				</S.UserWrapper>
-			),
-		}
-	})
-
-	if (!query?.length) return values
-	return values.filter((user) =>
-		user.name.toLowerCase().includes(query.toLowerCase()),
-	)
-}
 
 export const UserList = () => {
 	const { data: users, isLoading: isLoadingUsers, query } = useGetAllUsers()
@@ -166,7 +123,7 @@ export const UserList = () => {
 				key: "active",
 				responsive: ["md"],
 				width: 150,
-				onFilter: (value, record) => record?.active === value,
+				onFilter: (value, record) => record?.user?.active === value,
 				filters: [
 					{
 						text: "Ativo",
@@ -215,7 +172,7 @@ export const UserList = () => {
 		]
 	}
 	const columns = getColumns()
-	console.count("columns")
+
 	return (
 		<S.TableWrapper>
 			<Table

@@ -7,12 +7,10 @@ import { ForgotPassword } from "@/components/ForgotPassword"
 import Input from "@/components/Input"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
-import { useGetUserData } from "@/services/userServices"
-import { type DecodedToken, useUserStore } from "@/stores/User/useUserStore"
-import { jwtDecode } from "jwt-decode"
+import { useUserStore } from "@/stores/User/useUserStore"
 import React, { useState } from "react"
 import { useForm } from "react-hook-form"
-import { Navigate, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import * as yup from "yup"
 import {
 	Container,
@@ -42,19 +40,8 @@ const Login = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const { showNotification } = useGetNotification()
 	const userLogin = useUserStore((state) => state.userLogin)
-	const setToken = useUserStore((state) => state.setToken)
-	const setUser = useUserStore((state) => state.setUser)
 
 	const navigate = useNavigate()
-	const localStorageToken = localStorage.getItem("@kanban/token")
-	const decodedToken: DecodedToken | undefined = localStorageToken?.length
-		? jwtDecode(localStorageToken)
-		: undefined
-	const query = useGetUserData({
-		id: decodedToken?.sing?.id,
-		token: localStorageToken,
-	})
-	const hasUser = !!query?.data?.id
 
 	const {
 		register,
@@ -63,12 +50,6 @@ const Login = () => {
 	} = useForm<FormValues>({
 		resolver: yupResolver(schema),
 	})
-
-	if (hasUser && localStorageToken) {
-		setUser(query.data)
-		setToken(localStorageToken)
-		return <Navigate to="/dashboard" replace />
-	}
 
 	const onSubmit = async (data: FormValues) => {
 		setIsLoading(true)

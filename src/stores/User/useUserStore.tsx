@@ -1,4 +1,8 @@
-import { type ErrorExtended, parseError, UNEXPECTED_ERROR, } from "@/services/api"
+import {
+	type ErrorExtended,
+	UNEXPECTED_ERROR,
+	parseError,
+} from "@/services/api"
 import { type LoginBody, userLogin } from "@/services/userServices"
 import type { User } from "@/types/usuario"
 import { create } from "zustand"
