@@ -10,10 +10,9 @@ import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetUserData } from "@/services/userServices"
 import { type DecodedToken, useUserStore } from "@/stores/User/useUserStore"
 import { jwtDecode } from "jwt-decode"
-import { useState } from "react"
-// import React from 'react';
+import React, { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import * as yup from "yup"
 import {
 	Container,
@@ -68,8 +67,7 @@ const Login = () => {
 	if (hasUser && localStorageToken) {
 		setUser(query.data)
 		setToken(localStorageToken)
-		navigate("/dashboard")
-		return null
+		return <Navigate to="/dashboard" replace />
 	}
 
 	const onSubmit = async (data: FormValues) => {

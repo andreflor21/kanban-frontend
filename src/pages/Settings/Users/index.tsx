@@ -1,9 +1,9 @@
-import Button from "@/components/Button"
 import NewUser from "@/components/NewUser"
 import { PageHeader } from "@/components/PageHeader"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
 import { UserList } from "@/pages/Settings/Users/UserList"
+import { Button } from "antd"
 import { UserPlus } from "phosphor-react"
 import { useState } from "react"
 import { Container } from "./styles"
@@ -44,9 +44,9 @@ const Users = () => {
 					rightContent={
 						<>
 							<Button
+								type="primary"
 								icon={<UserPlus />}
-								type="button"
-								onClickFunc={() => setIsModalOpen(!isModalOpen)}
+								onClick={() => setIsModalOpen(!isModalOpen)}
 							>
 								Novo Usuário
 							</Button>
