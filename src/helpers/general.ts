@@ -1,3 +1,6 @@
+import type { DecodedToken } from "@/stores/User/useUserStore"
+import { jwtDecode } from "jwt-decode"
+
 export function cpfMask(cpf: string) {
 	if (!cpf?.length) return ""
 	let v = cpf
@@ -40,4 +43,10 @@ export function isValidCPF(value: string) {
 
 export function hashCPF(cpf: string) {
 	return `${cpf.replace(/\D/g, "").substring(0, 3)}.****-${cpf.replace(/\D/g, "").substring(9, 11)}`
+}
+
+export function isValidToken(token: string) {
+	const decodedToken: DecodedToken = jwtDecode(token)
+	const currentDate = new Date()
+	return new Date(decodedToken.exp * 1000) > currentDate
 }

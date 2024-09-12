@@ -1,20 +1,23 @@
 import { UserForm } from "@/components/NewUser/UserForm"
 import { Modal } from "antd"
-import React, { type Dispatch } from "react"
+import React from "react"
+import { useSearchParams } from "react-router-dom"
 
-interface NewUserProps {
-	isModalOpen: boolean
-	setIsModalOpen: Dispatch<boolean>
-}
+const NewUser = () => {
+	const [searchParams, setSearchParams] = useSearchParams()
+	const isOpen = searchParams.get("action") === "create_user"
 
-const NewUser = ({ isModalOpen, setIsModalOpen }: NewUserProps) => {
 	const handleCancel = () => {
-		setIsModalOpen(false)
+		setSearchParams((params) => {
+			params.delete("action")
+			return params
+		})
 	}
+
 	return (
 		<Modal
 			title="Novo Usuário"
-			open={isModalOpen}
+			open={isOpen}
 			onCancel={handleCancel}
 			footer={false}
 		>

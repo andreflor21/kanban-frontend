@@ -35,7 +35,6 @@ export const UserDetails = () => {
 		})
 		return null
 	}
-	console.log(user)
 
 	const userCPF = user?.cpf
 	const userBirthDate = user?.birthdate

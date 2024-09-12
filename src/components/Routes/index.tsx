@@ -4,7 +4,8 @@ import type { Rota } from "@/types/rota"
 import { List, Skeleton, Switch, Tooltip, notification } from "antd"
 import { Info, X } from "phosphor-react"
 import React, { useEffect, useState } from "react"
-import { ApiInstance } from "../../services/api"
+
+import { ApiInstance } from "@/services/api"
 import { Container } from "./styles"
 
 interface RoutesProps {
