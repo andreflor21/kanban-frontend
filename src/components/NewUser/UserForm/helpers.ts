@@ -15,10 +15,10 @@ export const userSchema = yup.object().shape({
 			}
 			return true
 		}),
-	birthdate: yup.string().required("Campo Obrigatório"),
 	profileId: yup.string().required("Campo Obrigatório"),
 	active: yup.boolean().required("Campo Obrigatório"),
-	code: yup.string().required("Campo Obrigatório"),
+	birthdate: yup.string(),
+	code: yup.string(),
 })
 
 export type UserSchema = yup.InferType<typeof userSchema>

@@ -26,7 +26,9 @@ export default createGlobalStyle`
         --teal-100:#ccfbf1;
         --font-standard: "Poppins", sans-serif;
         --font-secondary: 'Mulish', sans-serif;
+		;
     }
+	
 
     html, body, div, span, applet, object, iframe,
     h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -46,6 +48,7 @@ export default createGlobalStyle`
         box-sizing: border-box;
         outline: 0;
         scroll-behavior: smooth;
+		font-family: "Poppins", sans-serif;
    }
 
    body {

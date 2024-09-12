@@ -1,53 +1,69 @@
 import { type Profile, useGetProfiles } from "@/services/profileServices"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import type { User } from "@/types/usuario"
-import {
-	Modal,
-	Popconfirm,
-	Table,
-	type TableColumnsType,
-	Tag,
-	Tooltip,
-} from "antd"
+import { Modal, Popconfirm, Table, type TableColumnsType, Tag } from "antd"
 
 import { UserForm } from "@/components/NewUser/UserForm"
+import { StatusTag } from "@/components/StatusTag"
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { UserDetails } from "@/pages/Settings/Users/UserList/UserDetails"
 import { type ErrorExtended, parseError } from "@/services/api"
-import { Pencil, Trash } from "phosphor-react"
+import { useUserStore } from "@/stores/User/useUserStore"
+import { Eye, Pencil, Trash } from "phosphor-react"
 import type React from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
-type DataType =
+export type TableDataType =
 	| {
 			id: string
 			name: string
-			email: string
+			email: React.ReactNode
 			active: React.ReactNode
-			profile: string
+			profileTag: React.ReactNode
+			profileId: string
+			nameDisplay: React.ReactNode
+			user: User
 	  }
 	| undefined
 
-const TagInfo = ({ active }: { active: boolean }) => {
-	const message = active ? "Ativo" : "Inativo"
-	return <Tag color={active ? "green" : "red"}>{message}</Tag>
+const ProfileTag = ({ profile }: { profile: string }) => {
+	const color = profile.toLowerCase() === "admin" ? "purple" : "default"
+	return <Tag color={color}>{profile}</Tag>
 }
 
 const getDataToShow = (
 	data: User[] | undefined,
 	profiles: Profile[] | undefined,
 	query: string,
-): DataType[] => {
+	currentUser: User | undefined,
+): TableDataType[] => {
 	if (!data || !profiles) return []
-	const values = data.map((user) => ({
-		id: user.id,
-		name: user.name,
-		email: user.email,
-		active: <TagInfo active={user.active} />,
-		profile:
-			profiles.find((p) => p.id === user.profileId)?.description ??
-			"Desconhecido",
-	}))
+	const values = data.map((user) => {
+		const userProfile = profiles.find((p) => p.id === user.profileId)
+		const isCurrentUser = user.id === currentUser?.id
+		return {
+			user: user,
+			id: user.id,
+			name: user.name,
+			email: user.email,
+			active: <StatusTag key={user.id} active={user.active} />,
+			profileTag: (
+				<ProfileTag
+					profile={userProfile?.description ?? "Desconhecido"}
+					key={user.id}
+				/>
+			),
+			profileId: user.profileId,
+			nameDisplay: (
+				<S.UserWrapper key={user.id}>
+					{user.name}
+					{isCurrentUser && <Tag color={"green"}>Você</Tag>}
+				</S.UserWrapper>
+			),
+		}
+	})
+
 	if (!query?.length) return values
 	return values.filter((user) =>
 		user.name.toLowerCase().includes(query.toLowerCase()),
@@ -57,6 +73,7 @@ const getDataToShow = (
 export const UserList = () => {
 	const { data: users, isLoading: isLoadingUsers, query } = useGetAllUsers()
 	const { data: profiles, isLoading: isLoadingProfiles } = useGetProfiles()
+	const user = useUserStore((state) => state.user)
 	const [searchParams, setSearchParams] = useSearchParams()
 	const querySearch = searchParams.get("user") ?? ""
 	const { deleteUser } = useGetUsersActions()
@@ -68,6 +85,7 @@ export const UserList = () => {
 		users?.users,
 		profiles?.profiles,
 		querySearch,
+		user,
 	)
 
 	const handleDelete = async (id: string): Promise<void> => {
@@ -105,11 +123,18 @@ export const UserList = () => {
 		})
 	}
 
-	const getColumns = (): TableColumnsType<DataType> => {
+	const handleShowDetails = (id: string) => {
+		setSearchParams((params) => {
+			params.set("user_id", id)
+			return params
+		})
+	}
+
+	const getColumns = (): TableColumnsType<TableDataType> => {
 		return [
 			{
 				title: "Nome",
-				dataIndex: "name",
+				dataIndex: "nameDisplay",
 				key: "nome",
 				sorter: (a, b) => a?.name.localeCompare(b?.name ?? "") ?? 0,
 				sortDirections: ["descend", "ascend"],
@@ -123,6 +148,17 @@ export const UserList = () => {
 				dataIndex: "email",
 				key: "email",
 				responsive: ["sm"],
+			},
+			{
+				title: "Perfil",
+				dataIndex: "profileTag",
+				key: "profile",
+				responsive: ["sm"],
+				onFilter: (value, record) => record?.profileId === value,
+				filters: profiles?.profiles.map((profile) => ({
+					text: profile.description,
+					value: profile.id,
+				})),
 			},
 			{
 				title: "Status",
@@ -147,15 +183,21 @@ export const UserList = () => {
 				key: "action",
 				dataIndex: "action",
 				width: 100,
-				render: (_, record) => (
-					<S.ActionsWrapper key={record?.id}>
-						<Tooltip title={`Editar ${record?.name ?? ""}`}>
-							<Pencil
-								color={"#1677ff"}
-								onClick={() => onEdit(record?.id ?? "")}
-							/>
-						</Tooltip>
-						<Tooltip title={`Deletar ${record?.name ?? ""}`}>
+				render: (_, record) => {
+					const isCurrentUser = record?.user.id === user?.id
+					return (
+						<S.ActionsWrapper key={record?.id}>
+							{isCurrentUser ? (
+								<Pencil
+									color={"#1677ff"}
+									onClick={() => onEdit(record?.id ?? "")}
+								/>
+							) : (
+								<Eye
+									color={"#1677ff"}
+									onClick={() => handleShowDetails(record?.id ?? "")}
+								/>
+							)}
 							<Popconfirm
 								key={record?.id}
 								title={`Tem certeza que deseja deletar o usuário ${record?.name ?? ""}?`}
@@ -166,14 +208,14 @@ export const UserList = () => {
 							>
 								<Trash className={"delete"} />
 							</Popconfirm>
-						</Tooltip>
-					</S.ActionsWrapper>
-				),
+						</S.ActionsWrapper>
+					)
+				},
 			},
 		]
 	}
 	const columns = getColumns()
-
+	console.count("columns")
 	return (
 		<S.TableWrapper>
 			<Table
@@ -196,6 +238,7 @@ export const UserList = () => {
 					onCancel={handleCancel}
 				/>
 			</Modal>
+			<UserDetails />
 		</S.TableWrapper>
 	)
 }

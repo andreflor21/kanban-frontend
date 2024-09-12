@@ -8,8 +8,10 @@ import {
 	userSchema,
 } from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetProfiles } from "@/services/profileServices"
-import { useGetUsersActions } from "@/services/userServices"
+import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
@@ -17,7 +19,6 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { ContainerButtons, FormStyled } from "./styles"
 
 interface UserFormProps {
@@ -33,9 +34,9 @@ export const UserForm = ({
 	className,
 	usuario,
 }: UserFormProps) => {
-	console.log(usuario)
 	const [isLoading, setIsLoading] = useState(false)
-	const { createUser } = useGetUsersActions()
+	const { createUser, updateUser } = useGetUsersActions()
+	const { query } = useGetAllUsers()
 	const user = useUserStore((state) => state.user)
 	const idUser = user?.id
 	const { data: profiles } = useGetProfiles()
@@ -45,8 +46,8 @@ export const UserForm = ({
 			label: profile.description,
 		})) ?? []
 
-	const navigate = useNavigate()
-	const readOnly = !!usuarioId && idUser !== usuarioId
+	const { showNotification } = useGetNotification()
+	const isEditing = !!usuarioId && idUser === usuarioId
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
@@ -59,15 +60,7 @@ export const UserForm = ({
 		profileId: usuario?.profileId ?? "",
 		active: usuario?.active ?? true,
 		code: usuario?.code ?? "",
-		// email: "",
-		// password: "",
-		// cpf: "",
-		// birthdate: "",
-		// profileId: "",
-		// active: true,
-		// code: "",
 	}
-	console.log({ initialValues })
 
 	const methods = useForm<UserSchema>({
 		mode: "onChange",
@@ -75,8 +68,28 @@ export const UserForm = ({
 		values: initialValues,
 	})
 
-	const goBack = (path: string) => {
-		navigate(path)
+	const handleEdit = async () => {
+		const values = methods.getValues()
+		setIsLoading(true)
+		try {
+			await updateUser(usuarioId, values)
+			await query.refetch()
+			showNotification({
+				message: "Usuário atualizado com sucesso",
+				description: "O usuário foi atualizado com sucesso",
+				type: "SUCCESS",
+			})
+			onCancel()
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				message: "Erro ao atualizar usuário",
+				description: parsedError ?? "Por favor, tente novamente mais tarde",
+				type: "ERROR",
+			})
+		} finally {
+			setIsLoading(false)
+		}
 	}
 
 	const handleSubmit = async () => {
@@ -84,10 +97,21 @@ export const UserForm = ({
 		setIsLoading(true)
 		try {
 			await createUser(values)
-			setIsLoading(false)
+			await query.refetch()
+			showNotification({
+				message: "Usuário criado com sucesso",
+				description: "O usuário foi criado com sucesso",
+				type: "SUCCESS",
+			})
 			onCancel()
 		} catch (err) {
-			console.error(err)
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				message: "Erro ao criar usuário",
+				description: parsedError ?? "Por favor, tente novamente mais tarde",
+				type: "ERROR",
+			})
+		} finally {
 			setIsLoading(false)
 		}
 	}
@@ -109,13 +133,13 @@ export const UserForm = ({
 					onChange={(value) => {
 						methods.setValue("profileId", value)
 					}}
+					value={methods.watch("profileId")}
 				/>
 				<Input
 					required
 					label="Nome"
 					placeholder="Digite seu nome"
 					errorMessage={methods.formState.errors.name?.message}
-					disabled={readOnly}
 					{...methods.register("name")}
 				/>
 				<Input
@@ -123,7 +147,6 @@ export const UserForm = ({
 					label="Email"
 					placeholder="Digite seu email"
 					errorMessage={methods.formState.errors.email?.message}
-					disabled={readOnly}
 					{...methods.register("email")}
 				/>
 				<Input
@@ -132,7 +155,6 @@ export const UserForm = ({
 					label="Senha"
 					placeholder="Insira uma senha"
 					errorMessage={methods.formState.errors.password?.message}
-					disabled={readOnly}
 					{...methods.register("password")}
 				/>
 				<Input
@@ -141,7 +163,6 @@ export const UserForm = ({
 					type="text"
 					placeholder="000.000.000-00"
 					errorMessage={methods.formState.errors.cpf?.message}
-					disabled={readOnly}
 					error={!!methods.formState.errors.cpf}
 					onChange={(e) => {
 						methods.setValue("cpf", cpfMask(e.target.value))
@@ -155,7 +176,6 @@ export const UserForm = ({
 					inputType="text"
 					placeholder="XXXXX"
 					errorMessage={methods.formState.errors.code?.message}
-					disabled={readOnly}
 					{...methods.register("code")}
 				/>
 				<Input
@@ -163,13 +183,11 @@ export const UserForm = ({
 					inputType="date"
 					placeholder="DD/MM/YYYY"
 					errorMessage={methods.formState.errors.birthdate?.message}
-					disabled={readOnly}
 					{...methods.register("birthdate")}
 				/>
 				<Checkbox
 					label="Ativo"
 					checked={methods.watch("active")}
-					disabled={readOnly}
 					onCheckedChange={(checked) => methods.setValue("active", !!checked)}
 				/>
 
@@ -181,41 +199,12 @@ export const UserForm = ({
 						<Button
 							className="button2"
 							type="button"
-							onClickFunc={handleSubmit}
+							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
 							disabled={!methods.formState.isValid || isLoading}
 						>
-							Gravar
+							Salvar
 						</Button>
 					</>
-					{/*{!novoUsuario ? (*/}
-					{/*	<>*/}
-					{/*		<Button*/}
-					{/*			className="button1"*/}
-					{/*			type="button"*/}
-					{/*			onClickFunc={() => goBack("/configuracoes/usuarios")}*/}
-					{/*		>*/}
-					{/*			Voltar*/}
-					{/*		</Button>*/}
-					{/*		<Button*/}
-					{/*			className="button2"*/}
-					{/*			type="button"*/}
-					{/*			disabled={readOnly}*/}
-					{/*			onClickFunc={() => setIsModalOpen(!isModalOpen)}*/}
-					{/*		>*/}
-					{/*			Trocar Senha*/}
-					{/*		</Button>*/}
-					{/*		<Button*/}
-					{/*			className="button3"*/}
-					{/*			type="button"*/}
-					{/*			disabled={readOnly}*/}
-					{/*			onClickFunc={handleSubmit}*/}
-					{/*		>*/}
-					{/*			Atualizar*/}
-					{/*		</Button>*/}
-					{/*	</>*/}
-					{/*) : (*/}
-					{/*	*/}
-					{/*)}*/}
 				</ContainerButtons>
 			</FormStyled>
 			<ChangePassword
