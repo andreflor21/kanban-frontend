@@ -9,7 +9,7 @@ import {
 } from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetProfiles } from "@/services/profileServices"
-import { useGetUsersActions } from "@/services/userServices"
+import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
@@ -17,7 +17,6 @@ import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { useNavigate } from "react-router-dom"
 import { ContainerButtons, FormStyled } from "./styles"
 
 interface UserFormProps {
@@ -33,9 +32,9 @@ export const UserForm = ({
 	className,
 	usuario,
 }: UserFormProps) => {
-	console.log(usuario)
 	const [isLoading, setIsLoading] = useState(false)
 	const { createUser } = useGetUsersActions()
+	const { query } = useGetAllUsers()
 	const user = useUserStore((state) => state.user)
 	const idUser = user?.id
 	const { data: profiles } = useGetProfiles()
@@ -45,7 +44,6 @@ export const UserForm = ({
 			label: profile.description,
 		})) ?? []
 
-	const navigate = useNavigate()
 	const readOnly = !!usuarioId && idUser !== usuarioId
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
@@ -59,15 +57,7 @@ export const UserForm = ({
 		profileId: usuario?.profileId ?? "",
 		active: usuario?.active ?? true,
 		code: usuario?.code ?? "",
-		// email: "",
-		// password: "",
-		// cpf: "",
-		// birthdate: "",
-		// profileId: "",
-		// active: true,
-		// code: "",
 	}
-	console.log({ initialValues })
 
 	const methods = useForm<UserSchema>({
 		mode: "onChange",
@@ -75,15 +65,12 @@ export const UserForm = ({
 		values: initialValues,
 	})
 
-	const goBack = (path: string) => {
-		navigate(path)
-	}
-
 	const handleSubmit = async () => {
 		const values = methods.getValues()
 		setIsLoading(true)
 		try {
 			await createUser(values)
+			query.refetch()
 			setIsLoading(false)
 			onCancel()
 		} catch (err) {

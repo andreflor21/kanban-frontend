@@ -12,7 +12,6 @@ export function isValidCPF(value: string) {
 	let cpf = value
 	cpf = cpf.replace(/[^\d]+/g, "")
 	if (!cpf?.length) return false
-	// Elimina CPFs invalidos conhecidos
 	if (
 		cpf.length !== 11 ||
 		cpf === "00000000000" ||
@@ -27,16 +26,18 @@ export function isValidCPF(value: string) {
 		cpf === "99999999999"
 	)
 		return false
-	// Valida 1o digito
 	let add = 0
 	for (let i = 0; i < 9; i++) add += Number.parseInt(cpf.charAt(i)) * (10 - i)
 	let rev = 11 - (add % 11)
 	if (rev === 10 || rev === 11) rev = 0
 	if (rev !== Number.parseInt(cpf.charAt(9))) return false
-	// Valida 2o digito
 	add = 0
 	for (let i = 0; i < 10; i++) add += Number.parseInt(cpf.charAt(i)) * (11 - i)
 	rev = 11 - (add % 11)
 	if (rev === 10 || rev === 11) rev = 0
 	return rev === Number.parseInt(cpf.charAt(10))
+}
+
+export function hashCPF(cpf: string) {
+	return `${cpf.replace(/\D/g, "").substring(0, 3)}.****-${cpf.replace(/\D/g, "").substring(9, 11)}`
 }
