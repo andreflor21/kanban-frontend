@@ -59,7 +59,7 @@ type CreateUserBody = {
 	email: string
 	password: string
 	cpf: string
-	code: string
+	code?: string
 	profileId: string
 	birthdate?: string
 	active: boolean
@@ -89,7 +89,19 @@ export const useGetUsersActions = () => {
 		}
 	}
 
-	return { createUser, deleteUser }
+	const updateUser = async (id: string, data: CreateUserBody) => {
+		const url = `/users/${id}/edit`
+		try {
+			return await ApiInstance.patch<CreateUserBody, User>(url, data, {
+				headers,
+			})
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			throw new Error(parsedError ?? UNEXPECTED_ERROR)
+		}
+	}
+
+	return { createUser, deleteUser, updateUser }
 }
 
 type UsersResponse = {

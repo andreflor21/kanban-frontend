@@ -17,6 +17,8 @@ export const ApiInstance = {
 		await api.post<R>(uri, data, options).then((res) => res.data),
 	delete: async <R>(uri: string, options?: BffApiOptions) =>
 		await api.delete<R>(uri, options).then((res) => res.data),
+	patch: async <D, R>(uri: string, data: D, options?: BffApiOptions) =>
+		await api.patch<R>(uri, data, options).then((res) => res.data),
 }
 
 export type ErrorExtended = Error | undefined | ValidationError | AxiosError
