@@ -41,4 +41,10 @@ export const InfoLine = styled.span`
     display: flex;
     gap: ${spacing.micro};
     padding: ${spacing.micro} 0;
+    font-size:16px;
+`
+export const DeleteWrapper = styled.div`
+    display: flex;
+    justify-content: flex-end;
+    
 `

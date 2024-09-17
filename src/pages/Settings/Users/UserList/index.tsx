@@ -1,7 +1,7 @@
 import { useGetProfiles } from "@/services/profileServices"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import type { User } from "@/types/usuario"
-import { Modal, Popconfirm, Table, type TableColumnsType } from "antd"
+import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
 
 import { UserForm } from "@/components/NewUser/UserForm"
 import { useGetNotification } from "@/hooks/useGetNotification"
@@ -36,7 +36,7 @@ export const UserList = () => {
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
 
-	const isLoading = isLoadingUsers || isLoadingProfiles
+	const isLoading = isLoadingUsers
 
 	const dataToShow = getDataToShow(
 		users?.users,
@@ -182,11 +182,11 @@ export const UserList = () => {
 				pagination={false}
 				virtual={true}
 			/>
-			<Modal
+			<Drawer
 				title="Editar Usuário"
 				open={!!isModalOpen}
-				onCancel={handleCancel}
-				footer={false}
+				onClose={handleCancel}
+				width={600}
 			>
 				<UserForm
 					usuario={userToEdit}
@@ -194,7 +194,7 @@ export const UserList = () => {
 					className="modal"
 					onCancel={handleCancel}
 				/>
-			</Modal>
+			</Drawer>
 			<UserDetails />
 		</S.TableWrapper>
 	)

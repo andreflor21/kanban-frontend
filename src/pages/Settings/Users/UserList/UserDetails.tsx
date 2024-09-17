@@ -4,7 +4,7 @@ import { hashCPF } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
-import { Button, Modal } from "antd"
+import { Button, Drawer } from "antd"
 import { Trash } from "phosphor-react"
 import type React from "react"
 import { useState } from "react"
@@ -75,24 +75,14 @@ export const UserDetails = () => {
 
 	return (
 		<>
-			<Modal
+			<Drawer
 				title="Detalhes do Usuário"
 				open={!!user}
-				onCancel={() =>
+				onClose={() =>
 					setSearchParams((params) => {
 						params.delete("user_id")
 						return params
 					})
-				}
-				footer={
-					<Button
-						loading={isDeleting}
-						onClick={handleDeleteUser}
-						danger
-						icon={<Trash />}
-					>
-						Deletar Usuário
-					</Button>
 				}
 			>
 				<S.UserDetailsWrapper>
@@ -134,7 +124,17 @@ export const UserDetails = () => {
 						</span>
 					</S.InfoLine>
 				</S.UserDetailsWrapper>
-			</Modal>
+				<S.DeleteWrapper>
+					<Button
+						loading={isDeleting}
+						onClick={handleDeleteUser}
+						danger
+						icon={<Trash />}
+					>
+						Deletar Usuário
+					</Button>
+				</S.DeleteWrapper>
+			</Drawer>
 		</>
 	)
 }

@@ -4,12 +4,7 @@ import styled from "styled-components"
 export const FormStyled = styled.form`
     display: flex;
     flex-direction: column;
-    margin: 2rem auto 1rem;
-    width: 90%;
-    @media only screen and (min-width: 768px) {
-        margin: 2rem auto 1rem 12rem;
-        width: 40%;
-    }
+    gap: ${spacing.xxxs};
 
     > span {
         font-style: normal;
