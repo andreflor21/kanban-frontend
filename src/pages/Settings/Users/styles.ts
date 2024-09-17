@@ -15,7 +15,7 @@ export const Container = styled.div`
         gap: 0 1rem;
         font-weight: 300;
         padding: 6px 16px;
-        font-family: var(--font-standard);
+        font-family: var(--font-standard), sans-serif;
         @media screen and (min-width: 768px) {
             font-size: 1.25rem;
         }
