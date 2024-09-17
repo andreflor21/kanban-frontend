@@ -1,5 +1,6 @@
 import { UserForm } from "@/components/NewUser/UserForm"
-import { Modal } from "antd"
+import { Button, Drawer } from "antd"
+import { X } from "phosphor-react"
 import React from "react"
 import { useSearchParams } from "react-router-dom"
 
@@ -15,11 +16,14 @@ const NewUser = () => {
 	}
 
 	return (
-		<Modal
+		<Drawer
 			title="Novo Usuário"
+			placement="right"
+			closable={false}
+			onClose={handleCancel}
 			open={isOpen}
-			onCancel={handleCancel}
-			footer={false}
+			width={600}
+			extra={<Button shape="circle" onClick={handleCancel} icon={<X />} />}
 		>
 			<UserForm
 				usuario={null}
@@ -27,7 +31,7 @@ const NewUser = () => {
 				onCancel={handleCancel}
 				className="modal"
 			/>
-		</Modal>
+		</Drawer>
 	)
 }
 

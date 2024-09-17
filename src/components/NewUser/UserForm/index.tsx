@@ -3,7 +3,10 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
+import {
+	type UserSchema,
+	userSchema,
+} from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
@@ -210,14 +213,14 @@ export const UserForm = ({
 
 				<ContainerButtons>
 					<>
-						<Button className="button1" type="button" onClickFunc={onCancel}>
+						<Button className="button1" onClickFunc={onCancel} danger>
 							Cancelar
 						</Button>
 						<Button
 							className="button2"
-							type="button"
 							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
-							disabled={!methods.formState.isValid || isLoading}
+							// disabled={!methods.formState.isValid || isLoading}
+							type="primary"
 						>
 							Salvar
 						</Button>
