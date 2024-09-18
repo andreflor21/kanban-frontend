@@ -10,13 +10,14 @@ import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetProfiles } from "@/services/profileServices"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import { useUserStore } from "@/stores/User/useUserStore"
+import { FormStyled } from "@/style/global"
 import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { ContainerButtons, FormStyled } from "./styles"
+import { ContainerButtons } from "./styles"
 
 interface UserFormProps {
 	usuario: User | null
@@ -210,16 +211,16 @@ export const UserForm = ({
 
 				<ContainerButtons>
 					<>
-						<Button className="button1" type="button" onClickFunc={onCancel}>
+						<Button className="button1" onClickFunc={onCancel} danger>
 							Cancelar
 						</Button>
 						<Button
 							className="button2"
-							type="button"
 							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
 							disabled={!methods.formState.isValid || isLoading}
+							type="primary"
 						>
-							Salvar
+							{isEditing ? "Atualizar" : "Criar"}
 						</Button>
 					</>
 				</ContainerButtons>

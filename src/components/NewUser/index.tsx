@@ -1,5 +1,5 @@
 import { UserForm } from "@/components/NewUser/UserForm"
-import { Modal } from "antd"
+import { Drawer } from "antd"
 import React from "react"
 import { useSearchParams } from "react-router-dom"
 
@@ -15,11 +15,12 @@ const NewUser = () => {
 	}
 
 	return (
-		<Modal
+		<Drawer
 			title="Novo Usuário"
+			placement="right"
+			onClose={handleCancel}
 			open={isOpen}
-			onCancel={handleCancel}
-			footer={false}
+			width={600}
 		>
 			<UserForm
 				usuario={null}
@@ -27,7 +28,7 @@ const NewUser = () => {
 				onCancel={handleCancel}
 				className="modal"
 			/>
-		</Modal>
+		</Drawer>
 	)
 }
 

@@ -106,7 +106,12 @@ const Login = () => {
 						errorMessage={errors.password?.message}
 					/>
 
-					<Button type="submit" disabled={!isValid || isLoading}>
+					<Button
+						htmlType="submit"
+						type={"primary"}
+						disabled={!isValid || isLoading}
+						style={{ width: "60%" }}
+					>
 						Login
 					</Button>
 				</FormStyled>

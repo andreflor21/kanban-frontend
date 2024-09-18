@@ -17,9 +17,10 @@ export const getDataToShow = (
 	query: string,
 	currentUser: User | undefined,
 ): TableDataType[] => {
-	if (!data || !profiles) return []
+	if (!data) return []
 	const values = data.map((user) => {
-		const userProfile = profiles.find((p) => p.id === user.profileId)
+		const userProfile = profiles?.find((p) => p.id === user.profileId)
+		console.log(userProfile, profiles, user)
 		const isCurrentUser = user.id === currentUser?.id
 		return {
 			user: user,

@@ -5,8 +5,9 @@
 	"type": "module",
 	"scripts": {
 		"dev": "vite",
+		"start": "vite",
 		"build": "tsc && vite build",
-		"lint": "npx biome check --write .",
+		"lint": "pnpm biome check --write .",
 		"preview": "vite preview"
 	},
 	"dependencies": {

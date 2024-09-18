@@ -1,10 +1,11 @@
+import type { ButtonProps, GetProps } from "antd"
 import type React from "react"
 import { ButtonItem } from "./styles"
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+type ButtonPropsType = GetProps<ButtonProps> & {
 	onClickFunc?: (e: React.MouseEvent<HTMLButtonElement>) => void
 	children: React.ReactNode
-	type?: "button" | "submit" | "reset" | undefined
+	htmlType?: "button" | "submit" | "reset" | undefined
 	isLoading?: boolean
 	icon?: React.ReactNode
 	iconPosition?: "start" | "end"
@@ -12,20 +13,22 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = ({
 	onClickFunc,
-	type,
+	htmlType = "button",
 	children,
 	isLoading = false,
 	icon,
 	iconPosition = "start",
+	type = "default",
 	...rest
-}: ButtonProps) => {
+}: ButtonPropsType) => {
 	return (
 		<ButtonItem
 			icon={icon}
 			iconPosition={iconPosition}
-			htmlType={type}
+			htmlType={htmlType}
 			onClick={onClickFunc}
 			loading={isLoading}
+			type={type}
 			{...rest}
 		>
 			{children}
