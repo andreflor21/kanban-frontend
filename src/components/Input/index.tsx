@@ -36,6 +36,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 		ref,
 	) => {
 		const [visible, setVisible] = useState(false)
+		const hasError = Boolean(error || errorMessage)
 		return (
 			<ContainerInput>
 				{label && (
@@ -70,13 +71,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 					<InputStyled
 						className={className}
 						type={inputType}
-						error={error}
+						error={hasError}
 						placeholder={placeholder}
 						{...rest}
 						ref={ref}
 					/>
 				)}
-				{error && <ErrorMessage>{errorMessage}</ErrorMessage>}
+				{hasError && <ErrorMessage>{errorMessage}</ErrorMessage>}
 			</ContainerInput>
 		)
 	},

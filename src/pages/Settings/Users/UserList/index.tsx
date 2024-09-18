@@ -36,7 +36,7 @@ export const UserList = () => {
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
 
-	const isLoading = isLoadingUsers
+	const isLoading = isLoadingUsers || isLoadingProfiles
 
 	const dataToShow = getDataToShow(
 		users?.users,

@@ -20,6 +20,7 @@ export const getDataToShow = (
 	if (!data) return []
 	const values = data.map((user) => {
 		const userProfile = profiles?.find((p) => p.id === user.profileId)
+		console.log(userProfile, profiles, user)
 		const isCurrentUser = user.id === currentUser?.id
 		return {
 			user: user,

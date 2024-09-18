@@ -136,3 +136,18 @@ export const PageContainer = styled.div`
         }
     }
 `
+
+export const FormStyled = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: ${spacing.xxxs};
+
+    > span {
+        font-style: normal;
+        font-weight: normal;
+        font-size: 16px;
+        line-height: 19px;
+        padding: 0.5rem;
+    }
+
+`

@@ -3,23 +3,21 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import {
-	type UserSchema,
-	userSchema,
-} from "@/components/NewUser/UserForm/helpers"
+import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetProfiles } from "@/services/profileServices"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import { useUserStore } from "@/stores/User/useUserStore"
+import { FormStyled } from "@/style/global"
 import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { ContainerButtons, FormStyled } from "./styles"
+import { ContainerButtons } from "./styles"
 
 interface UserFormProps {
 	usuario: User | null
@@ -219,10 +217,10 @@ export const UserForm = ({
 						<Button
 							className="button2"
 							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
-							// disabled={!methods.formState.isValid || isLoading}
+							disabled={!methods.formState.isValid || isLoading}
 							type="primary"
 						>
-							Salvar
+							{isEditing ? "Atualizar" : "Criar"}
 						</Button>
 					</>
 				</ContainerButtons>
