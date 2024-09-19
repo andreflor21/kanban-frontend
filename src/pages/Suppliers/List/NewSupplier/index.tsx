@@ -9,33 +9,57 @@ import { useGetSuppliers, useGetSuppliersActions, } from "@/services/useGetSuppl
 import { useGetAllUsers } from "@/services/userServices"
 import { FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
+const EMPTY_INITIAL_VALUES: NewSupplierSchema = {
+	name: "",
+	cnpj: "",
+	email: "",
+	fone: "",
+	legalName: "",
+	ERPcode: "",
+	code: "",
+	users: [],
+}
+
 export const NewSupplier = () => {
 	const [isLoading, setIsLoading] = useState(false)
-	const [_, setSearchParams] = useSearchParams()
-	const { createSupplier } = useGetSuppliersActions()
+	const [searchParams, setSearchParams] = useSearchParams()
+	const { createSupplier, updateSupplier } = useGetSuppliersActions()
 	const { data: users } = useGetAllUsers()
-	const { query: supplierQuery } = useGetSuppliers()
+	const { query: supplierQuery, data: supplierData } = useGetSuppliers()
 	const { showNotification } = useGetNotification()
+
 	const usersToDisplay = users?.users?.map((user) => ({
 		label: user.name,
 		value: user.id,
 	}))
 
-	const initialValues: NewSupplierSchema = {
-		name: "",
-		cnpj: "",
-		email: "",
-		fone: "",
-		legalName: "",
-		ERPcode: "",
-		code: "",
-		users: [],
-	}
+	const editSupplierId = searchParams.get("edit_supplier_id")
+	const isEditing = !!editSupplierId
+
+	const initialValues = useMemo(() => {
+		const supplier = supplierData?.suppliers?.find(
+			(supplier) => supplier.id === editSupplierId,
+		)
+		if (!isEditing || !supplier) {
+			return EMPTY_INITIAL_VALUES
+		}
+		console.log("initial values", supplier)
+		return {
+			name: supplier.name,
+			cnpj: supplier.cnpj,
+			email: supplier.email,
+			fone: supplier.fone,
+			legalName: supplier.legalName,
+			ERPcode: supplier.ERPCode,
+			code: supplier.code,
+			users: supplier?.users?.map((user) => user.id),
+		}
+	}, [editSupplierId, isEditing, supplierData])
 
 	const methods = useForm<NewSupplierSchema>({
 		mode: "onChange",
@@ -46,14 +70,38 @@ export const NewSupplier = () => {
 	const handleCancel = () => {
 		setSearchParams((params) => {
 			params.delete("action")
+			params.delete("edit_supplier_id")
 			return params
 		})
 		methods.reset()
 	}
 
-	const isEditing = false
-	const handleEdit = () => {
-		console.log("handle edit")
+	const handleEdit = async () => {
+		const id = searchParams.get("edit_supplier_id")
+		if (!id) return
+
+		setIsLoading(true)
+		const values = methods.getValues()
+
+		try {
+			await updateSupplier(id, values)
+			await supplierQuery.refetch()
+			showNotification({
+				message: "Fornecedor atualizado com sucesso",
+				description: "O fornecedor foi atualizado com sucesso",
+				type: "SUCCESS",
+			})
+			handleCancel()
+		} catch (error) {
+			const parsedError = parseError(error as ErrorExtended)
+			showNotification({
+				message: "Erro ao atualizar fornecedor",
+				description: parsedError ?? "Por favor, tente novamente mais tarde",
+				type: "ERROR",
+			})
+		} finally {
+			setIsLoading(false)
+		}
 	}
 
 	const handleSubmit = async (data: NewSupplierSchema) => {
@@ -84,9 +132,13 @@ export const NewSupplier = () => {
 		}
 	}
 
+	console.log("methods.formState.isDirty", methods.formState.isDirty)
+
 	return (
 		<div>
-			<FormStyled onSubmit={methods.handleSubmit(handleSubmit)}>
+			<FormStyled
+				onSubmit={methods.handleSubmit(isEditing ? handleEdit : handleSubmit)}
+			>
 				<Input
 					required
 					label="Nome"
@@ -152,6 +204,7 @@ export const NewSupplier = () => {
 					options={usersToDisplay ?? []}
 					onChange={(value) => {
 						methods.setValue("users", value)
+						methods.trigger("users")
 					}}
 				/>
 				<S.ContainerButtons>
@@ -161,7 +214,7 @@ export const NewSupplier = () => {
 					<Button
 						className="button2"
 						htmlType="submit"
-						disabled={!methods.formState.isValid}
+						disabled={!methods.formState.isValid || !methods.formState.isDirty}
 						type="primary"
 						isLoading={isLoading}
 					>

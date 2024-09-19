@@ -1,7 +1,15 @@
 import { StatusTag } from "@/components/StatusTag"
 import { cnpjMask } from "@/helpers/general"
-import { type Suppliers, useGetSuppliers } from "@/services/useGetSuppliers"
-import { Table, type TableColumnsType } from "antd"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { NewSupplier } from "@/pages/Suppliers/List/NewSupplier"
+import { type ErrorExtended, parseError } from "@/services/api"
+import {
+	type Suppliers,
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
+import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
+import { Pencil, Trash } from "phosphor-react"
 import React, { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
@@ -16,10 +24,33 @@ type TableDataType = {
 }
 
 export const SuppliersTable = () => {
-	const { data, isLoading, error } = useGetSuppliers()
+	const { data, isLoading, error, query } = useGetSuppliers()
+	const { deleteSupplier } = useGetSuppliersActions()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const supplierQuery = searchParams.get("supplier")
+	const { showNotification } = useGetNotification()
 	console.log(data, isLoading, error)
+	const editSupplierId = searchParams.get("edit_supplier_id")
+	const isDrawerOpen = !!editSupplierId
+
+	const handleDelete = async (id: string): Promise<void> => {
+		try {
+			await deleteSupplier(id)
+			await query.refetch()
+			showNotification({
+				message: "Fornecedor deletado com sucesso",
+				description: "O fornecedor foi deletado com sucesso",
+				type: "SUCCESS",
+			})
+		} catch (error) {
+			const parsedError = parseError(error as ErrorExtended)
+			showNotification({
+				message: "Erro ao deletar fornecedor",
+				description: parsedError ?? "Por favor, tente novamente mais tarde",
+				type: "ERROR",
+			})
+		}
+	}
 
 	const getColumns = (): TableColumnsType<Suppliers> => {
 		return [
@@ -48,6 +79,23 @@ export const SuppliersTable = () => {
 				key: "cnpj",
 				render: (_, record) => cnpjMask(record.cnpj),
 			},
+
+			{
+				title: "Telefone",
+				dataIndex: "fone",
+				key: "fone",
+				responsive: ["md"],
+				width: 150,
+				render: (_, record) => (record?.fone ? record.fone : "Não informado"),
+			},
+			{
+				title: "Código ERP",
+				dataIndex: "code",
+				key: "ERPcode",
+				responsive: ["md"],
+				width: 150,
+				render: (_, record) => (record?.code ? record.code : "Não informado"),
+			},
 			{
 				title: "Status",
 				dataIndex: "active",
@@ -70,20 +118,35 @@ export const SuppliersTable = () => {
 				],
 			},
 			{
-				title: "Telefone",
-				dataIndex: "fone",
-				key: "fone",
-				responsive: ["md"],
-				width: 150,
-				render: (_, record) => (record?.fone ? record.fone : "Não informado"),
-			},
-			{
-				title: "Código ERP",
-				dataIndex: "code",
-				key: "ERPcode",
-				responsive: ["md"],
-				width: 150,
-				render: (_, record) => (record?.code ? record.code : "Não informado"),
+				title: "",
+				key: "action",
+				dataIndex: "action",
+				width: 100,
+				render: (_, record) => {
+					return (
+						<S.ActionsWrapper key={record?.id}>
+							<Pencil
+								color={"#1677ff"}
+								onClick={() =>
+									setSearchParams((params) => {
+										params.set("edit_supplier_id", record?.id ?? "")
+										return params
+									})
+								}
+							/>
+							<Popconfirm
+								key={record?.id}
+								title={`Tem certeza que deseja deletar o fornecedor ${record?.name ?? ""}?`}
+								onConfirm={() => handleDelete(record?.id ?? "")}
+								okText={"Deletar"}
+								cancelText={"Cancelar"}
+								placement={"left"}
+							>
+								<Trash className={"delete"} />
+							</Popconfirm>
+						</S.ActionsWrapper>
+					)
+				},
 			},
 		]
 	}
@@ -109,6 +172,20 @@ export const SuppliersTable = () => {
 				pagination={false}
 				virtual={true}
 			/>
+			<Drawer
+				title="Editar Fornecedor"
+				placement="right"
+				width={600}
+				open={isDrawerOpen}
+				onClose={() => {
+					setSearchParams((params) => {
+						params.delete("edit_supplier_id")
+						return params
+					})
+				}}
+			>
+				<NewSupplier />
+			</Drawer>
 		</S.TableWrapper>
 	)
 }
