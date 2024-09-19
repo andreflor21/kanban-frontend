@@ -9,9 +9,12 @@ export type User = {
 	createdAt: string
 	active: boolean
 	changePassword: boolean
-	profileId: string
 	tokenReset: string | null
 	tokenResetExpires: string | null
+	profile: {
+		description: string
+		id: string
+	}
 }
 export interface UsuarioData {
 	nome?: string

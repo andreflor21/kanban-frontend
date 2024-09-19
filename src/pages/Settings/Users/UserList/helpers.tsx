@@ -1,26 +1,22 @@
 import { StatusTag } from "@/components/StatusTag"
 import type { TableDataType } from "@/pages/Settings/Users/UserList/index"
 import * as S from "@/pages/Settings/Users/UserList/styles"
-import type { Profile } from "@/services/profileServices"
 import type { User } from "@/types/usuario"
 import { Tag } from "antd"
 import type React from "react"
 
-const ProfileTag = ({ profile }: { profile: string }) => {
+export const ProfileTag = ({ profile }: { profile: string }) => {
 	const color = profile.toLowerCase() === "admin" ? "purple" : "default"
 	return <Tag color={color}>{profile}</Tag>
 }
 
 export const getDataToShow = (
 	data: User[] | undefined,
-	profiles: Profile[] | undefined,
 	query: string,
 	currentUser: User | undefined,
 ): TableDataType[] => {
 	if (!data) return []
 	const values = data.map((user) => {
-		const userProfile = profiles?.find((p) => p.id === user.profileId)
-		console.log(userProfile, profiles, user)
 		const isCurrentUser = user.id === currentUser?.id
 		return {
 			user: user,
@@ -30,11 +26,11 @@ export const getDataToShow = (
 			active: <StatusTag key={user.id} active={user.active} />,
 			profileTag: (
 				<ProfileTag
-					profile={userProfile?.description ?? "Desconhecido"}
+					profile={user?.profile?.description ?? "Desconhecido"}
 					key={user.id}
 				/>
 			),
-			profileId: user.profileId,
+			profileId: user.profile?.id,
 			nameDisplay: (
 				<S.UserWrapper key={user.id}>
 					{user.name}

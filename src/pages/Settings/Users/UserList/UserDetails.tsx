@@ -2,6 +2,7 @@ import { StatusTag } from "@/components/StatusTag"
 import { formatDate } from "@/helpers/dates"
 import { hashCPF } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { ProfileTag } from "@/pages/Settings/Users/UserList/helpers"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetAllUsers, useGetUsersActions } from "@/services/userServices"
 import { Button, Drawer } from "antd"
@@ -49,7 +50,7 @@ export const UserDetails = () => {
 			description:
 				type === "SUCCESS"
 					? "Usuário deletado com sucesso"
-					: description ?? "Erro ao deletar usuário",
+					: (description ?? "Erro ao deletar usuário"),
 			message: type === "SUCCESS" ? "Sucesso" : "Erro",
 		})
 	}
@@ -108,7 +109,9 @@ export const UserDetails = () => {
 					)}
 					<S.InfoLine>
 						<LineTitle>Perfil:</LineTitle>
-						<span>{user?.profileId}</span>
+						<ProfileTag
+							profile={user?.profile?.description ?? "Desconhecido"}
+						/>
 					</S.InfoLine>
 					<S.InfoLine>
 						<LineTitle>Status:</LineTitle>

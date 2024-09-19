@@ -3,7 +3,10 @@ import ChangePassword from "@/components/ChangePassword"
 import { Checkbox } from "@/components/Checkbox"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import { type UserSchema, userSchema, } from "@/components/NewUser/UserForm/helpers"
+import {
+	type UserSchema,
+	userSchema,
+} from "@/components/NewUser/UserForm/helpers"
 import { cpfMask } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
@@ -55,7 +58,7 @@ export const UserForm = ({
 		password: "",
 		cpf: usuario?.cpf ?? "",
 		birthdate: usuario?.birthdate ?? "",
-		profileId: usuario?.profileId ?? "",
+		profileId: usuario?.profile?.id ?? "",
 		active: usuario?.active ?? true,
 		code: usuario?.code ?? "",
 	}
@@ -217,7 +220,11 @@ export const UserForm = ({
 						<Button
 							className="button2"
 							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
-							disabled={!methods.formState.isValid || isLoading}
+							disabled={
+								!methods.formState.isValid ||
+								!methods.formState.isDirty ||
+								isLoading
+							}
 							type="primary"
 						>
 							{isEditing ? "Atualizar" : "Criar"}
