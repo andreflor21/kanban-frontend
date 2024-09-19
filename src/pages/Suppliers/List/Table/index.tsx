@@ -29,7 +29,6 @@ export const SuppliersTable = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const supplierQuery = searchParams.get("supplier")
 	const { showNotification } = useGetNotification()
-	console.log(data, isLoading, error)
 	const editSupplierId = searchParams.get("edit_supplier_id")
 	const isDrawerOpen = !!editSupplierId
 

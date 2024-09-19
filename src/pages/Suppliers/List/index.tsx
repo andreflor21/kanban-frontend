@@ -8,7 +8,6 @@ import { useSearchParams } from "react-router-dom"
 export const SuppliersList = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const handleCreateSupplier = () => {
-		console.log("create supplier")
 		setSearchParams((params) => {
 			params.set("action", "create_supplier")
 			return params

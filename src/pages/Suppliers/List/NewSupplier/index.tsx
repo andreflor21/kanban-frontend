@@ -3,9 +3,15 @@ import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
 import { cnpjMask, onlyNumbersCnpj } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
-import { type NewSupplierSchema, newSupplierSchema, } from "@/pages/Suppliers/List/NewSupplier/schema"
+import {
+	type NewSupplierSchema,
+	newSupplierSchema,
+} from "@/pages/Suppliers/List/NewSupplier/schema"
 import { type ErrorExtended, parseError } from "@/services/api"
-import { useGetSuppliers, useGetSuppliersActions, } from "@/services/useGetSuppliers"
+import {
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
 import { useGetAllUsers } from "@/services/userServices"
 import { FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -48,7 +54,6 @@ export const NewSupplier = () => {
 		if (!isEditing || !supplier) {
 			return EMPTY_INITIAL_VALUES
 		}
-		console.log("initial values", supplier)
 		return {
 			name: supplier.name,
 			cnpj: supplier.cnpj,
@@ -131,8 +136,6 @@ export const NewSupplier = () => {
 			setIsLoading(false)
 		}
 	}
-
-	console.log("methods.formState.isDirty", methods.formState.isDirty)
 
 	return (
 		<div>
