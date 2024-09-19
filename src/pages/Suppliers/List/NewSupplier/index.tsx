@@ -217,7 +217,11 @@ export const NewSupplier = () => {
 					<Button
 						className="button2"
 						htmlType="submit"
-						disabled={!methods.formState.isValid || !methods.formState.isDirty}
+						disabled={
+							!methods.formState.isValid ||
+							!methods.formState.isDirty ||
+							isLoading
+						}
 						type="primary"
 						isLoading={isLoading}
 					>

@@ -29,21 +29,17 @@ export type TableDataType =
 
 export const UserList = () => {
 	const { data: users, isLoading: isLoadingUsers, query } = useGetAllUsers()
-	const { data: profiles, isLoading: isLoadingProfiles } = useGetProfiles()
+	const { data: profiles } = useGetProfiles()
 	const user = useUserStore((state) => state.user)
 	const [searchParams, setSearchParams] = useSearchParams()
 	const querySearch = searchParams.get("user") ?? ""
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
+	console.log("users", users)
 
-	const isLoading = isLoadingUsers || isLoadingProfiles
+	const isLoading = isLoadingUsers
 
-	const dataToShow = getDataToShow(
-		users?.users,
-		profiles?.profiles,
-		querySearch,
-		user,
-	)
+	const dataToShow = getDataToShow(users?.users, querySearch, user)
 
 	const handleDelete = async (id: string): Promise<void> => {
 		try {
