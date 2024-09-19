@@ -1,11 +1,15 @@
 import imgForgotPassword from "@/assets/forgot_password.svg"
 import Logo from "@/assets/logo.svg"
-import {yupResolver} from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"
-import {useForm} from "react-hook-form"
-import {useNavigate, useParams} from "react-router-dom"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { type ErrorExtended, parseError } from "@/services/api"
+import { useGetUsersActions } from "@/services/userServices"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"
 import * as yup from "yup"
 import {
 	Container,
@@ -20,37 +24,62 @@ import {
 	Wrapper,
 } from "./styles"
 
-interface FormValues {
-	password: string
-	confirmPassword: string
-}
+const newPasswordSchema = yup.object().shape({
+	password: yup
+		.string()
+		.required("Campo obrigatório")
+		.min(6, "Mínimo 6 caracteres"),
+	confirmPassword: yup
+		.string()
+		.oneOf([yup.ref("password")], "Senhas diferentes")
+		.required("Campo obrigatório"),
+})
+
+export type ResetPasswordData = yup.InferType<typeof newPasswordSchema>
+
 const ResetPassword = () => {
 	const { token } = useParams()
-	// const [load, setLoad] = useState<boolean>(false)
-	const resetPassword = () => {
-		console.log("resetPassword")
-	}
+	const [searchParams] = useSearchParams()
+	const isNewUser = searchParams.get("type") === "new-user"
+	const { resetPassword } = useGetUsersActions()
+	const { showNotification } = useGetNotification()
+	const [isLoading, setIsLoading] = useState(false)
+
 	const navigate = useNavigate()
-	const schema = yup.object().shape({
-		password: yup.string().required("Campo obrigatório"),
-		confirmPassword: yup
-			.string()
-			.oneOf([yup.ref("password")], "Senhas diferentes")
-			.required("Campo obrigatório"),
-	})
+
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-	} = useForm<FormValues>({
-		resolver: yupResolver(schema),
+		formState: { errors, isValid },
+	} = useForm<ResetPasswordData>({
+		resolver: yupResolver(newPasswordSchema),
+		mode: "all",
 	})
 
-	const onSubmit = (data: FormValues) => {
-		if (token) {
-			resetPassword(token, data, navigate)
+	const handleUpdateNewUser = async (data: ResetPasswordData) => {
+		if (!token) return
+		setIsLoading(true)
+		try {
+			await resetPassword(token, data)
+			showNotification({
+				message: "Senha atualizada com sucesso",
+				description: "",
+				type: "SUCCESS",
+			})
+			setIsLoading(false)
+			navigate("/login")
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				message: "Erro ao atualizar senha",
+				description: parsedError ?? "Por favor, tente novamente",
+				type: "ERROR",
+			})
+		} finally {
+			setIsLoading(false)
 		}
 	}
+
 	return (
 		<>
 			<Container>
@@ -64,8 +93,10 @@ const ResetPassword = () => {
 					</InnerWrapper>
 				</Wrapper>
 				<ContainerForm>
-					<TextStyled>Redefinir senha</TextStyled>
-					<FormStyled onSubmit={handleSubmit(onSubmit)}>
+					<TextStyled>
+						{isNewUser ? "Cadastrar senha" : "Redefinir senha"}
+					</TextStyled>
+					<FormStyled onSubmit={handleSubmit(handleUpdateNewUser)}>
 						<Input
 							inputType="password"
 							label="Nova senha"
@@ -83,11 +114,16 @@ const ResetPassword = () => {
 							errorMessage={errors.confirmPassword?.message}
 						/>
 
-						<Button type="submit">Redefinir senha</Button>
+						<Button
+							htmlType="submit"
+							type={"primary"}
+							size={"large"}
+							isLoading={isLoading}
+							disabled={isLoading || !isValid}
+						>
+							Redefinir senha
+						</Button>
 					</FormStyled>
-					{/* <LinkStyled href="/esqueci-minha-senha">
-                        Esqueci minha senha
-                    </LinkStyled> */}
 				</ContainerForm>
 			</Container>
 		</>

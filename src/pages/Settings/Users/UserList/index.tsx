@@ -35,7 +35,6 @@ export const UserList = () => {
 	const querySearch = searchParams.get("user") ?? ""
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
-	console.log("users", users)
 
 	const isLoading = isLoadingUsers
 

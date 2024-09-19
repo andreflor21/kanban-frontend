@@ -7,7 +7,7 @@ import {
 	type UserSchema,
 	userSchema,
 } from "@/components/NewUser/UserForm/helpers"
-import { cpfMask } from "@/helpers/general"
+import { cpfMask, onlyNumbersCpf } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetProfiles } from "@/services/profileServices"
@@ -18,7 +18,7 @@ import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { ContainerButtons } from "./styles"
 
@@ -29,6 +29,17 @@ interface UserFormProps {
 	className?: string
 }
 
+const EMPTY_INITIAL_VALUES: UserSchema = {
+	name: "",
+	email: "",
+	cpf: "",
+	birthdate: "",
+	profileId: "",
+	active: true,
+	code: "",
+	password: "",
+}
+
 export const UserForm = ({
 	usuarioId,
 	onCancel,
@@ -36,11 +47,12 @@ export const UserForm = ({
 	usuario,
 }: UserFormProps) => {
 	const [isLoading, setIsLoading] = useState(false)
-	const { createUser, updateUser } = useGetUsersActions()
+	const { createUser, updateUser, updateUserStatus } = useGetUsersActions()
 	const { query } = useGetAllUsers()
 	const user = useUserStore((state) => state.user)
 	const idUser = user?.id
 	const { data: profiles } = useGetProfiles()
+
 	const profileOptions =
 		profiles?.profiles?.map((profile) => ({
 			value: profile.id,
@@ -52,35 +64,46 @@ export const UserForm = ({
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
-	const initialValues: UserSchema = {
-		name: usuario?.name ?? "",
-		email: usuario?.email ?? "",
-		password: "",
-		cpf: usuario?.cpf ?? "",
-		birthdate: usuario?.birthdate ?? "",
-		profileId: usuario?.profile?.id ?? "",
-		active: usuario?.active ?? true,
-		code: usuario?.code ?? "",
-	}
+	const initialValues: UserSchema = useMemo(() => {
+		if (usuario) {
+			return {
+				name: usuario.name,
+				email: usuario.email,
+				cpf: usuario?.cpf ?? "",
+				birthdate: usuario?.birthdate ?? "",
+				profileId: usuario.profile.id,
+				active: usuario?.active ?? false,
+				code: usuario?.code ?? "",
+				password: "",
+			}
+		}
+		return EMPTY_INITIAL_VALUES
+	}, [usuario])
 
 	const methods = useForm<UserSchema>({
-		mode: "onChange",
+		mode: "all",
 		resolver: yupResolver(userSchema),
+		defaultValues: initialValues,
 		values: initialValues,
 		context: {
 			isEditing,
 		},
 	})
 
+	const handleCancel = () => {
+		methods.reset()
+		onCancel()
+	}
+
 	const handleEdit = async () => {
 		const values = methods.getValues()
 		setIsLoading(true)
 		const body: Partial<UserSchema> = {}
 		const keys = Object.keys(values) as (keyof UserSchema)[]
+		const shouldUpdateStatus = values.active !== initialValues.active
 
 		for (const key of keys) {
 			if (key === "active") {
-				body[key] = values[key]
 				continue
 			}
 			if (values[key]) {
@@ -90,6 +113,9 @@ export const UserForm = ({
 
 		try {
 			await updateUser(usuarioId, body)
+			if (shouldUpdateStatus) {
+				await updateUserStatus(usuarioId, { status: values.active })
+			}
 			await query.refetch()
 			showNotification({
 				message: "Usuário atualizado com sucesso",
@@ -112,6 +138,9 @@ export const UserForm = ({
 
 	const handleSubmit = async () => {
 		const values = methods.getValues()
+		values.password = onlyNumbersCpf(values.cpf)
+		values.cpf = onlyNumbersCpf(values.cpf)
+
 		setIsLoading(true)
 		try {
 			await createUser(values)
@@ -121,6 +150,7 @@ export const UserForm = ({
 				description: "O usuário foi criado com sucesso",
 				type: "SUCCESS",
 			})
+			methods.reset()
 			onCancel()
 		} catch (err) {
 			const parsedError = parseError(err as ErrorExtended)
@@ -131,7 +161,6 @@ export const UserForm = ({
 			})
 		} finally {
 			setIsLoading(false)
-			methods.reset()
 		}
 	}
 
@@ -151,6 +180,7 @@ export const UserForm = ({
 					options={profileOptions}
 					onChange={(value) => {
 						methods.setValue("profileId", value)
+						methods.trigger("profileId")
 					}}
 					value={methods.watch("profileId")}
 				/>
@@ -168,16 +198,6 @@ export const UserForm = ({
 					errorMessage={methods.formState.errors.email?.message}
 					{...methods.register("email")}
 				/>
-				{!isEditing && (
-					<Input
-						type={"text"}
-						required
-						label="Senha"
-						placeholder="Insira uma senha"
-						errorMessage={methods.formState.errors.password?.message}
-						{...methods.register("password")}
-					/>
-				)}
 				<Input
 					required
 					label="CPF"
@@ -189,7 +209,7 @@ export const UserForm = ({
 						methods.setValue("cpf", cpfMask(e.target.value))
 						methods.trigger("cpf")
 					}}
-					value={methods.watch("cpf")}
+					value={cpfMask(methods.watch("cpf"))}
 				/>
 
 				<Input
@@ -206,25 +226,27 @@ export const UserForm = ({
 					errorMessage={methods.formState.errors.birthdate?.message}
 					{...methods.register("birthdate")}
 				/>
-				<Checkbox
-					label="Ativo"
-					checked={methods.watch("active")}
-					onCheckedChange={(checked) => methods.setValue("active", !!checked)}
-				/>
+				{isEditing && (
+					<Checkbox
+						label="Ativo"
+						checked={methods.watch("active")}
+						onCheckedChange={(checked) => {
+							methods.setValue("active", !!checked)
+							methods.trigger("active")
+						}}
+					/>
+				)}
 
 				<ContainerButtons>
 					<>
-						<Button className="button1" onClickFunc={onCancel} danger>
+						<Button onClick={() => setIsModalOpen(true)}>Alterar Senha</Button>
+						<Button className="button1" onClickFunc={handleCancel} danger>
 							Cancelar
 						</Button>
 						<Button
 							className="button2"
 							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
-							disabled={
-								!methods.formState.isValid ||
-								!methods.formState.isDirty ||
-								isLoading
-							}
+							disabled={!methods.formState.isValid || isLoading}
 							type="primary"
 						>
 							{isEditing ? "Atualizar" : "Criar"}
@@ -233,7 +255,6 @@ export const UserForm = ({
 				</ContainerButtons>
 			</FormStyled>
 			<ChangePassword
-				idUser={Number.parseInt(usuarioId)}
 				isModalOpen={isModalOpen}
 				setIsModalOpen={setIsModalOpen}
 			/>

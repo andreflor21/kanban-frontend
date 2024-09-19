@@ -12,15 +12,14 @@ const queryClient = new QueryClient({
 	defaultOptions: {
 		queries: {
 			refetchOnWindowFocus: false,
+			refetchOnMount: false,
 		},
 	},
 })
 
 ReactDOM.createRoot(root).render(
-	<>
-		<QueryClientProvider client={queryClient}>
-			<RouterProvider router={router} />
-			<App />
-		</QueryClientProvider>
-	</>,
+	<QueryClientProvider client={queryClient}>
+		<RouterProvider router={router} />
+		<App />
+	</QueryClientProvider>,
 )

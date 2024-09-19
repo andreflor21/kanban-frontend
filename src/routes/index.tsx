@@ -1,4 +1,4 @@
-import {createBrowserRouter, Navigate} from "react-router-dom"
+import { Navigate, createBrowserRouter } from "react-router-dom"
 
 import Root from "./root"
 
@@ -137,7 +137,7 @@ export const router = createBrowserRouter([
 		// action: loginAction,
 	},
 	{
-		path: "/redefinir-senha/:token",
+		path: "/reset-password/:token",
 		element: <ResetPassword />,
 		// action: loginAction,
 	},

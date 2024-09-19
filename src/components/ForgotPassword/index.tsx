@@ -6,10 +6,9 @@ import { handleForgotPassword } from "@/services/userServices"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Modal } from "antd"
 import type React from "react"
-import { useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import { useForm } from "react-hook-form"
 import * as yup from "yup"
-import { ButtonStyled, FormStyled } from "./styles"
 
 interface ForgotPasswordProps {
 	children: React.ReactNode
@@ -23,25 +22,22 @@ type FormValues = yup.InferType<typeof schema>
 
 export const ForgotPassword = ({ children }: ForgotPasswordProps) => {
 	const [isLoading, setIsLoading] = useState(false)
-	const { showNotification } = useGetNotification()
-
+	const [isSent, setIsSent] = useState(false)
 	const [isModalOpen, setIsModalOpen] = useState(false)
+	const [closeCountDown, setCloseCountDown] = useState(5)
+
+	const { showNotification } = useGetNotification()
 
 	const showModal = () => {
 		setIsModalOpen(true)
-	}
-
-	const handleReset = () => {
-		setIsModalOpen(false)
-		setIsLoading(false)
 	}
 
 	const onSubmit = async (data: FormValues) => {
 		setIsLoading(true)
 
 		try {
-			const res = await handleForgotPassword(data.email)
-			console.log(res)
+			await handleForgotPassword(data.email)
+			setIsSent(true)
 		} catch (err) {
 			const parsedError = parseError(err as ErrorExtended)
 			const errorMessage = parsedError ?? "Erro ao recuperar senha"
@@ -50,8 +46,7 @@ export const ForgotPassword = ({ children }: ForgotPasswordProps) => {
 				description: errorMessage,
 				type: "ERROR",
 			})
-		} finally {
-			handleReset()
+			setIsLoading(false)
 		}
 	}
 
@@ -59,35 +54,76 @@ export const ForgotPassword = ({ children }: ForgotPasswordProps) => {
 		register,
 		handleSubmit,
 		formState: { errors, isValid },
+		reset,
 	} = useForm<FormValues>({
 		resolver: yupResolver(schema),
 		mode: "onChange",
 	})
 
+	const handleClose = useCallback(() => {
+		reset()
+		setIsModalOpen(false)
+		setIsSent(false)
+		setIsLoading(false)
+		setCloseCountDown(5)
+	}, [reset])
+
+	useEffect(() => {
+		if (isSent) {
+			const timer = setTimeout(() => {
+				setCloseCountDown(closeCountDown - 1)
+				if (closeCountDown === 1) {
+					handleClose()
+				}
+			}, 1000)
+			return () => clearTimeout(timer)
+		}
+	}, [closeCountDown, handleClose, isSent])
+
 	return (
 		<>
-			<ButtonStyled type="button" onClick={showModal}>
+			<Button type={"link"} htmlType="button" onClick={showModal}>
 				{children}
-			</ButtonStyled>
+			</Button>
 			<Modal
-				title="Esqueci minha senha"
+				title={isSent ? "Email enviado com sucesso!" : "Esqueci minha senha"}
 				open={isModalOpen}
-				onCancel={handleReset}
-				footer={false}
+				onCancel={handleClose}
+				footer={
+					isSent ? (
+						<Button
+							onClick={handleClose}
+							type={"text"}
+						>{`Fechar (${closeCountDown})`}</Button>
+					) : (
+						<Button
+							disabled={!isValid}
+							isLoading={isLoading}
+							type={"primary"}
+							onClick={handleSubmit(onSubmit)}
+						>
+							Recuperar senha
+						</Button>
+					)
+				}
 			>
-				<FormStyled onSubmit={handleSubmit(onSubmit)}>
-					<Input
-						inputType="email"
-						label="Email"
-						{...register("email")}
-						placeholder="Digite seu email"
-						error={!!errors.email}
-						errorMessage={errors.email?.message}
-					/>
-					<Button type="submit" disabled={!isValid} isLoading={isLoading}>
-						Recuperar senha
-					</Button>
-				</FormStyled>
+				{isSent ? (
+					<div>
+						<p>Uma mensagem foi enviada para o email informado</p>
+						<p>Por favor, verifique sua caixa de entrada</p>
+					</div>
+				) : (
+					<form onSubmit={handleSubmit(onSubmit)}>
+						<Input
+							inputType="email"
+							label="Email"
+							{...register("email")}
+							placeholder="Digite seu email"
+							error={!!errors.email}
+							errorMessage={errors.email?.message}
+						/>
+					</form>
+				)}
 			</Modal>
 		</>
 	)

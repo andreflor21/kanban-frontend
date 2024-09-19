@@ -1,3 +1,4 @@
+import { spacing } from "@/style/global"
 import styled from "styled-components"
 // import LogoDark from 'assets/logo_outline.svg';
 
@@ -94,10 +95,11 @@ export const ContainerForm = styled.div`
         width: 75%;
         height: 100vh;
         background-color: var(--emerald-400);
-        border-radius: 60px 0px 0px 0px;
+        border-top-left-radius: 60px;
     }
     @media only screen and (min-width: 1440px) {
         width: 50%;
+        max-width: 600px;
     }
 `
 export const LogoStyled = styled.img`
@@ -105,7 +107,7 @@ export const LogoStyled = styled.img`
 `
 
 export const Title = styled.h2`
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     color: var(--blue-900);
     font-size: 48px;
     padding-bottom: 2rem;
@@ -124,13 +126,14 @@ export const FormStyled = styled.form`
     align-items: center;
     gap: 32px;
     max-width: 20rem;
+    margin-bottom: ${spacing.xxxs};
     @media only screen and (min-width: 768px) {
         width: 75%;
     }
 `
 
 export const TextStyled = styled.h3`
-    font-family: var(--font-standard);
+    font-family: var(--font-standard), sans-serif;
     color: var(--blue-900);
     font-size: 34px;
     font-weight: 600;
@@ -140,19 +143,5 @@ export const TextStyled = styled.h3`
     align-self: flex-start;
     @media only screen and (min-width: 768px) {
         padding-left: 36px;
-    }
-`
-
-export const LinkStyled = styled.a`
-    color: var(--gray-100);
-    margin-top: 22px;
-    text-transform: lowercase;
-    text-decoration: underline;
-
-    &:hover {
-        color: var(--blue-900);
-    }
-    &:active {
-        color: var(--gray-100);
     }
 `
