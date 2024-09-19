@@ -1,4 +1,4 @@
-import { ApiInstance, type ErrorExtended, parseError, UNEXPECTED_ERROR, } from "@/services/api"
+import { ApiInstance } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
 import { useQuery } from "@tanstack/react-query"
@@ -13,27 +13,60 @@ type SuppliersBody = {
 	fone?: string
 	users?: string[]
 }
+export type Suppliers = {
+	ERPCode: string
+	active: boolean
+	address: {
+		addressTypeId: string
+		id: string
+	}
+	cnpj: string
+	code: string
+	createdAt: string
+	email?: string
+	fone?: string
+	id: string
+	legalName: string
+	name: string
+	users?: {
+		id: string
+		name: string
+	}[]
+}
+
+type SuppliersResponse = {
+	suppliers: Suppliers[]
+}
 
 export const useGetSuppliersActions = () => {
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
 
 	const createSupplier = async (data: SuppliersBody) => {
-		try {
-			return await ApiInstance.post<SuppliersBody, SuppliersBody>(
-				"/suppliers/new",
-				data,
-				{
-					headers,
-				},
-			)
-		} catch (err) {
-			const parsedError = parseError(err as ErrorExtended)
-			throw new Error(parsedError ?? UNEXPECTED_ERROR)
-		}
+		return await ApiInstance.post<SuppliersBody, SuppliersBody>(
+			"/suppliers/new",
+			data,
+			{
+				headers,
+			},
+		)
 	}
 
-	return { createSupplier }
+	const deleteSupplier = async (id: string) => {
+		return await ApiInstance.delete(`suppliers/${id}/delete`)
+	}
+
+	const updateSupplier = async (id: string, data: SuppliersBody) => {
+		return await ApiInstance.patch<SuppliersBody, SuppliersBody>(
+			`/suppliers/${id}/edit`,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return { createSupplier, deleteSupplier, updateSupplier }
 }
 
 export const useGetSuppliers = () => {
@@ -43,7 +76,7 @@ export const useGetSuppliers = () => {
 
 	const query = useQuery({
 		queryKey: [url],
-		queryFn: () => ApiInstance.get(url, { headers }),
+		queryFn: () => ApiInstance.get<SuppliersResponse>(url, { headers }),
 		enabled: !!token,
 	})
 

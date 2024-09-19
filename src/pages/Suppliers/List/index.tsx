@@ -8,7 +8,6 @@ import { useSearchParams } from "react-router-dom"
 export const SuppliersList = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const handleCreateSupplier = () => {
-		console.log("create supplier")
 		setSearchParams((params) => {
 			params.set("action", "create_supplier")
 			return params
@@ -19,17 +18,15 @@ export const SuppliersList = () => {
 		<div>
 			<PageHeader
 				searchQuery={"supplier"}
-				placeholder={"Buscar fornecedor"}
+				placeholder={"Buscar fornecedor por nome ou CNPJ"}
 				rightContent={
-					<>
-						<Button
-							type="primary"
-							icon={<FolderPlus />}
-							onClick={handleCreateSupplier}
-						>
-							Novo fornecedor
-						</Button>
-					</>
+					<Button
+						type="primary"
+						icon={<FolderPlus />}
+						onClick={handleCreateSupplier}
+					>
+						Novo fornecedor
+					</Button>
 				}
 			/>
 			<SuppliersTable />

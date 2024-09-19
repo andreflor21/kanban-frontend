@@ -27,15 +27,13 @@ const Users = () => {
 					searchQuery={"user"}
 					placeholder={"Buscar usuário"}
 					rightContent={
-						<>
-							<Button
-								type="primary"
-								icon={<UserPlus />}
-								onClick={handleCreateUser}
-							>
-								Novo Usuário
-							</Button>
-						</>
+						<Button
+							type="primary"
+							icon={<UserPlus />}
+							onClick={handleCreateUser}
+						>
+							Novo Usuário
+						</Button>
 					}
 				/>
 				<NewUser />
