@@ -174,6 +174,7 @@ export const UserForm = ({
 					options={profileOptions}
 					onChange={(value) => {
 						methods.setValue("profileId", value)
+						methods.trigger("profileId")
 					}}
 					value={methods.watch("profileId")}
 				/>
@@ -232,22 +233,22 @@ export const UserForm = ({
 				<Checkbox
 					label="Ativo"
 					checked={methods.watch("active")}
-					onCheckedChange={(checked) => methods.setValue("active", !!checked)}
+					onCheckedChange={(checked) => {
+						methods.setValue("active", !!checked)
+						methods.trigger("active")
+					}}
 				/>
 
 				<ContainerButtons>
 					<>
+						<Button onClick={() => setIsModalOpen(true)}>Alterar Senha</Button>
 						<Button className="button1" onClickFunc={handleCancel} danger>
 							Cancelar
 						</Button>
 						<Button
 							className="button2"
 							onClickFunc={() => (isEditing ? handleEdit() : handleSubmit())}
-							disabled={
-								!methods.formState.isValid ||
-								!methods.formState.isDirty ||
-								isLoading
-							}
+							disabled={!methods.formState.isValid || isLoading}
 							type="primary"
 						>
 							{isEditing ? "Atualizar" : "Criar"}
@@ -256,7 +257,6 @@ export const UserForm = ({
 				</ContainerButtons>
 			</FormStyled>
 			<ChangePassword
-				idUser={Number.parseInt(usuarioId)}
 				isModalOpen={isModalOpen}
 				setIsModalOpen={setIsModalOpen}
 			/>

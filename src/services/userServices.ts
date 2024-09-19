@@ -111,7 +111,21 @@ export const useGetUsersActions = () => {
 		})
 	}
 
-	return { createUser, deleteUser, updateUser, resetPassword }
+	const changePassword = (
+		id: string,
+		data: Pick<CreateUserBody, "password">,
+	) => {
+		const url = `/users/${id}/change-password`
+		return ApiInstance.patch<Pick<CreateUserBody, "password">, User>(
+			url,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return { createUser, deleteUser, updateUser, resetPassword, changePassword }
 }
 
 type UsersResponse = {

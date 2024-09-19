@@ -3,65 +3,95 @@ import { Modal } from "antd"
 
 import Button from "@/components/Button"
 import Input from "@/components/Input"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { type ErrorExtended, parseError } from "@/services/api"
+import { useGetUsersActions } from "@/services/userServices"
 import React, { type Dispatch } from "react"
 import { useForm } from "react-hook-form"
+import { useSearchParams } from "react-router-dom"
 import * as yup from "yup"
-import { FormStyled } from "./styles"
 
-interface FormValues {
-	password: string
-	confirmPassword: string
-}
 interface ChangePasswordProps {
-	idUser: number
 	isModalOpen: boolean
 	setIsModalOpen: Dispatch<boolean>
 }
 
 // import { Container } from './styles';
+const changePasswordSchema = yup.object().shape({
+	password: yup
+		.string()
+		.required("Campo obrigatório")
+		.min(6, "Mínimo 6 caracteres"),
+	confirmPassword: yup
+		.string()
+		.oneOf([yup.ref("password")], "Senhas diferentes")
+		.required("Campo obrigatório"),
+})
 
-function ChangePassword({
-	idUser,
-	isModalOpen,
-	setIsModalOpen,
-}: ChangePasswordProps) {
-	// const { changePassword } = useUsers()
-	const changePassword = (idUser: number, data: FormValues) => {
-		console.log(idUser, data)
-	}
-	const onSubmit = (data: FormValues) => {
+type ChangePasswordData = yup.InferType<typeof changePasswordSchema>
+
+function ChangePassword({ isModalOpen, setIsModalOpen }: ChangePasswordProps) {
+	const { changePassword } = useGetUsersActions()
+	const [searchParams] = useSearchParams()
+	const userId = searchParams.get("user_edit")
+	const { showNotification } = useGetNotification()
+
+	const onSubmit = async (data: ChangePasswordData) => {
 		setIsModalOpen(false)
-		changePassword(idUser, data)
+		if (!userId) return
+
+		try {
+			await changePassword(userId, {
+				password: data.password,
+			})
+			showNotification({
+				message: "Senha alterada com sucesso",
+				description: "A senha foi alterada com sucesso",
+				type: "SUCCESS",
+			})
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				message: "Erro ao alterar senha",
+				description: parsedError ?? "Por favor, tente novamente mais tarde",
+				type: "ERROR",
+			})
+		} finally {
+			setIsModalOpen(false)
+		}
 	}
 
 	const handleCancel = () => {
 		setIsModalOpen(false)
 	}
-	const schema = yup.object().shape({
-		password: yup.string().required("Campo obrigatório"),
-		confirmPassword: yup
-			.string()
-			.oneOf([yup.ref("password")], "Senhas diferentes")
-			.required("Campo obrigatório"),
-	})
+
 	const {
 		register,
 		handleSubmit,
-		formState: { errors },
-	} = useForm<FormValues>({
-		resolver: yupResolver(schema),
+		formState: { errors, isValid },
+	} = useForm<ChangePasswordData>({
+		resolver: yupResolver(changePasswordSchema),
+		mode: "all",
 	})
 	return (
 		<Modal
 			title="Atualizar Senha"
 			open={isModalOpen}
 			onCancel={handleCancel}
-			footer={false}
+			footer={
+				<Button
+					type="primary"
+					disabled={!isValid}
+					onClick={handleSubmit(onSubmit)}
+				>
+					Atualizar senha
+				</Button>
+			}
 		>
-			<FormStyled onSubmit={handleSubmit(onSubmit)}>
+			<form>
 				<Input
 					inputType="password"
-					label="Senha"
+					label="Nova Senha"
 					placeholder="Digite a nova senha"
 					{...register("password")}
 					error={!!errors.password}
@@ -75,8 +105,7 @@ function ChangePassword({
 					error={!!errors.confirmPassword}
 					errorMessage={errors.confirmPassword?.message}
 				/>
-				<Button type="submit">Atualizar senha</Button>
-			</FormStyled>
+			</form>
 		</Modal>
 	)
 }

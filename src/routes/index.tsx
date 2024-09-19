@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router-dom"
+import { Navigate, createBrowserRouter } from "react-router-dom"
 
 import Root from "./root"
 
