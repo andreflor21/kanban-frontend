@@ -16,7 +16,6 @@ interface ChangePasswordProps {
 	setIsModalOpen: Dispatch<boolean>
 }
 
-// import { Container } from './styles';
 const changePasswordSchema = yup.object().shape({
 	password: yup
 		.string()
