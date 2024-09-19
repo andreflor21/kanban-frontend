@@ -20,6 +20,10 @@ export function cnpjMask(cnpj: string) {
 	return v
 }
 
+export function onlyNumbersCnpj(cnpj: string) {
+	return cnpj.replace(/\D/g, "")
+}
+
 export function isValidCPF(value: string) {
 	let cpf = value
 	cpf = cpf.replace(/[^\d]+/g, "")

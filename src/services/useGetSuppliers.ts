@@ -13,6 +13,27 @@ type SuppliersBody = {
 	fone?: string
 	users?: string[]
 }
+export type Suppliers = {
+	ERPcode: string
+	active: boolean
+	address: {
+		addressTypeId: string
+		id: string
+	}
+	cnpj: string
+	code: string
+	createdAt: string
+	email?: string
+	fone?: string
+	id: string
+	legalName: string
+	name: string
+	users?: string[]
+}
+
+type SuppliersResponse = {
+	suppliers: Suppliers[]
+}
 
 export const useGetSuppliersActions = () => {
 	const token = useUserStore((state) => state.token)
@@ -43,7 +64,7 @@ export const useGetSuppliers = () => {
 
 	const query = useQuery({
 		queryKey: [url],
-		queryFn: () => ApiInstance.get(url, { headers }),
+		queryFn: () => ApiInstance.get<SuppliersResponse>(url, { headers }),
 		enabled: !!token,
 	})
 

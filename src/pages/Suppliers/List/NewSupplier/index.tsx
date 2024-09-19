@@ -1,11 +1,11 @@
 import Button from "@/components/Button"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
-import { cnpjMask } from "@/helpers/general"
+import { cnpjMask, onlyNumbersCnpj } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type NewSupplierSchema, newSupplierSchema, } from "@/pages/Suppliers/List/NewSupplier/schema"
 import { type ErrorExtended, parseError } from "@/services/api"
-import { useGetSuppliersActions } from "@/services/useGetSuppliers"
+import { useGetSuppliers, useGetSuppliersActions, } from "@/services/useGetSuppliers"
 import { useGetAllUsers } from "@/services/userServices"
 import { FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -19,6 +19,7 @@ export const NewSupplier = () => {
 	const [_, setSearchParams] = useSearchParams()
 	const { createSupplier } = useGetSuppliersActions()
 	const { data: users } = useGetAllUsers()
+	const { query: supplierQuery } = useGetSuppliers()
 	const { showNotification } = useGetNotification()
 	const usersToDisplay = users?.users?.map((user) => ({
 		label: user.name,
@@ -57,13 +58,19 @@ export const NewSupplier = () => {
 
 	const handleSubmit = async (data: NewSupplierSchema) => {
 		setIsLoading(true)
+		const updatedData = {
+			...data,
+			cnpj: onlyNumbersCnpj(data.cnpj),
+		}
+
 		try {
-			await createSupplier(data)
+			await createSupplier(updatedData)
 			showNotification({
 				message: "Fornecedor criado com sucesso",
 				description: "O fornecedor foi criado com sucesso",
 				type: "SUCCESS",
 			})
+			await supplierQuery.refetch()
 			handleCancel()
 		} catch (err) {
 			const parsedError = parseError(err as ErrorExtended)

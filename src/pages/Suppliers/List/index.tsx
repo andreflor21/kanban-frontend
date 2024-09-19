@@ -19,17 +19,15 @@ export const SuppliersList = () => {
 		<div>
 			<PageHeader
 				searchQuery={"supplier"}
-				placeholder={"Buscar fornecedor"}
+				placeholder={"Buscar fornecedor por nome ou CNPJ"}
 				rightContent={
-					<>
-						<Button
-							type="primary"
-							icon={<FolderPlus />}
-							onClick={handleCreateSupplier}
-						>
-							Novo fornecedor
-						</Button>
-					</>
+					<Button
+						type="primary"
+						icon={<FolderPlus />}
+						onClick={handleCreateSupplier}
+					>
+						Novo fornecedor
+					</Button>
 				}
 			/>
 			<SuppliersTable />
