@@ -1,4 +1,5 @@
 import { isValidToken } from "@/helpers/general"
+import type { ResetPasswordData } from "@/pages/ResetPassword"
 import {
 	ApiInstance,
 	type ErrorExtended,
@@ -55,13 +56,25 @@ type CreateUserBody = {
 	active: boolean
 }
 
+const handleRemoveEmptyKeys = <T>(obj: Record<string, unknown>): T => {
+	const newObj: Record<string, unknown> = {}
+
+	for (const key in obj) {
+		if (obj[key]) {
+			newObj[key] = obj[key]
+		}
+	}
+	return newObj as T
+}
+
 export const useGetUsersActions = () => {
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
 
 	const createUser = async (data: CreateUserBody) => {
+		const body = handleRemoveEmptyKeys<CreateUserBody>(data)
 		try {
-			return await ApiInstance.post<CreateUserBody, User>("/users/new", data, {
+			return await ApiInstance.post<CreateUserBody, User>("/users/new", body, {
 				headers,
 			})
 		} catch (err) {
@@ -91,7 +104,14 @@ export const useGetUsersActions = () => {
 		}
 	}
 
-	return { createUser, deleteUser, updateUser }
+	const resetPassword = async (token: string, data: ResetPasswordData) => {
+		const url = `/reset-password/${token}`
+		return await ApiInstance.post<ResetPasswordData, User>(url, data, {
+			headers,
+		})
+	}
+
+	return { createUser, deleteUser, updateUser, resetPassword }
 }
 
 type UsersResponse = {

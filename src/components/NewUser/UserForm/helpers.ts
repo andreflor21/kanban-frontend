@@ -11,7 +11,7 @@ export const userSchema = yup.object().shape({
 			if (isEditing) {
 				return true
 			}
-			return !!value && value?.length > 6
+			return !!value && value?.length >= 6
 		}),
 	cpf: yup
 		.string()

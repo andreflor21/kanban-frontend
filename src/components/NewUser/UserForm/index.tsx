@@ -18,7 +18,7 @@ import type { User } from "@/types/usuario"
 import { LoadingOutlined } from "@ant-design/icons"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Spin } from "antd"
-import { useState } from "react"
+import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { ContainerButtons } from "./styles"
 
@@ -27,6 +27,17 @@ interface UserFormProps {
 	usuarioId: string
 	onCancel: () => void
 	className?: string
+}
+
+const EMPTY_INITIAL_VALUES: UserSchema = {
+	name: "",
+	email: "",
+	password: "",
+	cpf: "",
+	birthdate: "",
+	profileId: "",
+	active: true,
+	code: "",
 }
 
 export const UserForm = ({
@@ -41,6 +52,7 @@ export const UserForm = ({
 	const user = useUserStore((state) => state.user)
 	const idUser = user?.id
 	const { data: profiles } = useGetProfiles()
+
 	const profileOptions =
 		profiles?.profiles?.map((profile) => ({
 			value: profile.id,
@@ -52,25 +64,36 @@ export const UserForm = ({
 
 	const [isModalOpen, setIsModalOpen] = useState(false)
 
-	const initialValues: UserSchema = {
-		name: usuario?.name ?? "",
-		email: usuario?.email ?? "",
-		password: "",
-		cpf: usuario?.cpf ?? "",
-		birthdate: usuario?.birthdate ?? "",
-		profileId: usuario?.profile?.id ?? "",
-		active: usuario?.active ?? true,
-		code: usuario?.code ?? "",
-	}
+	const initialValues: UserSchema = useMemo(() => {
+		if (usuario) {
+			return {
+				name: usuario.name,
+				email: usuario.email,
+				password: "",
+				cpf: usuario?.cpf ?? "",
+				birthdate: usuario?.birthdate ?? "",
+				profileId: usuario.profile.id,
+				active: usuario?.active ?? false,
+				code: usuario?.code ?? "",
+			}
+		}
+		return EMPTY_INITIAL_VALUES
+	}, [usuario])
 
 	const methods = useForm<UserSchema>({
-		mode: "onChange",
+		mode: "all",
 		resolver: yupResolver(userSchema),
+		defaultValues: initialValues,
 		values: initialValues,
 		context: {
 			isEditing,
 		},
 	})
+
+	const handleCancel = () => {
+		methods.reset()
+		onCancel()
+	}
 
 	const handleEdit = async () => {
 		const values = methods.getValues()
@@ -121,6 +144,7 @@ export const UserForm = ({
 				description: "O usuário foi criado com sucesso",
 				type: "SUCCESS",
 			})
+			methods.reset()
 			onCancel()
 		} catch (err) {
 			const parsedError = parseError(err as ErrorExtended)
@@ -131,7 +155,6 @@ export const UserForm = ({
 			})
 		} finally {
 			setIsLoading(false)
-			methods.reset()
 		}
 	}
 
@@ -214,7 +237,7 @@ export const UserForm = ({
 
 				<ContainerButtons>
 					<>
-						<Button className="button1" onClickFunc={onCancel} danger>
+						<Button className="button1" onClickFunc={handleCancel} danger>
 							Cancelar
 						</Button>
 						<Button
