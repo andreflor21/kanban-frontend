@@ -111,12 +111,12 @@ export const useGetUsersActions = () => {
 		})
 	}
 
-	const changePassword = (
+	const changePassword = async (
 		id: string,
 		data: Pick<CreateUserBody, "password">,
 	) => {
 		const url = `/users/${id}/change-password`
-		return ApiInstance.patch<Pick<CreateUserBody, "password">, User>(
+		return await ApiInstance.patch<Pick<CreateUserBody, "password">, User>(
 			url,
 			data,
 			{
@@ -125,7 +125,21 @@ export const useGetUsersActions = () => {
 		)
 	}
 
-	return { createUser, deleteUser, updateUser, resetPassword, changePassword }
+	const updateUserStatus = async (id: string, data: { status: boolean }) => {
+		const url = `/users/${id}/status`
+		return await ApiInstance.put(url, data, {
+			headers,
+		})
+	}
+
+	return {
+		createUser,
+		deleteUser,
+		updateUser,
+		resetPassword,
+		changePassword,
+		updateUserStatus,
+	}
 }
 
 type UsersResponse = {

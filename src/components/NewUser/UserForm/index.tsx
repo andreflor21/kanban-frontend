@@ -7,7 +7,7 @@ import {
 	type UserSchema,
 	userSchema,
 } from "@/components/NewUser/UserForm/helpers"
-import { cpfMask } from "@/helpers/general"
+import { cpfMask, onlyNumbersCpf } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetProfiles } from "@/services/profileServices"
@@ -32,12 +32,12 @@ interface UserFormProps {
 const EMPTY_INITIAL_VALUES: UserSchema = {
 	name: "",
 	email: "",
-	password: "",
 	cpf: "",
 	birthdate: "",
 	profileId: "",
 	active: true,
 	code: "",
+	password: "",
 }
 
 export const UserForm = ({
@@ -47,7 +47,7 @@ export const UserForm = ({
 	usuario,
 }: UserFormProps) => {
 	const [isLoading, setIsLoading] = useState(false)
-	const { createUser, updateUser } = useGetUsersActions()
+	const { createUser, updateUser, updateUserStatus } = useGetUsersActions()
 	const { query } = useGetAllUsers()
 	const user = useUserStore((state) => state.user)
 	const idUser = user?.id
@@ -69,12 +69,12 @@ export const UserForm = ({
 			return {
 				name: usuario.name,
 				email: usuario.email,
-				password: "",
 				cpf: usuario?.cpf ?? "",
 				birthdate: usuario?.birthdate ?? "",
 				profileId: usuario.profile.id,
 				active: usuario?.active ?? false,
 				code: usuario?.code ?? "",
+				password: "",
 			}
 		}
 		return EMPTY_INITIAL_VALUES
@@ -100,10 +100,10 @@ export const UserForm = ({
 		setIsLoading(true)
 		const body: Partial<UserSchema> = {}
 		const keys = Object.keys(values) as (keyof UserSchema)[]
+		const shouldUpdateStatus = values.active !== initialValues.active
 
 		for (const key of keys) {
 			if (key === "active") {
-				body[key] = values[key]
 				continue
 			}
 			if (values[key]) {
@@ -113,6 +113,9 @@ export const UserForm = ({
 
 		try {
 			await updateUser(usuarioId, body)
+			if (shouldUpdateStatus) {
+				await updateUserStatus(usuarioId, { status: values.active })
+			}
 			await query.refetch()
 			showNotification({
 				message: "Usuário atualizado com sucesso",
@@ -135,6 +138,9 @@ export const UserForm = ({
 
 	const handleSubmit = async () => {
 		const values = methods.getValues()
+		values.password = onlyNumbersCpf(values.cpf)
+		values.cpf = onlyNumbersCpf(values.cpf)
+
 		setIsLoading(true)
 		try {
 			await createUser(values)
@@ -192,16 +198,6 @@ export const UserForm = ({
 					errorMessage={methods.formState.errors.email?.message}
 					{...methods.register("email")}
 				/>
-				{!isEditing && (
-					<Input
-						type={"text"}
-						required
-						label="Senha"
-						placeholder="Insira uma senha"
-						errorMessage={methods.formState.errors.password?.message}
-						{...methods.register("password")}
-					/>
-				)}
 				<Input
 					required
 					label="CPF"
@@ -213,7 +209,7 @@ export const UserForm = ({
 						methods.setValue("cpf", cpfMask(e.target.value))
 						methods.trigger("cpf")
 					}}
-					value={methods.watch("cpf")}
+					value={cpfMask(methods.watch("cpf"))}
 				/>
 
 				<Input
@@ -230,14 +226,16 @@ export const UserForm = ({
 					errorMessage={methods.formState.errors.birthdate?.message}
 					{...methods.register("birthdate")}
 				/>
-				<Checkbox
-					label="Ativo"
-					checked={methods.watch("active")}
-					onCheckedChange={(checked) => {
-						methods.setValue("active", !!checked)
-						methods.trigger("active")
-					}}
-				/>
+				{isEditing && (
+					<Checkbox
+						label="Ativo"
+						checked={methods.watch("active")}
+						onCheckedChange={(checked) => {
+							methods.setValue("active", !!checked)
+							methods.trigger("active")
+						}}
+					/>
+				)}
 
 				<ContainerButtons>
 					<>
