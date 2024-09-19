@@ -39,12 +39,11 @@ export type ResetPasswordData = yup.InferType<typeof newPasswordSchema>
 
 const ResetPassword = () => {
 	const { token } = useParams()
-	const [searchParams, setSearchParams] = useSearchParams()
+	const [searchParams] = useSearchParams()
 	const isNewUser = searchParams.get("type") === "new-user"
 	const { resetPassword } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
 	const [isLoading, setIsLoading] = useState(false)
-	// const [load, setLoad] = useState<boolean>(false)
 
 	const navigate = useNavigate()
 
@@ -56,7 +55,6 @@ const ResetPassword = () => {
 		resolver: yupResolver(newPasswordSchema),
 		mode: "all",
 	})
-	console.log(token, isNewUser)
 
 	const handleUpdateNewUser = async (data: ResetPasswordData) => {
 		if (!token) return
@@ -82,11 +80,6 @@ const ResetPassword = () => {
 		}
 	}
 
-	const onSubmit = (data: ResetPasswordData) => {
-		if (token) {
-			// resetPassword()
-		}
-	}
 	return (
 		<>
 			<Container>
@@ -100,10 +93,10 @@ const ResetPassword = () => {
 					</InnerWrapper>
 				</Wrapper>
 				<ContainerForm>
-					<TextStyled>Redefinir senha</TextStyled>
-					<FormStyled
-						onSubmit={handleSubmit(isNewUser ? handleUpdateNewUser : onSubmit)}
-					>
+					<TextStyled>
+						{isNewUser ? "Cadastrar senha" : "Redefinir senha"}
+					</TextStyled>
+					<FormStyled onSubmit={handleSubmit(handleUpdateNewUser)}>
 						<Input
 							inputType="password"
 							label="Nova senha"
@@ -123,6 +116,8 @@ const ResetPassword = () => {
 
 						<Button
 							htmlType="submit"
+							type={"primary"}
+							size={"large"}
 							isLoading={isLoading}
 							disabled={isLoading || !isValid}
 						>

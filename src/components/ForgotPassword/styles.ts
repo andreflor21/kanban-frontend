@@ -15,12 +15,3 @@ export const ButtonStyled = styled.button`
         color: var(--gray-100);
     }
 `
-export const FormStyled = styled.form`
-    display: flex;
-    flex-direction: column;
-
-    > button {
-        align-self: flex-end;
-        width: fit-content;
-    }
-`

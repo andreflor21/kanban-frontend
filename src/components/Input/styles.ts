@@ -69,6 +69,7 @@ export const ContainerInput = styled.div`
     flex-direction: column;
     position: relative;
     width: 100%;
+
 `
 export const ContainerInner = styled.div`
     display: flex;
@@ -78,7 +79,6 @@ export const ContainerInner = styled.div`
     align-items: center;
     width: 100%;
     background: var(--gray-100);
-    border: 2px solid var(--gray-500);
     box-sizing: border-box;
     border-radius: 8px;
     font-size: 1rem;
