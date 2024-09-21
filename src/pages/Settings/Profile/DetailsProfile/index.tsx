@@ -39,18 +39,6 @@ export const DetailsProfile = () => {
 					</Button>
 				</Space>
 			}
-			// footer={
-			// 	<Button
-			// 		onClick={() =>
-			// 			setSearchParams((params) => {
-			// 				params.delete("profile_id")
-			// 				return params
-			// 			})
-			// 		}
-			// 	>
-			// 		Editar Perfil
-			// 	</Button>
-			// }
 		>
 			<div>
 				<InfoLine title={"Nome"}>{profile?.description}</InfoLine>

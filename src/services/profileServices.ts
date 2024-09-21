@@ -7,7 +7,7 @@ import { useQuery } from "@tanstack/react-query"
 export type ProfileType = {
 	description: string
 	id: string
-	routers: Array<unknown>
+	routes: Array<string>
 	users: Array<Pick<User, "id" | "name" | "email">>
 }
 
@@ -25,6 +25,7 @@ export const useGetProfiles = () => {
 		queryFn: () => ApiInstance.get<UseGetProfilesData>(url, { headers }),
 		enabled: !!token,
 	})
+	console.log(data)
 
 	return { data, isLoading, error }
 }

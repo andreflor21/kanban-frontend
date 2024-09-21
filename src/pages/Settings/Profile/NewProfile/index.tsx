@@ -7,19 +7,22 @@ import {
 	profileSchema,
 } from "@/pages/Settings/Profile/NewProfile/schema"
 import { useGetProfiles } from "@/services/profileServices"
+import { useGetRoutes } from "@/services/routesServices"
 import { useGetAllUsers } from "@/services/userServices"
 import { FormFooter, FormStyled } from "@/style/global"
+import { CheckOutlined, CloseOutlined } from "@ant-design/icons"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Drawer } from "antd"
+import { Divider, Drawer, Switch, Typography } from "antd"
 import { useMemo } from "react"
 import { useForm } from "react-hook-form"
-import { useParams, useSearchParams } from "react-router-dom"
+import { useSearchParams } from "react-router-dom"
+import * as S from "./styles"
 
 const NewProfile = () => {
-	const { perfilId } = useParams()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { data: users } = useGetAllUsers()
 	const { data: profiles } = useGetProfiles()
+	const { data: routes } = useGetRoutes()
 
 	const isCreatingNew = searchParams.get("action") === "create_profile"
 	const editProfileId = searchParams.get("edit_profile_id")
@@ -39,6 +42,7 @@ const NewProfile = () => {
 		return {
 			description: currentProfile.description,
 			users: currentProfile.users.map((user) => user.id),
+			route_ids: currentProfile?.routes ?? [],
 		}
 	}, [currentProfile, isEditing])
 
@@ -57,6 +61,20 @@ const NewProfile = () => {
 		})
 		methods.reset()
 	}
+
+	const handleToggleRoute = (checked: boolean, routeId: string) => {
+		if (checked) {
+			methods.setValue("route_ids", methods.watch("route_ids")?.concat(routeId))
+		} else {
+			methods.setValue(
+				"route_ids",
+				methods.watch("route_ids")?.filter((id) => id !== routeId),
+			)
+		}
+		methods.trigger("route_ids")
+	}
+
+	console.count("render")
 
 	return (
 		<>
@@ -91,6 +109,27 @@ const NewProfile = () => {
 							methods.trigger("users")
 						}}
 					/>
+					<Divider style={{ margin: "12px 0" }} />
+					<S.RoutesWrapper>
+						<Typography.Title style={{ margin: 0 }} level={4}>
+							Rotas
+						</Typography.Title>
+
+						{routes?.map((route) => (
+							<S.RouteLine key={route.id}>
+								<Typography.Text>{route.description}</Typography.Text>
+								<Switch
+									checkedChildren={<CheckOutlined />}
+									unCheckedChildren={<CloseOutlined />}
+									checked={methods.watch("route_ids")?.includes(route.id)}
+									onChange={(checked) => {
+										handleToggleRoute(checked, route.id)
+									}}
+								/>
+							</S.RouteLine>
+						))}
+					</S.RoutesWrapper>
+
 					<FormFooter>
 						<Button className="button1" onClickFunc={handleCancel}>
 							Cancelar
@@ -101,8 +140,7 @@ const NewProfile = () => {
 							type="primary"
 							disabled={!methods.formState.isValid}
 						>
-							{/*{isEditing ? "Atualizar" : "Criar"}*/}
-							Criar Perfil
+							{isEditing ? "Atualizar Perfil" : "Criar Perfil"}
 						</Button>
 					</FormFooter>
 				</FormStyled>
