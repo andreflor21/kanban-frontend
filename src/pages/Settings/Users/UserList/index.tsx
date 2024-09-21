@@ -9,10 +9,10 @@ import { UserDetails } from "@/pages/Settings/Users/UserList/UserDetails"
 import { getDataToShow } from "@/pages/Settings/Users/UserList/helpers"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useUserStore } from "@/stores/User/useUserStore"
+import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import { Eye, Pencil, Trash } from "phosphor-react"
 import type React from "react"
 import { useSearchParams } from "react-router-dom"
-import * as S from "./styles"
 
 export type TableDataType =
 	| {
@@ -138,7 +138,7 @@ export const UserList = () => {
 				render: (_, record) => {
 					const isCurrentUser = record?.user.id === user?.id
 					return (
-						<S.ActionsWrapper key={record?.id}>
+						<TableActionsWrapper key={record?.id}>
 							{isCurrentUser ? (
 								<Pencil
 									color={"#1677ff"}
@@ -160,7 +160,7 @@ export const UserList = () => {
 							>
 								<Trash className={"delete"} />
 							</Popconfirm>
-						</S.ActionsWrapper>
+						</TableActionsWrapper>
 					)
 				},
 			},
@@ -169,7 +169,7 @@ export const UserList = () => {
 	const columns = getColumns()
 
 	return (
-		<S.TableWrapper>
+		<TableWrapper>
 			<Table
 				columns={columns}
 				dataSource={dataToShow}
@@ -191,6 +191,6 @@ export const UserList = () => {
 				/>
 			</Drawer>
 			<UserDetails />
-		</S.TableWrapper>
+		</TableWrapper>
 	)
 }
