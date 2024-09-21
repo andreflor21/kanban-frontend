@@ -1,4 +1,4 @@
-import { Navigate, createBrowserRouter } from "react-router-dom"
+import { createBrowserRouter, Navigate } from "react-router-dom"
 
 import Root from "./root"
 
@@ -13,7 +13,6 @@ import Products from "@/pages/Products"
 import ResetPassword from "@/pages/ResetPassword"
 import Section from "@/pages/Section"
 import Profile from "@/pages/Settings/Profile"
-import ProfileDetails from "@/pages/Settings/Profile/ProfileDetails"
 import Users from "@/pages/Settings/Users"
 import UserDetails from "@/pages/Settings/Users/UserDetails"
 import Suppliers from "@/pages/Suppliers"
@@ -109,10 +108,6 @@ export const router = createBrowserRouter([
 
 						children: [
 							{ index: true, element: <Profile /> },
-							{
-								path: ":perfilId",
-								element: <ProfileDetails />,
-							},
 							{
 								path: "novo",
 								element: <ProfileForm action="create" title="Criar Perfil" />,

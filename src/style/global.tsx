@@ -26,7 +26,6 @@ export default createGlobalStyle`
         --teal-100:#ccfbf1;
         --font-standard: "Poppins", sans-serif;
         --font-secondary: 'Mulish', sans-serif;
-		;
     }
 	
 
@@ -48,15 +47,15 @@ export default createGlobalStyle`
         box-sizing: border-box;
         outline: 0;
         scroll-behavior: smooth;
-		font-family: "Poppins", sans-serif;
+		font-family: var(--font-standard), sans-serif;
    }
 
    body {
       background: ${(props: GlobalProps) =>
 				props.themeDark ? "var(--gray-500)" : "var(--gray-100)"};
-      font-family: var(--font-standard);
-      /* padding-top: 56px; */
-  ::-webkit-scrollbar {
+	   font-family: var(--font-standard), sans-serif;
+
+	   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
@@ -75,7 +74,8 @@ export default createGlobalStyle`
     }    
   
     h1, h2, h3, h4, h5, h6, strong {
-      font-weight: 600;
+		font-weight: 600;
+		font-family: var(--font-standard), sans-serif;
     }
   
     button {
@@ -87,7 +87,8 @@ export default createGlobalStyle`
       text-decoration: none;
     }
 
-    // @media screen and (min-width: 920px) {
+
+	// @media screen and (min-width: 920px) {
     //   body {
     //     padding-top: 70px;
     //   }

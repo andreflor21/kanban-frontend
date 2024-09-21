@@ -1,8 +1,8 @@
 import ProfileForm from "@/components/ProfileForm"
 import TitlePage from "@/components/TitlePage"
-import {useParams} from "react-router-dom"
+import { useParams } from "react-router-dom"
 
-const ProfileDetails = () => {
+const NewProfile = () => {
 	const { perfilId } = useParams()
 
 	return (
@@ -22,4 +22,4 @@ const ProfileDetails = () => {
 	)
 }
 
-export default ProfileDetails
+export default NewProfile

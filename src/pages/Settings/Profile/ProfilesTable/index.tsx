@@ -1,3 +1,4 @@
+import { DetailsProfile } from "@/pages/Settings/Profile/DetailsProfile"
 import { type ProfileType, useGetProfiles } from "@/services/profileServices"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import {
@@ -8,8 +9,8 @@ import {
 	Tag,
 	Tooltip,
 } from "antd"
-import { Copy, Trash } from "phosphor-react"
-import { useCallback, useMemo } from "react"
+import { Copy, Eye, Trash } from "phosphor-react"
+import React, { useCallback, useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 
 const MAX_USERS_TO_SHOW = 5
@@ -25,6 +26,16 @@ export const ProfilesTable = () => {
 	const handleDuplicate = useCallback(async (id: string) => {
 		console.log(id)
 	}, [])
+
+	const handleToggleDetails = useCallback(
+		async (id: string | undefined) => {
+			setSearchParams((params) => {
+				id ? params.set("profile_id", id) : params.delete("profile_id")
+				return params
+			})
+		},
+		[setSearchParams],
+	)
 
 	const columns: TableColumnsType<ProfileType> = useMemo(() => {
 		if (!data) return []
@@ -81,22 +92,20 @@ export const ProfilesTable = () => {
 				title: "",
 				dataIndex: "action",
 				key: "action",
-				width: 100,
+				width: 120,
 				render: (_, record) => {
 					return (
 						<TableActionsWrapper key={record?.id}>
-							<Popconfirm
-								key={record?.id}
-								title={`Tem certeza que deseja duplicar o perfil ${record?.description ?? ""}?`}
-								onConfirm={() => handleDuplicate(record?.id ?? "")}
-								okText={"Duplicar"}
-								cancelText={"Cancelar"}
-								placement={"left"}
-							>
-								<Tooltip title={"Duplicar"}>
-									<Copy />
-								</Tooltip>
-							</Popconfirm>
+							<Tooltip key={record.id} title={"Visualizar Perfil"}>
+								<Eye
+									color={"#1677ff"}
+									onClick={() => handleToggleDetails(record?.id ?? "")}
+								/>
+							</Tooltip>
+							<Tooltip key={record.id} title={"Duplicar Perfil"}>
+								<Copy onClick={() => handleDuplicate(record?.id ?? "")} />
+							</Tooltip>
+
 							<Popconfirm
 								key={record?.id}
 								title={`Tem certeza que deseja deletar o perfil ${record?.description ?? ""}?`}
@@ -105,7 +114,7 @@ export const ProfilesTable = () => {
 								cancelText={"Cancelar"}
 								placement={"left"}
 							>
-								<Tooltip title={"Deletar"}>
+								<Tooltip title={"Deletar Perfil"}>
 									<Trash className={"delete"} />
 								</Tooltip>
 							</Popconfirm>
@@ -114,17 +123,20 @@ export const ProfilesTable = () => {
 				},
 			},
 		]
-	}, [data, handleDelete, handleDuplicate])
+	}, [data, handleDelete, handleDuplicate, handleToggleDetails])
 
 	return (
-		<TableWrapper>
-			<Table
-				columns={columns}
-				dataSource={data?.profiles}
-				loading={isLoading}
-				pagination={false}
-				virtual={true}
-			/>
-		</TableWrapper>
+		<>
+			<TableWrapper>
+				<Table
+					columns={columns}
+					dataSource={data?.profiles}
+					loading={isLoading}
+					pagination={false}
+					virtual={true}
+				/>
+			</TableWrapper>
+			<DetailsProfile />
+		</>
 	)
 }

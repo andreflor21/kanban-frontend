@@ -22,7 +22,7 @@ export const SuppliersList = () => {
 				rightContent={
 					<Button
 						type="primary"
-						icon={<FolderPlus />}
+						icon={<FolderPlus size={20} />}
 						onClick={handleCreateSupplier}
 					>
 						Novo fornecedor
