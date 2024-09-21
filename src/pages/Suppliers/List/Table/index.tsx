@@ -8,6 +8,7 @@ import {
 	useGetSuppliers,
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
+import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
 import { Pencil, Trash } from "phosphor-react"
 import React, { useMemo } from "react"
@@ -123,7 +124,7 @@ export const SuppliersTable = () => {
 				width: 100,
 				render: (_, record) => {
 					return (
-						<S.ActionsWrapper key={record?.id}>
+						<TableActionsWrapper key={record?.id}>
 							<Pencil
 								color={"#1677ff"}
 								onClick={() =>
@@ -143,7 +144,7 @@ export const SuppliersTable = () => {
 							>
 								<Trash className={"delete"} />
 							</Popconfirm>
-						</S.ActionsWrapper>
+						</TableActionsWrapper>
 					)
 				},
 			},
@@ -163,7 +164,7 @@ export const SuppliersTable = () => {
 	}, [data?.suppliers, supplierQuery])
 
 	return (
-		<S.TableWrapper>
+		<TableWrapper>
 			<Table
 				columns={getColumns()}
 				dataSource={dataToDisplay}
@@ -185,6 +186,6 @@ export const SuppliersTable = () => {
 			>
 				<NewSupplier />
 			</Drawer>
-		</S.TableWrapper>
+		</TableWrapper>
 	)
 }

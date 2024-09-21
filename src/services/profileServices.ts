@@ -4,15 +4,15 @@ import { useUserStore } from "@/stores/User/useUserStore"
 import type { User } from "@/types/usuario"
 import { useQuery } from "@tanstack/react-query"
 
-export type Profile = {
+export type ProfileType = {
 	description: string
 	id: string
-	routers: Array<unknown>
+	routes: Array<string>
 	users: Array<Pick<User, "id" | "name" | "email">>
 }
 
 type UseGetProfilesData = {
-	profiles: Profile[]
+	profiles: ProfileType[]
 }
 
 export const useGetProfiles = () => {
@@ -25,6 +25,7 @@ export const useGetProfiles = () => {
 		queryFn: () => ApiInstance.get<UseGetProfilesData>(url, { headers }),
 		enabled: !!token,
 	})
+	console.log(data)
 
 	return { data, isLoading, error }
 }

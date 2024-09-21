@@ -13,12 +13,11 @@ import {
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
 import { useGetAllUsers } from "@/services/userServices"
-import { FormStyled } from "@/style/global"
+import { FormFooter, FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
-import * as S from "./styles"
 
 const EMPTY_INITIAL_VALUES: NewSupplierSchema = {
 	name: "",
@@ -210,7 +209,7 @@ export const NewSupplier = () => {
 						methods.trigger("users")
 					}}
 				/>
-				<S.ContainerButtons>
+				<FormFooter>
 					<Button className="button1" onClickFunc={handleCancel} danger>
 						Cancelar
 					</Button>
@@ -227,7 +226,7 @@ export const NewSupplier = () => {
 					>
 						{isEditing ? "Atualizar" : "Criar"}
 					</Button>
-				</S.ContainerButtons>
+				</FormFooter>
 			</FormStyled>
 		</div>
 	)

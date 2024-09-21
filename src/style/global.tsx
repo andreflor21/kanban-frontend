@@ -26,7 +26,6 @@ export default createGlobalStyle`
         --teal-100:#ccfbf1;
         --font-standard: "Poppins", sans-serif;
         --font-secondary: 'Mulish', sans-serif;
-		;
     }
 	
 
@@ -48,15 +47,15 @@ export default createGlobalStyle`
         box-sizing: border-box;
         outline: 0;
         scroll-behavior: smooth;
-		font-family: "Poppins", sans-serif;
+		font-family: var(--font-standard), sans-serif;
    }
 
    body {
       background: ${(props: GlobalProps) =>
 				props.themeDark ? "var(--gray-500)" : "var(--gray-100)"};
-      font-family: var(--font-standard);
-      /* padding-top: 56px; */
-  ::-webkit-scrollbar {
+	   font-family: var(--font-standard), sans-serif;
+
+	   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
@@ -75,7 +74,8 @@ export default createGlobalStyle`
     }    
   
     h1, h2, h3, h4, h5, h6, strong {
-      font-weight: 600;
+		font-weight: 600;
+		font-family: var(--font-standard), sans-serif;
     }
   
     button {
@@ -87,7 +87,8 @@ export default createGlobalStyle`
       text-decoration: none;
     }
 
-    // @media screen and (min-width: 920px) {
+
+	// @media screen and (min-width: 920px) {
     //   body {
     //     padding-top: 70px;
     //   }
@@ -149,5 +150,35 @@ export const FormStyled = styled.form`
         line-height: 19px;
         padding: 0.5rem;
     }
+`
 
+export const FormFooter = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	gap: ${spacing.xxs};
+	margin-top: 1rem;
+`
+
+export const TableWrapper = styled.div`
+	padding: 0;
+
+	@media (min-width: ${BREAKPOINTS.MD}) {
+		padding: 0 ${spacing.md} 0 0;
+	}
+`
+
+export const TableActionsWrapper = styled.div`
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0 ${spacing.xxxs};
+
+	svg, a {
+		font-size: 18px;
+		cursor: pointer;
+
+		&.delete {
+			color: var(--red-500);
+		}
+	}
 `

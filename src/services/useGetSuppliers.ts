@@ -53,7 +53,7 @@ export const useGetSuppliersActions = () => {
 	}
 
 	const deleteSupplier = async (id: string) => {
-		return await ApiInstance.delete(`suppliers/${id}/delete`)
+		return await ApiInstance.delete(`suppliers/${id}/delete`, { headers })
 	}
 
 	const updateSupplier = async (id: string, data: SuppliersBody) => {

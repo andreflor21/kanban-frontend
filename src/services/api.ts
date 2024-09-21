@@ -10,6 +10,19 @@ type BffApiOptions = {
 	responseType?: "json" | "blob"
 }
 
+const handleUnauthorized = (error: AxiosError) => {
+	if (error.response?.status === 401) {
+		window.location.href = "/login"
+	}
+}
+api.interceptors.response.use(
+	(response) => response,
+	(error) => {
+		handleUnauthorized(error)
+		return Promise.reject(error)
+	},
+)
+
 export const ApiInstance = {
 	get: async <R>(uri: string, options?: BffApiOptions) =>
 		await api.get<R>(uri, options).then((res) => res.data),
