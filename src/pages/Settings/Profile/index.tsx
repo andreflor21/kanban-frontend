@@ -1,13 +1,12 @@
 import { PageHeader } from "@/components/PageHeader"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
+import NewProfile from "@/pages/Settings/Profile/NewProfile"
 import { ProfilesTable } from "@/pages/Settings/Profile/ProfilesTable"
 import { PageContainer } from "@/style/global"
 import { Button } from "antd"
 import { UserCirclePlus } from "phosphor-react"
 import { useSearchParams } from "react-router-dom"
-
-// import { Container } from './styles';
 
 const Profile = () => {
 	const [_, setSearchParams] = useSearchParams()
@@ -38,6 +37,7 @@ const Profile = () => {
 					}
 				/>
 				<ProfilesTable />
+				<NewProfile />
 			</PageContainer>
 		</>
 	)

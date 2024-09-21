@@ -9,7 +9,7 @@ import {
 	Tag,
 	Tooltip,
 } from "antd"
-import { Copy, Eye, Trash } from "phosphor-react"
+import { Copy, Eye, Pencil, Trash } from "phosphor-react"
 import React, { useCallback, useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 
@@ -18,6 +18,17 @@ const MAX_USERS_TO_SHOW = 5
 export const ProfilesTable = () => {
 	const { data, isLoading } = useGetProfiles()
 	const [searchParams, setSearchParams] = useSearchParams()
+	const profileQuery = searchParams.get("profile")
+
+	const dataToShow = useMemo(() => {
+		if (!data) return []
+		if (profileQuery) {
+			return data.profiles.filter((profile) =>
+				profile.description.toLowerCase().includes(profileQuery.toLowerCase()),
+			)
+		}
+		return data.profiles
+	}, [data, profileQuery])
 
 	const handleDelete = useCallback(async (id: string) => {
 		console.log(id)
@@ -31,6 +42,18 @@ export const ProfilesTable = () => {
 		async (id: string | undefined) => {
 			setSearchParams((params) => {
 				id ? params.set("profile_id", id) : params.delete("profile_id")
+				return params
+			})
+		},
+		[setSearchParams],
+	)
+
+	const handleEdit = useCallback(
+		async (id: string | undefined) => {
+			setSearchParams((params) => {
+				id
+					? params.set("edit_profile_id", id)
+					: params.delete("edit_profile_id")
 				return params
 			})
 		},
@@ -92,7 +115,7 @@ export const ProfilesTable = () => {
 				title: "",
 				dataIndex: "action",
 				key: "action",
-				width: 120,
+				width: 150,
 				render: (_, record) => {
 					return (
 						<TableActionsWrapper key={record?.id}>
@@ -100,6 +123,12 @@ export const ProfilesTable = () => {
 								<Eye
 									color={"#1677ff"}
 									onClick={() => handleToggleDetails(record?.id ?? "")}
+								/>
+							</Tooltip>
+							<Tooltip key={record.id} title={"Editar Perfil"}>
+								<Pencil
+									color={"#1677ff"}
+									onClick={() => handleEdit(record?.id ?? "")}
 								/>
 							</Tooltip>
 							<Tooltip key={record.id} title={"Duplicar Perfil"}>
@@ -123,14 +152,14 @@ export const ProfilesTable = () => {
 				},
 			},
 		]
-	}, [data, handleDelete, handleDuplicate, handleToggleDetails])
+	}, [data, handleDelete, handleDuplicate, handleToggleDetails, handleEdit])
 
 	return (
 		<>
 			<TableWrapper>
 				<Table
 					columns={columns}
-					dataSource={data?.profiles}
+					dataSource={dataToShow}
 					loading={isLoading}
 					pagination={false}
 					virtual={true}

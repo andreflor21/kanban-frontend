@@ -150,7 +150,13 @@ export const FormStyled = styled.form`
         line-height: 19px;
         padding: 0.5rem;
     }
+`
 
+export const FormFooter = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	gap: ${spacing.xxs};
+	margin-top: 1rem;
 `
 
 export const TableWrapper = styled.div`

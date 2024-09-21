@@ -29,7 +29,7 @@ const Users = () => {
 					rightContent={
 						<Button
 							type="primary"
-							icon={<UserPlus size={20}/>}
+							icon={<UserPlus size={20} />}
 							onClick={handleCreateUser}
 						>
 							Novo Usuário

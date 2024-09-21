@@ -1,6 +1,6 @@
 import { InfoLine } from "@/components/InfoLine"
 import { useGetProfiles } from "@/services/profileServices"
-import { Divider, Drawer, Flex, List, Typography } from "antd"
+import { Button, Divider, Drawer, Flex, List, Space, Typography } from "antd"
 import { useSearchParams } from "react-router-dom"
 
 export const DetailsProfile = () => {
@@ -23,6 +23,34 @@ export const DetailsProfile = () => {
 					return params
 				})
 			}}
+			extra={
+				<Space>
+					<Button
+						onClick={() => {
+							setSearchParams((params) => {
+								if (!profileId) return params
+								params.set("edit_profile_id", profileId)
+								params.delete("profile_id")
+								return params
+							})
+						}}
+					>
+						Editar Perfil
+					</Button>
+				</Space>
+			}
+			// footer={
+			// 	<Button
+			// 		onClick={() =>
+			// 			setSearchParams((params) => {
+			// 				params.delete("profile_id")
+			// 				return params
+			// 			})
+			// 		}
+			// 	>
+			// 		Editar Perfil
+			// 	</Button>
+			// }
 		>
 			<div>
 				<InfoLine title={"Nome"}>{profile?.description}</InfoLine>

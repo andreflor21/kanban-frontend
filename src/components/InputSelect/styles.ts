@@ -8,8 +8,12 @@ export const SelectStyled = styled(Select)`
     box-sizing: border-box;
     border-radius: ${spacing.xxxs};
     width: 100%;
-    height: 2.5rem;
+    min-height: 2.5rem;
     font-family: var(--font-standard), sans-serif;
+
+    > div:first-child {
+        min-height: 2.5rem;
+    }
     
 
     &::placeholder {
