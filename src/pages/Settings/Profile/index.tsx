@@ -1,17 +1,19 @@
 import { Confirm } from "@/components/Confirm"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import { List, Skeleton, Tooltip } from "antd"
+import { useGetProfiles } from "@/services/profileServices" // import { Container } from './styles';
+import { Card, List, Skeleton, Tooltip } from "antd"
 import { Copy, Plus, Trash, WarningCircle } from "phosphor-react"
-import { useState } from "react"
-import { Container, ContainerButtons, LinkStyleld } from "./styles" // import { Container } from './styles';
+import { Link } from "react-router-dom"
+import { Container, ContainerButtons, LinkStyleld } from "./styles"
 
 // import { Container } from './styles';
 
 const Profile = () => {
 	// const { getProfiles, profiles, deleteProfile } = useProfile()
-	const profiles: unknown[] = []
-	const [load, setLoad] = useState(true)
+	const { data, isLoading } = useGetProfiles()
+	// console.log(data)
+	const profiles = data?.profiles ?? []
 
 	// useEffect(() => {
 	// 	// setLoad(false);
@@ -43,9 +45,18 @@ const Profile = () => {
 					style={{
 						marginRight: "2rem",
 					}}
+					grid={{
+						gutter: 16,
+						xs: 1,
+						sm: 2,
+						md: 4,
+						lg: 4,
+						xl: 6,
+						xxl: 3,
+					}}
 					dataSource={profiles}
 					pagination={{ position: "bottom", align: "end" }}
-					renderItem={(p, index) => (
+					renderItem={(profile, index) => (
 						<List.Item
 							actions={[
 								<Confirm
@@ -68,20 +79,23 @@ const Profile = () => {
 							style={{ fontFamily: "var(--font-standard)" }}
 						>
 							<Skeleton
-								loading={load}
+								loading={isLoading}
 								active
 								title
 								paragraph={{ rows: 2 }}
 								style={{ width: "50%" }}
 							>
-								{/*<List.Item.Meta*/}
-								{/*	title={<Link to={`${p.id}`}>{p.descricao}</Link>}*/}
-								{/*	description={`${*/}
-								{/*		p.usuarios.length > 0*/}
-								{/*			? `${p.usuarios.length} usuário(s) vinculado(s)`*/}
-								{/*			: "Nenhum usuário vinculado"*/}
-								{/*	}`}*/}
-								{/*/>*/}
+								<Card
+									title={
+										<Link to={`/configuracoes/perfil/${p.id}`}>
+											{p.description}
+										</Link>
+									}
+								>
+									{p.users.length > 0
+										? `${p.users.length} usuário(s) vinculado(s)`
+										: "Nenhum usuário vinculado"}
+								</Card>
 							</Skeleton>
 						</List.Item>
 					)}
