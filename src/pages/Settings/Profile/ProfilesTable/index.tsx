@@ -1,5 +1,11 @@
+import { useGetNotification } from "@/hooks/useGetNotification"
 import { DetailsProfile } from "@/pages/Settings/Profile/DetailsProfile"
-import { type ProfileType, useGetProfiles } from "@/services/profileServices"
+import { type ErrorExtended, parseError } from "@/services/api"
+import {
+	type ProfileType,
+	useGetProfiles,
+	useGetProfilesActions,
+} from "@/services/profileServices"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import {
 	Popconfirm,
@@ -19,6 +25,8 @@ export const ProfilesTable = () => {
 	const { data, isLoading } = useGetProfiles()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const profileQuery = searchParams.get("profile")
+	const { deleteProfile } = useGetProfilesActions()
+	const { showNotification } = useGetNotification()
 
 	const dataToShow = useMemo(() => {
 		if (!data) return []
@@ -30,9 +38,26 @@ export const ProfilesTable = () => {
 		return data.profiles
 	}, [data, profileQuery])
 
-	const handleDelete = useCallback(async (id: string) => {
-		console.log(id)
-	}, [])
+	const handleDelete = useCallback(
+		async (id: string) => {
+			try {
+				await deleteProfile(id)
+				showNotification({
+					type: "SUCCESS",
+					message: "Perfil deletado com sucesso",
+					description: "",
+				})
+			} catch (err) {
+				const parsedError = parseError(err as ErrorExtended)
+				showNotification({
+					type: "ERROR",
+					message: "Erro ao deletar perfil",
+					description: parsedError ?? "Por favor, tente novamente",
+				})
+			}
+		},
+		[deleteProfile, showNotification],
+	)
 
 	const handleDuplicate = useCallback(async (id: string) => {
 		console.log(id)

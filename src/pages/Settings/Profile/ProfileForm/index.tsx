@@ -1,12 +1,17 @@
 import Button from "@/components/Button"
 import Input from "@/components/Input"
 import { InputSelect } from "@/components/InputSelect"
+import { useGetNotification } from "@/hooks/useGetNotification"
 import {
 	EMPTY_NEW_PROFILE,
 	type ProfileSchemaType,
 	profileSchema,
-} from "@/pages/Settings/Profile/NewProfile/schema"
-import { useGetProfiles } from "@/services/profileServices"
+} from "@/pages/Settings/Profile/ProfileForm/schema"
+import { type ErrorExtended, parseError } from "@/services/api"
+import {
+	useGetProfiles,
+	useGetProfilesActions,
+} from "@/services/profileServices"
 import { useGetRoutes } from "@/services/routesServices"
 import { useGetAllUsers } from "@/services/userServices"
 import { FormFooter, FormStyled } from "@/style/global"
@@ -18,11 +23,13 @@ import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
-const NewProfile = () => {
+const ProfileForm = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { data: users } = useGetAllUsers()
 	const { data: profiles } = useGetProfiles()
 	const { data: routes } = useGetRoutes()
+	const { createProfile, updateProfile } = useGetProfilesActions()
+	const { showNotification } = useGetNotification()
 
 	const isCreatingNew = searchParams.get("action") === "create_profile"
 	const editProfileId = searchParams.get("edit_profile_id")
@@ -42,12 +49,43 @@ const NewProfile = () => {
 		return {
 			description: currentProfile.description,
 			users: currentProfile.users.map((user) => user.id),
-			route_ids: currentProfile?.routes ?? [],
+			routes: currentProfile?.routes ?? [],
 		}
 	}, [currentProfile, isEditing])
 
-	const onSubmit = () => {
-		console.log("onSubmit")
+	const onSubmit = async () => {
+		const values = methods.getValues()
+		const body = {
+			description: values.description,
+			users: values?.users ?? [],
+			routes: values?.routes ?? [],
+		}
+		try {
+			isEditing
+				? await updateProfile(editProfileId, body)
+				: await createProfile(body)
+			showNotification({
+				type: "SUCCESS",
+				message: isEditing
+					? "Perfil atualizado com sucesso"
+					: "Perfil criado com sucesso",
+				description: "",
+			})
+			setSearchParams((params) => {
+				params.delete("action")
+				params.delete("edit_profile_id")
+				return params
+			})
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				type: "ERROR",
+				message: isEditing
+					? "Erro ao atualizar perfil"
+					: "Erro ao criar perfil",
+				description: parsedError ?? "Por favor, tente novamente",
+			})
+		}
 	}
 	const methods = useForm<ProfileSchemaType>({
 		resolver: yupResolver(profileSchema),
@@ -64,14 +102,14 @@ const NewProfile = () => {
 
 	const handleToggleRoute = (checked: boolean, routeId: string) => {
 		if (checked) {
-			methods.setValue("route_ids", methods.watch("route_ids")?.concat(routeId))
+			methods.setValue("routes", methods.watch("routes")?.concat(routeId))
 		} else {
 			methods.setValue(
-				"route_ids",
-				methods.watch("route_ids")?.filter((id) => id !== routeId),
+				"routes",
+				methods.watch("routes")?.filter((id) => id !== routeId),
 			)
 		}
-		methods.trigger("route_ids")
+		methods.trigger("routes")
 	}
 
 	console.count("render")
@@ -121,7 +159,7 @@ const NewProfile = () => {
 								<Switch
 									checkedChildren={<CheckOutlined />}
 									unCheckedChildren={<CloseOutlined />}
-									checked={methods.watch("route_ids")?.includes(route.id)}
+									checked={methods.watch("routes")?.includes(route.id)}
 									onChange={(checked) => {
 										handleToggleRoute(checked, route.id)
 									}}
@@ -145,20 +183,8 @@ const NewProfile = () => {
 					</FormFooter>
 				</FormStyled>
 			</Drawer>
-
-			{/*{perfilId && (*/}
-			{/*	<>*/}
-			{/*		<TitlePage title="Configurações" />*/}
-
-			{/*		<ProfileForm*/}
-			{/*			profileId={perfilId}*/}
-			{/*			title="Informações do Perfil"*/}
-			{/*			action="edit"*/}
-			{/*		/>*/}
-			{/*	</>*/}
-			{/*)}*/}
 		</>
 	)
 }
 
-export default NewProfile
+export default ProfileForm
