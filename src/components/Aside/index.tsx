@@ -2,34 +2,41 @@ import LogoImg from "@/assets/logo.svg"
 import Menu from "@/components/Menu"
 import type { MenuProps } from "antd"
 import { useState } from "react"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { AsideContainer, ContainerLogo, Logo } from "./styles"
 
 const Aside = () => {
-	const { pathname } = useLocation()
 	const [hovered, setHovered] = useState(false)
-	const [current, setCurrent] = useState(pathname.substring(1))
+	const path = useLocation().pathname
+	const navigate = useNavigate()
 
 	const onClick: MenuProps["onClick"] = (e) => {
-		setCurrent(e.key)
+		navigate(e.key)
 	}
+
 	return (
 		<AsideContainer
 			className={hovered ? "hovered" : ""}
-			onMouseEnter={() => setHovered(true)}
-			onMouseLeave={() => setHovered(false)}
+			onMouseEnter={() => {
+				setHovered(true)
+			}}
+			onMouseLeave={() => {
+				setTimeout(() => {
+					setHovered(false)
+				}, 500)
+			}}
 		>
 			<div>
 				<ContainerLogo>
 					<Logo src={LogoImg} alt="Logo" />
-					{hovered ? <h3>Kanban</h3> : undefined}
+					{hovered && <h3>Kanban</h3>}
 				</ContainerLogo>
 				<Menu
 					mode="inline"
 					className={`${!hovered ? "collapsed" : "open"} pc`}
 					inlineCollapsed={!hovered}
 					onClick={onClick}
-					selectedKeys={[current]}
+					selectedKeys={[path]}
 				/>
 			</div>
 		</AsideContainer>

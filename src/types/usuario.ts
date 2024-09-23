@@ -1,3 +1,5 @@
+import type { Route } from "@/services/routesServices"
+
 export type User = {
 	id: string
 	name: string
@@ -14,20 +16,6 @@ export type User = {
 	profile: {
 		description: string
 		id: string
+		routes: Route[]
 	}
-}
-export interface UsuarioData {
-	nome?: string
-	email?: string
-	senha?: string
-	cpf?: string
-	id: number | string
-	dtNascimento?: string | null
-	codigo?: string
-	ativo?: boolean
-	trocaSenha?: boolean
-	tokenReset?: string
-	tokenResetExpire?: string
-	perfilId?: number | string
-	perfil?: number | string
 }
