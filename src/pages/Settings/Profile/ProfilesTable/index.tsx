@@ -22,7 +22,7 @@ import { useSearchParams } from "react-router-dom"
 const MAX_USERS_TO_SHOW = 5
 
 export const ProfilesTable = () => {
-	const { data, isLoading } = useGetProfiles()
+	const { data, isLoading, query: profilesQuery } = useGetProfiles()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const profileQuery = searchParams.get("profile")
 	const { deleteProfile } = useGetProfilesActions()
@@ -47,6 +47,7 @@ export const ProfilesTable = () => {
 					message: "Perfil deletado com sucesso",
 					description: "",
 				})
+				await profilesQuery.refetch()
 			} catch (err) {
 				const parsedError = parseError(err as ErrorExtended)
 				showNotification({
@@ -56,12 +57,19 @@ export const ProfilesTable = () => {
 				})
 			}
 		},
-		[deleteProfile, showNotification],
+		[deleteProfile, showNotification, profilesQuery],
 	)
 
-	const handleDuplicate = useCallback(async (id: string) => {
-		console.log(id)
-	}, [])
+	const handleDuplicate = useCallback(
+		async (id: string) => {
+			setSearchParams((params) => {
+				params.set("action", "duplicate_profile")
+				params.set("edit_profile_id", id)
+				return params
+			})
+		},
+		[setSearchParams],
+	)
 
 	const handleToggleDetails = useCallback(
 		async (id: string | undefined) => {

@@ -23,47 +23,70 @@ import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
+const getActionButtonText = (isEditing: boolean, isDuplicating: boolean) => {
+	if (isEditing) return "Atualizar Perfil"
+	if (isDuplicating) return "Duplicar Perfil"
+	return "Criar Perfil"
+}
+
+const getTitle = (isEditing: boolean, isDuplicating: boolean) => {
+	if (isEditing) return "Editar Perfil"
+	if (isDuplicating) return "Duplicar Perfil"
+	return "Criar Novo Perfil"
+}
+
 const ProfileForm = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { data: users } = useGetAllUsers()
-	const { data: profiles } = useGetProfiles()
+	const { data: profiles, query: profilesQuery } = useGetProfiles()
 	const { data: routes } = useGetRoutes()
-	const { createProfile, updateProfile } = useGetProfilesActions()
+	const { createProfile, updateProfile, duplicateProfile } =
+		useGetProfilesActions()
 	const { showNotification } = useGetNotification()
 
 	const isCreatingNew = searchParams.get("action") === "create_profile"
+	const isDuplicating = searchParams.get("action") === "duplicate_profile"
 	const editProfileId = searchParams.get("edit_profile_id")
+
 	const currentProfile = profiles?.profiles.find(
 		(profile) => profile.id === editProfileId,
 	)
-	const isEditing = !!editProfileId && !!currentProfile?.id
+	const isEditing = !!editProfileId && !!currentProfile?.id && !isDuplicating
 	const usersToDisplay = users?.users?.map((user) => ({
 		label: user.name,
 		value: user.id,
 	}))
 
 	const initialValues = useMemo(() => {
-		if (!isEditing || !currentProfile) {
+		if (!currentProfile?.id) {
 			return EMPTY_NEW_PROFILE
 		}
+
 		return {
-			description: currentProfile.description,
+			description: isDuplicating ? "" : currentProfile.description,
 			users: currentProfile.users.map((user) => user.id),
-			routes: currentProfile?.routes ?? [],
+			routes: currentProfile?.routes.map((route) => route.id) ?? [],
 		}
-	}, [currentProfile, isEditing])
+	}, [currentProfile, isDuplicating])
 
 	const onSubmit = async () => {
 		const values = methods.getValues()
 		const body = {
 			description: values.description,
 			users: values?.users ?? [],
-			routes: values?.routes ?? [],
+			routes: isDuplicating ? [] : (values?.routes ?? []),
 		}
 		try {
-			isEditing
-				? await updateProfile(editProfileId, body)
-				: await createProfile(body)
+			if (isDuplicating && editProfileId) {
+				await duplicateProfile(editProfileId, body)
+			}
+			if (isEditing) {
+				await updateProfile(editProfileId, body)
+			}
+			if (isCreatingNew) {
+				await createProfile(body)
+			}
+			await profilesQuery.refetch()
 			showNotification({
 				type: "SUCCESS",
 				message: isEditing
@@ -112,14 +135,12 @@ const ProfileForm = () => {
 		methods.trigger("routes")
 	}
 
-	console.count("render")
-
 	return (
 		<>
 			<Drawer
 				width={600}
-				title={isCreatingNew ? "Criar Novo Perfil" : "Editar Perfil"}
-				open={isCreatingNew || isEditing}
+				title={getTitle(isEditing, isDuplicating)}
+				open={isCreatingNew || isEditing || isDuplicating}
 				onClose={() => {
 					setSearchParams((params) => {
 						params.delete("action")
@@ -159,6 +180,7 @@ const ProfileForm = () => {
 								<Switch
 									checkedChildren={<CheckOutlined />}
 									unCheckedChildren={<CloseOutlined />}
+									disabled={isDuplicating}
 									checked={methods.watch("routes")?.includes(route.id)}
 									onChange={(checked) => {
 										handleToggleRoute(checked, route.id)
@@ -178,7 +200,7 @@ const ProfileForm = () => {
 							type="primary"
 							disabled={!methods.formState.isValid}
 						>
-							{isEditing ? "Atualizar Perfil" : "Criar Perfil"}
+							{getActionButtonText(isEditing, isDuplicating)}
 						</Button>
 					</FormFooter>
 				</FormStyled>

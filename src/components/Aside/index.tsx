@@ -21,9 +21,7 @@ const Aside = () => {
 				setHovered(true)
 			}}
 			onMouseLeave={() => {
-				setTimeout(() => {
-					setHovered(false)
-				}, 500)
+				setHovered(false)
 			}}
 		>
 			<div>
