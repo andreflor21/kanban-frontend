@@ -5,10 +5,10 @@ import { useQuery } from "@tanstack/react-query"
 
 type SuppliersBody = {
 	name: string
-	cnpj: string
-	legalName: string
-	ERPcode: string
-	code: string
+	cnpj?: string
+	legalName?: string
+	ERPCode?: string
+	code?: string
 	email?: string
 	fone?: string
 	users?: string[]
@@ -16,10 +16,16 @@ type SuppliersBody = {
 export type Suppliers = {
 	ERPCode: string
 	active: boolean
-	address: {
-		addressTypeId: string
+	addresses?: {
 		id: string
-	}
+		lograd?: string
+		number?: string
+		complement?: string
+		district?: string
+		city?: string
+		state?: string
+		zipcode?: string
+	}[]
 	cnpj: string
 	code: string
 	createdAt: string

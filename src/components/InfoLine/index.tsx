@@ -12,7 +12,7 @@ const { Paragraph } = Typography
 export const InfoLine = ({
 	children,
 	title,
-	copyable = false,
+	copyable,
 	...rest
 }: InfoLineProps) => {
 	return (
@@ -27,6 +27,7 @@ export const InfoLine = ({
 				{...(copyable && {
 					copyable: {
 						tooltips: false,
+						text: typeof copyable !== "boolean" ? copyable.text : undefined,
 					},
 				})}
 				{...rest}
