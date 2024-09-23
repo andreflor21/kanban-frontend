@@ -1,7 +1,7 @@
 import { PageHeader } from "@/components/PageHeader"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import NewProfile from "@/pages/Settings/Profile/NewProfile"
+import ProfileForm from "@/pages/Settings/Profile/ProfileForm"
 import { ProfilesTable } from "@/pages/Settings/Profile/ProfilesTable"
 import { PageContainer } from "@/style/global"
 import { Button } from "antd"
@@ -37,7 +37,7 @@ const Profile = () => {
 					}
 				/>
 				<ProfilesTable />
-				<NewProfile />
+				<ProfileForm />
 			</PageContainer>
 		</>
 	)

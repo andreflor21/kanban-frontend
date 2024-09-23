@@ -24,7 +24,6 @@ export const AsideContainer = styled.aside`
     @media screen and (min-width: 426px) {
         width: 100%;
         height: 80px;
-
         position: fixed;
         bottom: 0;
         left: 0;
