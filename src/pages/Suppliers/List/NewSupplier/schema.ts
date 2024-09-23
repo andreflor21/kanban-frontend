@@ -4,7 +4,7 @@ export const newSupplierSchema = yup.object({
 	name: yup.string().required("Campo obrigatório"),
 	cnpj: yup.string(),
 	legalName: yup.string(),
-	ERPCode: yup.string(),
+	ERPcode: yup.string(),
 	code: yup.string(),
 	fone: yup.string(),
 	email: yup.string(),

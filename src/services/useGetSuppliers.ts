@@ -7,14 +7,14 @@ type SuppliersBody = {
 	name: string
 	cnpj?: string
 	legalName?: string
-	ERPCode?: string
+	ERPcode?: string
 	code?: string
 	email?: string
 	fone?: string
 	users?: string[]
 }
 export type Suppliers = {
-	ERPCode: string
+	ERPcode: string
 	active: boolean
 	addresses?: {
 		id: string

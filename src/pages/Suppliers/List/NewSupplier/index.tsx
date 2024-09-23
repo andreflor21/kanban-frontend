@@ -25,7 +25,7 @@ const EMPTY_INITIAL_VALUES: NewSupplierSchema = {
 	email: "",
 	fone: "",
 	legalName: "",
-	ERPCode: "",
+	ERPcode: "",
 	code: "",
 	users: [],
 }
@@ -59,7 +59,7 @@ export const NewSupplier = () => {
 			email: supplier.email,
 			fone: supplier.fone,
 			legalName: supplier.legalName,
-			ERPCode: supplier.ERPCode,
+			ERPcode: supplier.ERPcode,
 			code: supplier.code,
 			users: supplier?.users?.map((user) => user.id),
 		}
@@ -185,8 +185,8 @@ export const NewSupplier = () => {
 					required
 					label="Código de ERP"
 					placeholder="ERP do fornecedor"
-					errorMessage={methods.formState.errors.ERPCode?.message}
-					{...methods.register("ERPCode")}
+					errorMessage={methods.formState.errors.ERPcode?.message}
+					{...methods.register("ERPcode")}
 				/>
 				<Input
 					required
