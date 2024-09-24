@@ -31,7 +31,7 @@ export const AddressForm = () => {
 	const [uf, setUf] = useState("")
 
 	const { data: suppliers, query: suppliersQuery } = useGetSuppliers()
-	const { addAddress } = useGetSuppliersActions()
+	const { addAddress, editAddress } = useGetSuppliersActions()
 	const { data: addressByCep, isLoading: isLoadingCEP } =
 		useGetAddressByCEP(cep)
 	const { data: ufs, isLoading: isLoadingUFs } = useGetUFs()
@@ -112,9 +112,6 @@ export const AddressForm = () => {
 		setUf("")
 	}
 
-	console.log("valores", watch())
-	console.log(addressByCep)
-
 	const handleSubmit = async () => {
 		const addressType = getValues("addressType")
 		const values = {
@@ -146,13 +143,43 @@ export const AddressForm = () => {
 		}
 	}
 
+	const handleEdit = async () => {
+		const addressType = getValues("addressType")
+		const values = {
+			...getValues(),
+			addressType: { description: addressType },
+		}
+
+		if (!supplierId || !addressId) return
+		setLoadingPost(true)
+
+		try {
+			await editAddress(supplierId, addressId, values)
+			await suppliersQuery.refetch()
+			showNotification({
+				type: "SUCCESS",
+				message: "Endereço atualizado com sucesso",
+				description: "",
+			})
+			handleCancel()
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				type: "ERROR",
+				message: parsedError ?? "Erro ao atualizar endereço",
+				description: "Verifique seus dados e tente novamente",
+			})
+		} finally {
+			setLoadingPost(false)
+		}
+	}
 	return (
 		<Modal
 			open={isModalOpen}
 			title={isCreatingNew ? "Novo endereço" : "Editar endereço"}
 			onCancel={handleCancel}
 			okText={isCreatingNew ? "Adicionar endereço" : "Salvar"}
-			onOk={handleSubmit}
+			onOk={isEditing ? handleEdit : handleSubmit}
 			okButtonProps={{ loading: loadingPost, disabled: !isValid }}
 		>
 			<FormStyled>

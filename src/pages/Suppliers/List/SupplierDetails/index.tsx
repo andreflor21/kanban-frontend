@@ -1,23 +1,56 @@
 import Button from "@/components/Button"
 import { InfoLine } from "@/components/InfoLine"
-import { cepMask, cnpjMask, getTextValue, onlyNumbersCnpj, } from "@/helpers/general"
-import { useGetSuppliers } from "@/services/useGetSuppliers"
+import {
+	cepMask,
+	cnpjMask,
+	getTextValue,
+	onlyNumbersCnpj,
+} from "@/helpers/general"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { type ErrorExtended, parseError } from "@/services/api"
+import {
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
 import { FormFooter } from "@/style/global"
 import { Card, Divider, Drawer, Popconfirm, Space, Tag, Typography } from "antd"
+import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
 export const SupplierDetails = () => {
+	const [isDeleting, setIsDeleting] = useState(false)
 	const [searchParams, setSearchParams] = useSearchParams()
-	const { data: suppliers } = useGetSuppliers()
+	const { data: suppliers, query: suppliersQuery } = useGetSuppliers()
+	const { deleteAddress } = useGetSuppliersActions()
 	const supplierId = searchParams.get("supplier_id")
 	const supplier = suppliers?.suppliers.find(
 		(supplier) => supplier.id === supplierId,
 	)
+	const { showNotification } = useGetNotification()
 	const isDrawerOpen = !!supplierId && !!supplier?.id
 
-	const handleDeleteAddress = (id: string) => {
-		console.log(id)
+	const handleDeleteAddress = async (id: string) => {
+		if (!supplierId) return
+		setIsDeleting(true)
+		try {
+			await deleteAddress(supplierId, id)
+			await suppliersQuery.refetch()
+			showNotification({
+				type: "SUCCESS",
+				message: "Endereço excluído com sucesso",
+				description: "",
+			})
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				type: "ERROR",
+				message: parsedError ?? "Erro ao excluir endereço",
+				description: "Verifique seus dados e tente novamente",
+			})
+		} finally {
+			setIsDeleting(false)
+		}
 	}
 
 	const handleEditAddress = (id: string) => {
@@ -116,6 +149,7 @@ export const SupplierDetails = () => {
 								okText={"Excluir"}
 								cancelText={"Cancelar"}
 								placement={"topLeft"}
+								okButtonProps={{ loading: isDeleting }}
 							>
 								<Button type={"link"} danger>
 									Excluir

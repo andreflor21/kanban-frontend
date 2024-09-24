@@ -87,7 +87,37 @@ export const useGetSuppliersActions = () => {
 		)
 	}
 
-	return { createSupplier, deleteSupplier, updateSupplier, addAddress }
+	const deleteAddress = async (supplierId: string, addressId: string) => {
+		return await ApiInstance.delete(
+			`/suppliers/${supplierId}/addresses/${addressId}/delete`,
+			{
+				headers,
+			},
+		)
+	}
+
+	const editAddress = async (
+		supplierId: string,
+		addressId: string,
+		data: Partial<AddressType>,
+	) => {
+		return await ApiInstance.patch(
+			`/suppliers/${supplierId}/addresses/${addressId}/edit`,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return {
+		createSupplier,
+		deleteSupplier,
+		updateSupplier,
+		addAddress,
+		deleteAddress,
+		editAddress,
+	}
 }
 
 export const useGetSuppliers = () => {
