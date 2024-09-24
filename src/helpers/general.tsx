@@ -20,6 +20,13 @@ export function cnpjMask(cnpj: string) {
 	return v
 }
 
+export function cepMask(cep: string) {
+	return cep
+		.replace(/\D/g, "")
+		.replace(/(\d{5})(\d)/, "$1-$2")
+		.replace(/(-\d{3})\d+?$/, "$1")
+}
+
 export function onlyNumbersCnpj(cnpj: string) {
 	return cnpj.replace(/\D/g, "")
 }
@@ -66,4 +73,9 @@ export function isValidToken(token: string) {
 	const decodedToken: DecodedToken = jwtDecode(token)
 	const currentDate = new Date()
 	return new Date(decodedToken.exp * 1000) > currentDate
+}
+
+export const getTextValue = (value: string | undefined) => {
+	if (!value?.length) return <i>Não informado</i>
+	return value
 }

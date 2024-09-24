@@ -4,6 +4,7 @@ import styled from "styled-components"
 export const InfoLineWrapper = styled.div`
     display: flex;
     margin-bottom: ${spacing.xxxs};
+    flex: 1;
 
     .lineTitle, .lineContent {
         margin: 0;
@@ -11,7 +12,7 @@ export const InfoLineWrapper = styled.div`
     }
 
     .lineTitle {
-        flex: 0.20;
+        flex: 0.25;
     }
 
     .lineContent {

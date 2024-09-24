@@ -1,9 +1,16 @@
 import Button from "@/components/Button"
 import { InfoLine } from "@/components/InfoLine"
-import { cnpjMask, onlyNumbersCnpj } from "@/helpers/general"
+import {
+	cepMask,
+	cnpjMask,
+	getTextValue,
+	onlyNumbersCnpj,
+} from "@/helpers/general"
 import { useGetSuppliers } from "@/services/useGetSuppliers"
-import { Divider, Drawer, Space, Typography } from "antd"
+import { FormFooter } from "@/style/global"
+import { Card, Divider, Drawer, Popconfirm, Space, Tag, Typography } from "antd"
 import { useSearchParams } from "react-router-dom"
+import * as S from "./styles"
 
 export const SupplierDetails = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -13,6 +20,14 @@ export const SupplierDetails = () => {
 		(supplier) => supplier.id === supplierId,
 	)
 	const isDrawerOpen = !!supplierId && !!supplier?.id
+
+	const handleDeleteAddress = async (id: string) => {
+		console.log(id)
+	}
+
+	const handleEditAddress = async (id: string) => {
+		console.log(id)
+	}
 
 	return (
 		<Drawer
@@ -44,43 +59,91 @@ export const SupplierDetails = () => {
 		>
 			<div>
 				<Typography.Title level={4}>Detalhes do fornecedor</Typography.Title>
-				<InfoLine title={"Nome"}>{supplier?.name}</InfoLine>
+				<InfoLine title={"Nome"}>{getTextValue(supplier?.name)}</InfoLine>
 				<InfoLine
 					title={"CNPJ"}
 					copyable={{
 						text: supplier?.cnpj ? onlyNumbersCnpj(supplier.cnpj) : "",
 					}}
 				>
-					{supplier?.cnpj ? cnpjMask(supplier.cnpj) : "-"}
+					{supplier?.cnpj ? cnpjMask(supplier.cnpj) : <i>Não informado</i>}
 				</InfoLine>
-				<InfoLine title={"Razão Social"}>{supplier?.legalName}</InfoLine>
-				<InfoLine title={"Código do ERP"}>{supplier?.ERPCode}</InfoLine>
-				<InfoLine title={"Código"}>{supplier?.code}</InfoLine>
-				<InfoLine title={"Telefone"}>{supplier?.fone}</InfoLine>
-				<InfoLine title={"Email"} copyable>
-					{supplier?.email}
+				<InfoLine title={"Razão Social"}>
+					{getTextValue(supplier?.legalName)}
+				</InfoLine>
+				<InfoLine title={"Código do ERP"}>
+					{getTextValue(supplier?.ERPcode)}
+				</InfoLine>
+				<InfoLine title={"Código"}>{getTextValue(supplier?.code)}</InfoLine>
+				<InfoLine title={"Telefone"}>{getTextValue(supplier?.fone)}</InfoLine>
+				<InfoLine title={"Email"} copyable={!!supplier?.email}>
+					{getTextValue(supplier?.email)}
 				</InfoLine>
 				<InfoLine title={"Usuários"}>
-					{supplier?.users?.map((user) => user.name).join(", ")}
+					{supplier?.users?.map((user) => (
+						<Tag key={user.id}>{user.name}</Tag>
+					))}
 				</InfoLine>
 			</div>
 			<Divider />
-			<div>
-				<Typography.Title level={4}>Endereços</Typography.Title>
+			<S.AddressWrapper>
+				<Typography.Title level={4}>
+					Endereços{" "}
+					<Typography.Text type="secondary">
+						({supplier?.addresses?.length})
+					</Typography.Text>
+				</Typography.Title>
 				{supplier?.addresses?.map((address) => (
-					<div key={address.id}>
-						<InfoLine title={"Logradouro"}>{address.lograd}</InfoLine>
-						<InfoLine title={"Número"}>{address.number}</InfoLine>
-						<InfoLine title={"Complemento"}>{address.complement}</InfoLine>
-						<InfoLine title={"Bairro"}>{address.district}</InfoLine>
-						<InfoLine title={"Cidade"}>{address.city}</InfoLine>
-						<InfoLine title={"Estado"}>{address.state}</InfoLine>
-						<InfoLine title={"CEP"} copyable>
-							{address.zipcode}
+					<Card
+						key={address.id}
+						actions={[
+							<Button
+								type={"link"}
+								key={"edit"}
+								onClick={() => handleEditAddress(address.id)}
+							>
+								Editar
+							</Button>,
+							<Popconfirm
+								key={"delete"}
+								title={`Tem certeza que deseja excluir o endereço ${address.lograd}?`}
+								onConfirm={() => handleDeleteAddress(address.id)}
+								okText={"Excluir"}
+								cancelText={"Cancelar"}
+								placement={"topLeft"}
+							>
+								<Button type={"link"} danger>
+									Excluir
+								</Button>
+							</Popconfirm>,
+						]}
+					>
+						<InfoLine title={"Logradouro"}>
+							{getTextValue(address.lograd)}
 						</InfoLine>
-					</div>
+						<InfoLine title={"Número"}>{getTextValue(address.number)}</InfoLine>
+						<InfoLine title={"Complemento"}>
+							{getTextValue(address.complement)}
+						</InfoLine>
+						<InfoLine title={"Bairro"}>
+							{getTextValue(address.district)}
+						</InfoLine>
+						<InfoLine title={"Cidade"}>{getTextValue(address.city)}</InfoLine>
+						<InfoLine title={"Estado"}>{getTextValue(address.state)}</InfoLine>
+						<InfoLine
+							title={"CEP"}
+							copyable={{
+								text: address.zipcode,
+							}}
+						>
+							{address.zipcode ? cepMask(address.zipcode) : "-"}
+						</InfoLine>
+					</Card>
 				))}
-			</div>
+				<FormFooter>
+					<Button type={"primary"}>Adicionar endereço</Button>
+				</FormFooter>
+			</S.AddressWrapper>
 		</Drawer>
 	)
 }
