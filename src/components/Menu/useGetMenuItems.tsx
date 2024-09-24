@@ -35,8 +35,6 @@ export const useGetMenuItems = () => {
 		id: decodedToken?.sing?.id,
 		token: token,
 	})
-	console.log(decodedToken)
-	console.log({ query })
 
 	const user = useUserStore((state) => state.user)
 	const userRoutes = user?.profile?.routes
@@ -45,7 +43,6 @@ export const useGetMenuItems = () => {
 	// const userPaths = userRoutes.map((route) => route.path)
 
 	routes.push(...defaultMenuItems)
-	console.log("aqui", defaultMenuItems)
 
 	return routes
 }

@@ -13,19 +13,24 @@ type SuppliersBody = {
 	fone?: string
 	users?: string[]
 }
+
+type AddressType = {
+	id: string
+	lograd?: string
+	number?: string
+	complement?: string
+	district?: string
+	city?: string
+	state?: string
+	zipcode?: string
+	addressType: {
+		description: string
+	}
+}
 export type Suppliers = {
 	ERPcode: string
 	active: boolean
-	addresses?: {
-		id: string
-		lograd?: string
-		number?: string
-		complement?: string
-		district?: string
-		city?: string
-		state?: string
-		zipcode?: string
-	}[]
+	addresses?: AddressType[]
 	cnpj: string
 	code: string
 	createdAt: string

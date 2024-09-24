@@ -1,11 +1,6 @@
 import Button from "@/components/Button"
 import { InfoLine } from "@/components/InfoLine"
-import {
-	cepMask,
-	cnpjMask,
-	getTextValue,
-	onlyNumbersCnpj,
-} from "@/helpers/general"
+import { cepMask, cnpjMask, getTextValue, onlyNumbersCnpj, } from "@/helpers/general"
 import { useGetSuppliers } from "@/services/useGetSuppliers"
 import { FormFooter } from "@/style/global"
 import { Card, Divider, Drawer, Popconfirm, Space, Tag, Typography } from "antd"
@@ -21,12 +16,23 @@ export const SupplierDetails = () => {
 	)
 	const isDrawerOpen = !!supplierId && !!supplier?.id
 
-	const handleDeleteAddress = async (id: string) => {
+	const handleDeleteAddress = (id: string) => {
 		console.log(id)
 	}
 
-	const handleEditAddress = async (id: string) => {
-		console.log(id)
+	const handleEditAddress = (id: string) => {
+		setSearchParams((params) => {
+			params.set("action", "edit_address")
+			params.set("address_id", id)
+			return params
+		})
+	}
+
+	const handleCreateAddress = () => {
+		setSearchParams((params) => {
+			params.set("action", "create_address")
+			return params
+		})
 	}
 
 	return (
@@ -58,7 +64,6 @@ export const SupplierDetails = () => {
 			}
 		>
 			<div>
-				<Typography.Title level={4}>Detalhes do fornecedor</Typography.Title>
 				<InfoLine title={"Nome"}>{getTextValue(supplier?.name)}</InfoLine>
 				<InfoLine
 					title={"CNPJ"}
@@ -141,7 +146,9 @@ export const SupplierDetails = () => {
 					</Card>
 				))}
 				<FormFooter>
-					<Button type={"primary"}>Adicionar endereço</Button>
+					<Button type={"primary"} onClick={handleCreateAddress}>
+						Adicionar endereço
+					</Button>
 				</FormFooter>
 			</S.AddressWrapper>
 		</Drawer>

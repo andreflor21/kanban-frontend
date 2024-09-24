@@ -27,6 +27,10 @@ export function cepMask(cep: string) {
 		.replace(/(-\d{3})\d+?$/, "$1")
 }
 
+export function onlyNumbersCep(cep: string) {
+	return cep.replace(/\D/g, "")
+}
+
 export function onlyNumbersCnpj(cnpj: string) {
 	return cnpj.replace(/\D/g, "")
 }
@@ -78,4 +82,9 @@ export function isValidToken(token: string) {
 export const getTextValue = (value: string | undefined) => {
 	if (!value?.length) return <i>Não informado</i>
 	return value
+}
+
+export const isValidCEP = (cep: string) => {
+	if (!cep?.length) return false
+	return cep.length === 8
 }

@@ -15,10 +15,11 @@ import {
 interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	required?: boolean
 	label?: string
-	inputType?: string
+	inputType?: "text" | "password" | "email" | "number" | "textarea"
 	errorMessage?: string
 	error?: boolean
 	className?: string
+	loading?: boolean
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
@@ -31,6 +32,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 			error = false,
 			className,
 			required = false,
+			loading = false,
 			...rest
 		}: InputProps,
 		ref,
@@ -73,6 +75,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
 						type={inputType}
 						error={hasError}
 						placeholder={placeholder}
+						// loading={loading}
 						{...rest}
 						ref={ref}
 					/>
