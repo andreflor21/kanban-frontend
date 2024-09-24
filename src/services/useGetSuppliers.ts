@@ -14,7 +14,7 @@ type SuppliersBody = {
 	users?: string[]
 }
 
-type AddressType = {
+export type AddressType = {
 	id: string
 	lograd?: string
 	number?: string
@@ -23,8 +23,8 @@ type AddressType = {
 	city?: string
 	state?: string
 	zipcode?: string
-	addressType: {
-		description: string
+	addressType?: {
+		description?: string
 	}
 }
 export type Suppliers = {
@@ -77,7 +77,17 @@ export const useGetSuppliersActions = () => {
 		)
 	}
 
-	return { createSupplier, deleteSupplier, updateSupplier }
+	const addAddress = async (supplierId: string, data: Partial<AddressType>) => {
+		return await ApiInstance.post(
+			`/suppliers/${supplierId}/addresses/new`,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return { createSupplier, deleteSupplier, updateSupplier, addAddress }
 }
 
 export const useGetSuppliers = () => {

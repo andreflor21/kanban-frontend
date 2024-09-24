@@ -14,6 +14,22 @@ type AddressViaCep = {
 	uf: string
 }
 
+type Uf = {
+	id: string
+	nome: string
+	sigla: string
+	regiao: {
+		id: string
+		nome: string
+		sigla: string
+	}
+}
+
+type City = {
+	id: string
+	nome: string
+}
+
 export const useGetAddressByCEP = (cep: string) => {
 	const url = `https://viacep.com.br/ws/${cep}/json/`
 
@@ -21,6 +37,36 @@ export const useGetAddressByCEP = (cep: string) => {
 		queryKey: [url],
 		queryFn: () => axios.get<AddressViaCep>(url),
 		enabled: isValidCEP(cep),
+	})
+
+	return {
+		data: query.data?.data,
+		isLoading: query.isLoading,
+		error: query.error,
+		query,
+	}
+}
+
+export const useGetUFs = () => {
+	const url = "https://servicodados.ibge.gov.br/api/v1/localidades/estados"
+	const query = useQuery({
+		queryKey: [url],
+		queryFn: () => axios.get<Uf[]>(url),
+	})
+
+	return {
+		data: query.data?.data,
+		isLoading: query.isLoading,
+		error: query.error,
+		query,
+	}
+}
+
+export const useGetCitiesByUF = (uf: string) => {
+	const url = `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`
+	const query = useQuery({
+		queryKey: [url],
+		queryFn: () => axios.get<City[]>(url),
 	})
 
 	return {

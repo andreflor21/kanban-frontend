@@ -1,11 +1,24 @@
 import { LabelStyled } from "@/components/Input/styles"
-import { cepMask, isValidCEP, onlyNumbersCep } from "@/helpers/general"
-import { addressSchema, type AddressSchemaType, EMPTY_ADDRESS, } from "@/pages/Suppliers/AddressForm/schema"
-import { useGetAddressByCEP } from "@/services/adressServices"
-import { useGetSuppliers } from "@/services/useGetSuppliers"
+import { cepMask, onlyNumbersCep } from "@/helpers/general"
+import { useGetNotification } from "@/hooks/useGetNotification"
+import {
+	type AddressSchemaType,
+	EMPTY_ADDRESS,
+	addressSchema,
+} from "@/pages/Suppliers/AddressForm/schema"
+import {
+	useGetAddressByCEP,
+	useGetCitiesByUF,
+	useGetUFs,
+} from "@/services/adressServices"
+import { type ErrorExtended, parseError } from "@/services/api"
+import {
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
 import { FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { Input as AntInput, Modal } from "antd"
+import { Input as AntInput, Modal, Select } from "antd"
 import { useEffect, useMemo, useState } from "react"
 import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
@@ -13,10 +26,17 @@ import * as S from "./styles"
 
 export const AddressForm = () => {
 	const [searchParams, setSearchParams] = useSearchParams()
+	const [loadingPost, setLoadingPost] = useState(false)
 	const [cep, setCep] = useState("")
+	const [uf, setUf] = useState("")
 
-	const { data: suppliers } = useGetSuppliers()
-	const { data: addressByCep, isLoading } = useGetAddressByCEP(cep)
+	const { data: suppliers, query: suppliersQuery } = useGetSuppliers()
+	const { addAddress } = useGetSuppliersActions()
+	const { data: addressByCep, isLoading: isLoadingCEP } =
+		useGetAddressByCEP(cep)
+	const { data: ufs, isLoading: isLoadingUFs } = useGetUFs()
+	const { data: cities, isLoading: isLoadingCities } = useGetCitiesByUF(uf)
+	const { showNotification } = useGetNotification()
 
 	const action = searchParams.get("action")
 	const isCreatingNew = action === "create_address"
@@ -55,8 +75,31 @@ export const AddressForm = () => {
 		}
 	}, [address, isEditing])
 
-	// console.log("initial", initialValues)
-	// console.log("cep", cep)
+	const {
+		setValue,
+		watch,
+		trigger,
+		reset,
+		getValues,
+		formState: { isValid },
+	} = useForm<AddressSchemaType>({
+		resolver: yupResolver(addressSchema),
+		values: initialValues,
+		defaultValues: EMPTY_ADDRESS,
+	})
+
+	useEffect(() => {
+		if (
+			!isLoadingCEP &&
+			addressByCep?.cep &&
+			onlyNumbersCep(addressByCep.cep) === cep
+		) {
+			setValue("city", addressByCep.localidade)
+			setValue("state", addressByCep.uf)
+			setValue("district", addressByCep.bairro)
+			setValue("lograd", addressByCep.logradouro)
+		}
+	}, [isLoadingCEP, addressByCep, cep, setValue])
 
 	const handleCancel = () => {
 		setSearchParams((params) => {
@@ -64,37 +107,53 @@ export const AddressForm = () => {
 			params.delete("address_id")
 			return params
 		})
+		reset(EMPTY_ADDRESS)
+		setCep("")
+		setUf("")
 	}
 
-	const { register, setValue, watch, trigger } = useForm<AddressSchemaType>({
-		resolver: yupResolver(addressSchema),
-		values: initialValues,
-	})
+	console.log("valores", watch())
+	console.log(addressByCep)
 
-	useEffect(() => {
-		console.count("useEffect")
-		if (
-			!isLoading &&
-			addressByCep?.cep &&
-			onlyNumbersCep(addressByCep.cep) === cep
-		) {
-			console.count("setValue")
-			setValue("zipcode", addressByCep.cep)
-			setValue("city", addressByCep.localidade)
-			setValue("state", addressByCep.uf)
-			setValue("district", addressByCep.bairro)
-			setValue("lograd", addressByCep.logradouro)
-			setCep("")
+	const handleSubmit = async () => {
+		const addressType = getValues("addressType")
+		const values = {
+			...getValues(),
+			addressType: { description: addressType },
 		}
-	}, [isLoading, addressByCep, cep, setValue])
 
-	// console.log("valores", watch())
+		if (!supplierId) return
+		setLoadingPost(true)
+
+		try {
+			await addAddress(supplierId, values)
+			await suppliersQuery.refetch()
+			showNotification({
+				type: "SUCCESS",
+				message: "Endereço adicionado com sucesso",
+				description: "",
+			})
+			handleCancel()
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				type: "ERROR",
+				message: parsedError ?? "Erro ao adicionar endereço",
+				description: "Verifique seus dados e tente novamente",
+			})
+		} finally {
+			setLoadingPost(false)
+		}
+	}
 
 	return (
 		<Modal
 			open={isModalOpen}
 			title={isCreatingNew ? "Novo endereço" : "Editar endereço"}
 			onCancel={handleCancel}
+			okText={isCreatingNew ? "Adicionar endereço" : "Salvar"}
+			onOk={handleSubmit}
+			okButtonProps={{ loading: loadingPost, disabled: !isValid }}
 		>
 			<FormStyled>
 				<S.FormLine>
@@ -102,11 +161,9 @@ export const AddressForm = () => {
 					<AntInput.Search
 						size={"large"}
 						name={"cep"}
-						loading={isLoading}
+						loading={isLoadingCEP || loadingPost}
 						onChange={(e) => {
 							setCep(onlyNumbersCep(e.target.value))
-							if (isValidCEP(e.target.value)) {
-							}
 							setValue("zipcode", onlyNumbersCep(e.target.value))
 							trigger("zipcode")
 						}}
@@ -119,8 +176,12 @@ export const AddressForm = () => {
 					<AntInput
 						size={"large"}
 						placeholder={"Rua"}
-						disabled={isLoading}
-						{...register("lograd")}
+						disabled={isLoadingCEP || loadingPost}
+						onChange={(e) => {
+							setValue("lograd", e.target.value)
+							trigger("lograd")
+						}}
+						value={watch("lograd")}
 					/>
 				</S.FormLine>
 				<S.FormLine>
@@ -128,8 +189,12 @@ export const AddressForm = () => {
 					<AntInput
 						size={"large"}
 						placeholder={"Número"}
-						disabled={isLoading}
-						{...register("number")}
+						disabled={isLoadingCEP || loadingPost}
+						onChange={(e) => {
+							setValue("number", e.target.value)
+							trigger("number")
+						}}
+						value={watch("number")}
 					/>
 				</S.FormLine>
 				<S.FormLine>
@@ -137,8 +202,12 @@ export const AddressForm = () => {
 					<AntInput
 						size={"large"}
 						placeholder={"Complemento"}
-						disabled={isLoading}
-						{...register("complement")}
+						disabled={isLoadingCEP || loadingPost}
+						onChange={(e) => {
+							setValue("complement", e.target.value)
+							trigger("complement")
+						}}
+						value={watch("complement")}
 					/>
 				</S.FormLine>
 				<S.FormLine>
@@ -146,26 +215,52 @@ export const AddressForm = () => {
 					<AntInput
 						size={"large"}
 						placeholder={"Bairro"}
-						disabled={isLoading}
-						{...register("district")}
-					/>
-				</S.FormLine>
-				<S.FormLine>
-					<LabelStyled htmlFor={"city"}>Cidade</LabelStyled>
-					<AntInput
-						size={"large"}
-						placeholder={"Cidade"}
-						disabled={isLoading}
-						{...register("city")}
+						disabled={isLoadingCEP || !!addressByCep?.bairro || loadingPost}
+						onChange={(e) => {
+							setValue("district", e.target.value)
+							trigger("district")
+						}}
+						value={watch("district")}
 					/>
 				</S.FormLine>
 				<S.FormLine>
 					<LabelStyled htmlFor={"state"}>Estado</LabelStyled>
-					<AntInput
+					<Select
+						showSearch
 						size={"large"}
-						placeholder={"Estado"}
-						disabled={isLoading}
-						{...register("state")}
+						options={ufs?.map((uf) => ({
+							label: uf.sigla,
+							value: uf.sigla,
+						}))}
+						onChange={(value) => {
+							setUf(value)
+							setValue("state", value)
+							setValue("city", "")
+							trigger(["state", "city"])
+						}}
+						placeholder={"Selecione o estado"}
+						value={watch("state")}
+						disabled={!!addressByCep?.uf || loadingPost}
+					/>
+				</S.FormLine>
+				<S.FormLine>
+					<LabelStyled htmlFor={"city"}>Cidade</LabelStyled>
+					<Select
+						showSearch
+						size={"large"}
+						options={cities?.map((city) => ({
+							label: city.nome,
+							value: city.nome,
+						}))}
+						onChange={(value) => {
+							setValue("city", value)
+							trigger("city")
+						}}
+						placeholder={"Selecione a cidade"}
+						value={watch("city")}
+						disabled={
+							!!addressByCep?.localidade || isLoadingCities || loadingPost
+						}
 					/>
 				</S.FormLine>
 				<S.FormLine>
@@ -173,12 +268,15 @@ export const AddressForm = () => {
 					<AntInput
 						size={"large"}
 						placeholder={"Tipo de endereço"}
-						disabled={isLoading}
-						{...register("addressType")}
+						disabled={isLoadingCEP || loadingPost}
+						onChange={(e) => {
+							setValue("addressType", e.target.value)
+							trigger("addressType")
+						}}
+						value={watch("addressType")}
 					/>
 				</S.FormLine>
 			</FormStyled>
-			teste
 		</Modal>
 	)
 }
