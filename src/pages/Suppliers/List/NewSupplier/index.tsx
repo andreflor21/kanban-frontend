@@ -59,7 +59,7 @@ export const NewSupplier = () => {
 			email: supplier.email,
 			fone: supplier.fone,
 			legalName: supplier.legalName,
-			ERPcode: supplier.ERPCode,
+			ERPcode: supplier.ERPcode,
 			code: supplier.code,
 			users: supplier?.users?.map((user) => user.id),
 		}
@@ -86,6 +86,9 @@ export const NewSupplier = () => {
 
 		setIsLoading(true)
 		const values = methods.getValues()
+		if (values?.cnpj?.length) {
+			values.cnpj = onlyNumbersCnpj(values.cnpj)
+		}
 
 		try {
 			await updateSupplier(id, values)
@@ -110,9 +113,9 @@ export const NewSupplier = () => {
 
 	const handleSubmit = async (data: NewSupplierSchema) => {
 		setIsLoading(true)
-		const updatedData = {
-			...data,
-			cnpj: onlyNumbersCnpj(data.cnpj),
+		const updatedData = { ...data }
+		if (updatedData?.cnpj?.length) {
+			updatedData.cnpj = onlyNumbersCnpj(updatedData.cnpj)
 		}
 
 		try {

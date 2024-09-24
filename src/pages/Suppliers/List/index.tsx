@@ -1,5 +1,6 @@
 import { PageHeader } from "@/components/PageHeader"
 import { NewSupplier } from "@/pages/Suppliers/List/NewSupplier"
+import { SupplierDetails } from "@/pages/Suppliers/List/SupplierDetails"
 import { SuppliersTable } from "@/pages/Suppliers/List/Table"
 import { Button, Drawer } from "antd"
 import { FolderPlus } from "phosphor-react"
@@ -44,6 +45,7 @@ export const SuppliersList = () => {
 			>
 				<NewSupplier />
 			</Drawer>
+			<SupplierDetails />
 		</div>
 	)
 }

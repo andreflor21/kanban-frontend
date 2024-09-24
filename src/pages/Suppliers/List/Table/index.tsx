@@ -10,7 +10,7 @@ import {
 } from "@/services/useGetSuppliers"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
-import { Pencil, Trash } from "phosphor-react"
+import { Eye, Pencil, Trash } from "phosphor-react"
 import React, { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
@@ -121,10 +121,20 @@ export const SuppliersTable = () => {
 				title: "",
 				key: "action",
 				dataIndex: "action",
-				width: 100,
+				width: 120,
 				render: (_, record) => {
 					return (
 						<TableActionsWrapper key={record?.id}>
+							<Eye
+								color={"#1677ff"}
+								onClick={() =>
+									setSearchParams((params) => {
+										if (!record?.id) return params
+										params.set("supplier_id", record?.id)
+										return params
+									})
+								}
+							/>
 							<Pencil
 								color={"#1677ff"}
 								onClick={() =>

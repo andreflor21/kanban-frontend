@@ -5,21 +5,32 @@ import { useQuery } from "@tanstack/react-query"
 
 type SuppliersBody = {
 	name: string
-	cnpj: string
-	legalName: string
-	ERPcode: string
-	code: string
+	cnpj?: string
+	legalName?: string
+	ERPcode?: string
+	code?: string
 	email?: string
 	fone?: string
 	users?: string[]
 }
-export type Suppliers = {
-	ERPCode: string
-	active: boolean
-	address: {
-		addressTypeId: string
-		id: string
+
+export type AddressType = {
+	id: string
+	lograd?: string
+	number?: string
+	complement?: string
+	district?: string
+	city?: string
+	state?: string
+	zipcode?: string
+	addressType?: {
+		description?: string
 	}
+}
+export type Suppliers = {
+	ERPcode: string
+	active: boolean
+	addresses?: AddressType[]
 	cnpj: string
 	code: string
 	createdAt: string
@@ -66,7 +77,47 @@ export const useGetSuppliersActions = () => {
 		)
 	}
 
-	return { createSupplier, deleteSupplier, updateSupplier }
+	const addAddress = async (supplierId: string, data: Partial<AddressType>) => {
+		return await ApiInstance.post(
+			`/suppliers/${supplierId}/addresses/new`,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	const deleteAddress = async (supplierId: string, addressId: string) => {
+		return await ApiInstance.delete(
+			`/suppliers/${supplierId}/addresses/${addressId}/delete`,
+			{
+				headers,
+			},
+		)
+	}
+
+	const editAddress = async (
+		supplierId: string,
+		addressId: string,
+		data: Partial<AddressType>,
+	) => {
+		return await ApiInstance.patch(
+			`/suppliers/${supplierId}/addresses/${addressId}/edit`,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return {
+		createSupplier,
+		deleteSupplier,
+		updateSupplier,
+		addAddress,
+		deleteAddress,
+		editAddress,
+	}
 }
 
 export const useGetSuppliers = () => {
