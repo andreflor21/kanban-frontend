@@ -87,6 +87,10 @@ export default createGlobalStyle`
       text-decoration: none;
     }
 
+	.delete {
+		color: var(--red-500);
+	}
+
 
 	// @media screen and (min-width: 920px) {
     //   body {

@@ -128,11 +128,41 @@ export const useGetSuppliersActions = () => {
 		supplierId: string,
 		data: DeliveryDaysBody[],
 	) => {
+		const updatedData: DeliveryDaysBody[] = data.map((day) => ({
+			days: day.days,
+			period: day?.period ?? "",
+			hour: day?.hour ?? "",
+		}))
+		return await ApiInstance.post(
+			`/suppliers/${supplierId}/delivery-days/new`,
+			updatedData,
+			{
+				headers,
+			},
+		)
+	}
+
+	const updateDeliveryDays = async (
+		supplierId: string,
+		data: DeliveryDaysBody[],
+	) => {
+		const updatedData: DeliveryDaysBody[] = data.map((day) => ({
+			days: day.days,
+			period: day?.period ?? "",
+			hour: day?.hour ?? "",
+		}))
 		return await ApiInstance.patch(
 			`/suppliers/${supplierId}/delivery-days/edit`,
+			{ deliveryDays: updatedData },
 			{
-				deliveryDays: data,
+				headers,
 			},
+		)
+	}
+
+	const deleteDeliveryDays = async (supplierId: string, deliveryId: string) => {
+		return await ApiInstance.delete(
+			`/suppliers/${supplierId}/delivery-days/${deliveryId}/delete`,
 			{
 				headers,
 			},
@@ -147,6 +177,8 @@ export const useGetSuppliersActions = () => {
 		deleteAddress,
 		editAddress,
 		addDeliveryDays,
+		updateDeliveryDays,
+		deleteDeliveryDays,
 	}
 }
 

@@ -1,10 +1,17 @@
+import { useGetNotification } from "@/hooks/useGetNotification"
 import {
 	DELIVERY_DAYS_OPTIONS,
 	type DaySchemaType,
 	PERIODS,
 } from "@/pages/Suppliers/DeliveryDaysForm/schema"
+import { type ErrorExtended, parseError } from "@/services/api"
+import {
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
 import {
 	Checkbox,
+	Popconfirm,
 	Select,
 	Table,
 	type TableColumnsType,
@@ -12,6 +19,9 @@ import {
 	TimePicker,
 } from "antd"
 import dayjs from "dayjs"
+import { Trash } from "phosphor-react"
+import { useState } from "react"
+import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
 type TableProps = {
@@ -29,6 +39,37 @@ export const DeliveryDaysTable = ({
 	handleSelectTime,
 	isReadOnly,
 }: TableProps) => {
+	const [searchParams] = useSearchParams()
+	const supplierId = searchParams.get("supplier_id")
+	const { deleteDeliveryDays } = useGetSuppliersActions()
+	const { query: suppliersQuery } = useGetSuppliers()
+	const { showNotification } = useGetNotification()
+	const [isDeleting, setIsDeleting] = useState(false)
+
+	const handleDelete = async (id: string) => {
+		if (!supplierId) return
+
+		setIsDeleting(true)
+		try {
+			await deleteDeliveryDays(supplierId, id)
+			await suppliersQuery.refetch()
+			showNotification({
+				type: "SUCCESS",
+				message: "Dia excluído com sucesso",
+				description: "",
+			})
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				type: "ERROR",
+				message: parsedError ?? "Erro ao excluir dia",
+				description: "Verifique seus dados e tente novamente",
+			})
+		} finally {
+			setIsDeleting(false)
+		}
+	}
+
 	const tableColumns: TableColumnsType<DaySchemaType> = [
 		{
 			title: "Dia",
@@ -46,6 +87,7 @@ export const DeliveryDaysTable = ({
 						{!isReadOnly && (
 							<Checkbox
 								checked={isChecked}
+								onClick={() => handleToggleSelect?.(record)}
 								onChange={() => handleToggleSelect?.(record)}
 							/>
 						)}
@@ -59,7 +101,7 @@ export const DeliveryDaysTable = ({
 			dataIndex: "period",
 			key: "period",
 			render: (_, record) => {
-				const isChecked = !!deliveryDays?.find(
+				const isChecked = deliveryDays?.find(
 					(day) => day.id === record.id && day.checked,
 				)
 
@@ -73,7 +115,7 @@ export const DeliveryDaysTable = ({
 							if (typeof record?.id !== "number") return
 							handleChangePeriod?.(value, record.id)
 						}}
-						value={record?.period}
+						value={isChecked?.period ?? record?.period}
 					/>
 				)
 			},
@@ -83,7 +125,7 @@ export const DeliveryDaysTable = ({
 			dataIndex: "time",
 			key: "time",
 			render: (_, record) => {
-				const isChecked = !!deliveryDays?.find(
+				const isChecked = deliveryDays?.find(
 					(day) => day.id === record.id && day.checked,
 				)
 				if (isReadOnly) {
@@ -93,6 +135,7 @@ export const DeliveryDaysTable = ({
 						</Tag>
 					)
 				}
+				const hasTime = !!isChecked?.time?.length || !!record?.time?.length
 				return (
 					<TimePicker
 						onChange={(time) => {
@@ -104,16 +147,50 @@ export const DeliveryDaysTable = ({
 						placeholder={"Horário"}
 						showNow={false}
 						disabled={!isChecked || isReadOnly}
+						value={
+							hasTime
+								? dayjs(isChecked?.time ?? record?.time, "HH:mm")
+								: undefined
+						}
 					/>
 				)
 			},
 		},
 	]
+
+	if (isReadOnly) {
+		tableColumns.push({
+			title: "",
+			dataIndex: "action",
+			key: "action",
+			render: (_, record) => {
+				return (
+					<Popconfirm
+						key={record.id}
+						title={`Tem certeza que deseja excluir o dia ${record?.key}?`}
+						onConfirm={() => handleDelete(record?.deliveryId ?? "")}
+						okText={"Deletar"}
+						cancelText={"Cancelar"}
+						placement={"topLeft"}
+						okButtonProps={{ loading: isDeleting }}
+					>
+						<Trash className={"delete"} />
+					</Popconfirm>
+				)
+			},
+		})
+	}
+
+	const getDataSource = () => {
+		if (isReadOnly) return deliveryDays
+		return DELIVERY_DAYS_OPTIONS
+	}
+
 	return (
 		<S.PageWrapper>
 			<Table
 				columns={tableColumns}
-				dataSource={isReadOnly ? deliveryDays : DELIVERY_DAYS_OPTIONS}
+				dataSource={getDataSource()}
 				pagination={false}
 				rowClassName={"row"}
 			/>
