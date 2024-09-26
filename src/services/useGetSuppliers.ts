@@ -14,6 +14,19 @@ type SuppliersBody = {
 	users?: string[]
 }
 
+export type DeliveryDaysType = {
+	id: string | number
+	days: number
+	period: string
+	hour: string
+}
+
+type DeliveryDaysBody = {
+	days: number
+	period: string | undefined
+	hour: string | undefined
+}
+
 export type AddressType = {
 	id: string
 	lograd?: string
@@ -31,6 +44,7 @@ export type Suppliers = {
 	ERPcode: string
 	active: boolean
 	addresses?: AddressType[]
+	deliveryDays?: DeliveryDaysType[]
 	cnpj: string
 	code: string
 	createdAt: string
@@ -110,6 +124,21 @@ export const useGetSuppliersActions = () => {
 		)
 	}
 
+	const addDeliveryDays = async (
+		supplierId: string,
+		data: DeliveryDaysBody[],
+	) => {
+		return await ApiInstance.patch(
+			`/suppliers/${supplierId}/delivery-days/edit`,
+			{
+				deliveryDays: data,
+			},
+			{
+				headers,
+			},
+		)
+	}
+
 	return {
 		createSupplier,
 		deleteSupplier,
@@ -117,6 +146,7 @@ export const useGetSuppliersActions = () => {
 		addAddress,
 		deleteAddress,
 		editAddress,
+		addDeliveryDays,
 	}
 }
 

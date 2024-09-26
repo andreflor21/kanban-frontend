@@ -15,15 +15,6 @@ import React, { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
-type TableDataType = {
-	name: string
-	legalName: string
-	cnpj: string
-	active: boolean
-	id: string
-	fone: string
-}
-
 export const SuppliersTable = () => {
 	const { data, isLoading, error, query } = useGetSuppliers()
 	const { deleteSupplier } = useGetSuppliersActions()

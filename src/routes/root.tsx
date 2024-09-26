@@ -19,8 +19,9 @@ const useValidateToken = () => {
 	const decodedToken: DecodedToken | undefined = token?.length
 		? jwtDecode(token)
 		: undefined
+
 	const query = useGetUserData({
-		id: decodedToken?.sing?.id,
+		id: decodedToken?.id,
 		token: token,
 	})
 

@@ -27,6 +27,7 @@ export async function userLogin(data: LoginBody) {
 export async function handleForgotPassword(email: string) {
 	return await ApiInstance.post("forgot-password", { email })
 }
+
 type UseGetUserData = {
 	id: string | undefined
 	token: string | null
