@@ -1,5 +1,4 @@
 import {
-	type DaySchemaType,
 	DELIVERY_DAYS_OPTIONS,
 	type DaySchemaType,
 	PERIODS,
