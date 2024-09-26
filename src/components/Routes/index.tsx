@@ -1,7 +1,7 @@
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { Perfil } from "@/types/perfil"
 import type { Rota } from "@/types/rota"
-import { List, Skeleton, Switch, Tooltip, notification } from "antd"
+import { List, notification, Skeleton, Switch, Tooltip } from "antd"
 import { Info, X } from "phosphor-react"
 import React, { useEffect, useState } from "react"
 

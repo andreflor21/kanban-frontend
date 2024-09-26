@@ -3,8 +3,8 @@ import type { ResetPasswordData } from "@/pages/ResetPassword"
 import {
 	ApiInstance,
 	type ErrorExtended,
-	UNEXPECTED_ERROR,
 	parseError,
+	UNEXPECTED_ERROR,
 } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"

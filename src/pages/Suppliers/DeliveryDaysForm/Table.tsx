@@ -1,6 +1,6 @@
 import {
-	DELIVERY_DAYS_OPTIONS,
 	type DaySchemaType,
+	DELIVERY_DAYS_OPTIONS,
 	PERIODS,
 } from "@/pages/Suppliers/DeliveryDaysForm/schema"
 import {
@@ -63,7 +63,7 @@ export const DeliveryDaysTable = ({
 					(day) => day.id === record.id && day.checked,
 				)
 
-				if (isReadOnly) return <Tag>{record?.period ?? "-"}</Tag>
+				if (isReadOnly) return <Tag>{record?.period ? record.period : "-"}</Tag>
 				return (
 					<Select
 						options={PERIODS}

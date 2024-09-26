@@ -1,7 +1,7 @@
 import {
 	type ErrorExtended,
-	UNEXPECTED_ERROR,
 	parseError,
+	UNEXPECTED_ERROR,
 } from "@/services/api"
 import { type LoginBody, userLogin } from "@/services/userServices"
 import type { User } from "@/types/usuario"

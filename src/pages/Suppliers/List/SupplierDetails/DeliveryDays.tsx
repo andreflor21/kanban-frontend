@@ -25,6 +25,12 @@ const mockedDeliveryDays: Suppliers["deliveryDays"] = [
 		period: "Tarde",
 		hour: "13:30",
 	},
+	{
+		id: "3",
+		days: 3,
+		period: "",
+		hour: "",
+	},
 ]
 
 export const DeliveryDays = ({ supplier }: DeliveryDaysProps) => {

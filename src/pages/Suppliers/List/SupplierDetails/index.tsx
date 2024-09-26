@@ -121,8 +121,6 @@ export const SupplierDetails = () => {
 				</InfoLine>
 			</div>
 			<Divider />
-			<DeliveryDays supplier={supplier} />
-			<Divider />
 			<S.AddressWrapper>
 				<Typography.Title level={4}>
 					Endereços{" "}
@@ -152,6 +150,8 @@ export const SupplierDetails = () => {
 					</Button>
 				</FormFooter>
 			</S.AddressWrapper>
+			<Divider />
+			<DeliveryDays supplier={supplier} />
 		</Drawer>
 	)
 }

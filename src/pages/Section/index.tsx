@@ -1,12 +1,12 @@
-import {List, Skeleton, Tooltip} from "antd"
+import { List, Skeleton, Tooltip } from "antd"
 
-import {Confirm} from "@/components/Confirm"
+import { Confirm } from "@/components/Confirm"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
-import {DotsNine, Plus, Trash, WarningCircle} from "phosphor-react"
-import {useState} from "react"
-import {Link} from "react-router-dom"
-import {Container, ContainerButtons, LinkStyleld} from "./styles"
+import { DotsNine, Plus, Trash, WarningCircle } from "phosphor-react"
+import { useState } from "react"
+import { Link } from "react-router-dom"
+import { Container, ContainerButtons, LinkStyleld } from "./styles"
 
 const Section = () => {
 	// const { getSections, sections, deleteSection } = useSection()
