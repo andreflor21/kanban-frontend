@@ -1,19 +1,16 @@
 import Button from "@/components/Button"
 import { InfoLine } from "@/components/InfoLine"
-import {
-	cepMask,
-	cnpjMask,
-	getTextValue,
-	onlyNumbersCnpj,
-} from "@/helpers/general"
+import { cnpjMask, getTextValue, onlyNumbersCnpj } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { AddressCard } from "@/pages/Suppliers/List/SupplierDetails/AddressCard"
+import { DeliveryDays } from "@/pages/Suppliers/List/SupplierDetails/DeliveryDays"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
 	useGetSuppliers,
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
 import { FormFooter } from "@/style/global"
-import { Card, Divider, Drawer, Popconfirm, Space, Tag, Typography } from "antd"
+import { Collapse, Divider, Drawer, Space, Tag, Typography } from "antd"
 import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
@@ -124,6 +121,8 @@ export const SupplierDetails = () => {
 				</InfoLine>
 			</div>
 			<Divider />
+			<DeliveryDays supplier={supplier} />
+			<Divider />
 			<S.AddressWrapper>
 				<Typography.Title level={4}>
 					Endereços{" "}
@@ -131,54 +130,13 @@ export const SupplierDetails = () => {
 						({supplier?.addresses?.length})
 					</Typography.Text>
 				</Typography.Title>
-				{supplier?.addresses?.map((address) => (
-					<Card
-						key={address.id}
-						actions={[
-							<Button
-								type={"link"}
-								key={"edit"}
-								onClick={() => handleEditAddress(address.id)}
-							>
-								Editar
-							</Button>,
-							<Popconfirm
-								key={"delete"}
-								title={`Tem certeza que deseja excluir o endereço ${address.lograd}?`}
-								onConfirm={() => handleDeleteAddress(address.id)}
-								okText={"Excluir"}
-								cancelText={"Cancelar"}
-								placement={"topLeft"}
-								okButtonProps={{ loading: isDeleting }}
-							>
-								<Button type={"link"} danger>
-									Excluir
-								</Button>
-							</Popconfirm>,
-						]}
-					>
-						<InfoLine title={"Logradouro"}>
-							{getTextValue(address.lograd)}
-						</InfoLine>
-						<InfoLine title={"Número"}>{getTextValue(address.number)}</InfoLine>
-						<InfoLine title={"Complemento"}>
-							{getTextValue(address.complement)}
-						</InfoLine>
-						<InfoLine title={"Bairro"}>
-							{getTextValue(address.district)}
-						</InfoLine>
-						<InfoLine title={"Cidade"}>{getTextValue(address.city)}</InfoLine>
-						<InfoLine title={"Estado"}>{getTextValue(address.state)}</InfoLine>
-						<InfoLine
-							title={"CEP"}
-							copyable={{
-								text: address.zipcode,
-							}}
-						>
-							{address.zipcode ? cepMask(address.zipcode) : "-"}
-						</InfoLine>
-					</Card>
-				))}
+				<Collapse
+					items={supplier?.addresses?.map((address) => ({
+						key: address.id,
+						label: `${address.lograd}  ${address.number ? `- ${address.number}` : ""}`,
+						children: <AddressCard address={address} />,
+					}))}
+				/>
 				<FormFooter>
 					<Button type={"primary"} onClick={handleCreateAddress}>
 						Adicionar endereço

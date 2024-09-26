@@ -14,6 +14,13 @@ type SuppliersBody = {
 	users?: string[]
 }
 
+export type DeliveryDays = {
+	id: string
+	days: number
+	period: string
+	hour: string
+}
+
 export type AddressType = {
 	id: string
 	lograd?: string
@@ -31,6 +38,7 @@ export type Suppliers = {
 	ERPcode: string
 	active: boolean
 	addresses?: AddressType[]
+	deliveryDays?: DeliveryDays[]
 	cnpj: string
 	code: string
 	createdAt: string

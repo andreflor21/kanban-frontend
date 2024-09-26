@@ -20,6 +20,7 @@ export type DecodedToken = {
 		id: string
 		profile: string
 	}
+	id: string
 	iat: string
 	exp: number
 }

@@ -3,26 +3,13 @@ import { cnpjMask } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { NewSupplier } from "@/pages/Suppliers/List/NewSupplier"
 import { type ErrorExtended, parseError } from "@/services/api"
-import {
-	type Suppliers,
-	useGetSuppliers,
-	useGetSuppliersActions,
-} from "@/services/useGetSuppliers"
+import { type Suppliers, useGetSuppliers, useGetSuppliersActions, } from "@/services/useGetSuppliers"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
 import { Eye, Pencil, Trash } from "phosphor-react"
 import React, { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
-
-type TableDataType = {
-	name: string
-	legalName: string
-	cnpj: string
-	active: boolean
-	id: string
-	fone: string
-}
 
 export const SuppliersTable = () => {
 	const { data, isLoading, error, query } = useGetSuppliers()
