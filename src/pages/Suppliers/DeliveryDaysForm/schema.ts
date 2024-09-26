@@ -6,6 +6,7 @@ const daySchema = yup.object().shape({
 	period: yup.string(),
 	id: yup.number(),
 	key: yup.string(),
+	deliveryId: yup.string(),
 })
 
 export type DaySchemaType = yup.InferType<typeof daySchema>

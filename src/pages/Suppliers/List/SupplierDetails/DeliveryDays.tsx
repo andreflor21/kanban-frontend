@@ -36,10 +36,7 @@ const mockedDeliveryDays: Suppliers["deliveryDays"] = [
 export const DeliveryDays = ({ supplier }: DeliveryDaysProps) => {
 	const [isFormOpen, setIsFormOpen] = useState(false)
 	if (!supplier) return null
-	const deliveryDays = supplier?.deliveryDays?.length
-		? supplier?.deliveryDays
-		: mockedDeliveryDays
-	console.log(deliveryDays)
+	const deliveryDays = supplier?.deliveryDays ?? []
 
 	const tableOptions = DELIVERY_DAYS_OPTIONS.map((option) => {
 		const hasOption = deliveryDays.find((day) => day.days === option.id)
@@ -49,6 +46,7 @@ export const DeliveryDays = ({ supplier }: DeliveryDaysProps) => {
 			time: hasOption?.hour ?? "",
 			period: hasOption?.period ?? "",
 			checked: !!hasOption,
+			deliveryId: `${hasOption?.id}`,
 		}
 	}).filter((option) => !!option)
 
@@ -77,12 +75,15 @@ export const DeliveryDays = ({ supplier }: DeliveryDaysProps) => {
 
 			<FormFooter>
 				<Button type={"primary"} onClick={() => setIsFormOpen(true)}>
-					Editar dias de entrega
+					{deliveryDays?.length
+						? "Editar dias de entrega"
+						: "Adicionar dias de entrega"}
 				</Button>
 			</FormFooter>
 			<DeliveryDaysForm
 				isModalOpen={isFormOpen}
 				setIsModalOpen={setIsFormOpen}
+				currentDeliveryDays={{ allDays: tableOptions }}
 			/>
 		</S.AddressWrapper>
 	)

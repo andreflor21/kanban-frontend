@@ -2,6 +2,7 @@ import { ApiInstance } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
 import { useQuery } from "@tanstack/react-query"
+import axios from "axios"
 
 type SuppliersBody = {
 	name: string
@@ -128,11 +129,41 @@ export const useGetSuppliersActions = () => {
 		supplierId: string,
 		data: DeliveryDaysBody[],
 	) => {
+		const updatedData: DeliveryDaysBody[] = data.map((day) => ({
+			days: day.days,
+			period: day?.period ?? "",
+			hour: day?.hour ?? "",
+		}))
+		return await ApiInstance.post(
+			`/suppliers/${supplierId}/delivery-days/new`,
+			updatedData,
+			{
+				headers,
+			},
+		)
+	}
+
+	const updateDeliveryDays = async (
+		supplierId: string,
+		data: DeliveryDaysBody[],
+	) => {
+		const updatedData: DeliveryDaysBody[] = data.map((day) => ({
+			days: day.days,
+			period: day?.period ?? "",
+			hour: day?.hour ?? "",
+		}))
 		return await ApiInstance.patch(
 			`/suppliers/${supplierId}/delivery-days/edit`,
+			{ deliveryDays: updatedData },
 			{
-				deliveryDays: data,
+				headers,
 			},
+		)
+	}
+
+	const deleteDeliveryDays = async (supplierId: string, deliveryId: string) => {
+		return await ApiInstance.delete(
+			`/suppliers/${supplierId}/delivery-days/${deliveryId}/delete`,
 			{
 				headers,
 			},
@@ -147,6 +178,8 @@ export const useGetSuppliersActions = () => {
 		deleteAddress,
 		editAddress,
 		addDeliveryDays,
+		updateDeliveryDays,
+		deleteDeliveryDays,
 	}
 }
 
@@ -164,4 +197,30 @@ export const useGetSuppliers = () => {
 	const { data, isLoading, error } = query
 
 	return { data, isLoading, error, query }
+}
+
+type CNPJResponse = {
+	razao_social?: string
+	nome_fantasia?: string
+	ddd_telefone_1?: string
+	ddd_telefone_2?: string
+	cnpj?: string
+}
+
+export const useGetSupplierInfoByCNPJ = (cnpj: string) => {
+	const url = `https://brasilapi.com.br/api/cnpj/v1/${cnpj}`
+
+	const query = useQuery({
+		queryKey: [url],
+		queryFn: () => axios.get<CNPJResponse>(url),
+		enabled: !!cnpj,
+		retry: false,
+	})
+
+	return {
+		data: query.data?.data,
+		isLoading: query.isLoading,
+		error: query.error,
+		query,
+	}
 }

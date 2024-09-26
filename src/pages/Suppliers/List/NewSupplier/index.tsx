@@ -1,6 +1,7 @@
 import Button from "@/components/Button"
-import Input from "@/components/Input"
+import { ContainerInput, LabelStyled } from "@/components/Input/styles"
 import { InputSelect } from "@/components/InputSelect"
+import { NewInput } from "@/components/NewInput"
 import { cnpjMask, onlyNumbersCnpj } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import {
@@ -9,14 +10,16 @@ import {
 } from "@/pages/Suppliers/List/NewSupplier/schema"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
+	useGetSupplierInfoByCNPJ,
 	useGetSuppliers,
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
 import { useGetAllUsers } from "@/services/userServices"
 import { FormFooter, FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
-import { useMemo, useState } from "react"
-import { useForm } from "react-hook-form"
+import { Input } from "antd"
+import { useEffect, useMemo, useState } from "react"
+import { Controller, useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
 
 const EMPTY_INITIAL_VALUES: NewSupplierSchema = {
@@ -30,13 +33,21 @@ const EMPTY_INITIAL_VALUES: NewSupplierSchema = {
 	users: [],
 }
 
+const getOnlyNumbers = (value: string | undefined) => {
+	if (!value?.length) return ""
+	return value.replace(/[^\d]+/g, "")
+}
+
 export const NewSupplier = () => {
+	const [cnpj, setCnpj] = useState("")
 	const [isLoading, setIsLoading] = useState(false)
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { createSupplier, updateSupplier } = useGetSuppliersActions()
 	const { data: users } = useGetAllUsers()
 	const { query: supplierQuery, data: supplierData } = useGetSuppliers()
 	const { showNotification } = useGetNotification()
+	const { data: supplierInfo, isLoading: loadingCNPJ } =
+		useGetSupplierInfoByCNPJ(cnpj)
 
 	const usersToDisplay = users?.users?.map((user) => ({
 		label: user.name,
@@ -45,13 +56,17 @@ export const NewSupplier = () => {
 
 	const editSupplierId = searchParams.get("edit_supplier_id")
 	const isEditing = !!editSupplierId
+	const supplier = supplierData?.suppliers?.find(
+		(supplier) => supplier.id === editSupplierId,
+	)
 
 	const initialValues = useMemo(() => {
-		const supplier = supplierData?.suppliers?.find(
-			(supplier) => supplier.id === editSupplierId,
-		)
 		if (!isEditing || !supplier) {
 			return EMPTY_INITIAL_VALUES
+		}
+		if (supplier.cnpj) {
+			const onlyNumbers = supplier.cnpj.replace(/[^\d]+/g, "")
+			setCnpj(onlyNumbers)
 		}
 		return {
 			name: supplier.name,
@@ -63,10 +78,10 @@ export const NewSupplier = () => {
 			code: supplier.code,
 			users: supplier?.users?.map((user) => user.id),
 		}
-	}, [editSupplierId, isEditing, supplierData])
+	}, [supplier, isEditing])
 
 	const methods = useForm<NewSupplierSchema>({
-		mode: "onChange",
+		mode: "all",
 		resolver: yupResolver(newSupplierSchema),
 		values: initialValues,
 	})
@@ -77,8 +92,22 @@ export const NewSupplier = () => {
 			params.delete("edit_supplier_id")
 			return params
 		})
-		methods.reset()
+		methods.reset(initialValues)
 	}
+
+	useEffect(() => {
+		if (!!cnpj?.length && !loadingCNPJ && supplierInfo?.cnpj === cnpj) {
+			const name = isEditing
+				? supplier?.name
+				: (supplierInfo.nome_fantasia ?? "")
+			methods.setValue("legalName", supplierInfo?.razao_social)
+			methods.setValue("name", name ?? "")
+			const fone =
+				supplierInfo?.ddd_telefone_1 ?? supplierInfo?.ddd_telefone_2 ?? ""
+			methods.setValue("fone", fone)
+			methods.trigger(["legalName", "name", "fone"])
+		}
+	}, [cnpj, loadingCNPJ, supplierInfo, methods, isEditing, supplier])
 
 	const handleEdit = async () => {
 		const id = searchParams.get("edit_supplier_id")
@@ -88,6 +117,14 @@ export const NewSupplier = () => {
 		const values = methods.getValues()
 		if (values?.cnpj?.length) {
 			values.cnpj = onlyNumbersCnpj(values.cnpj)
+		}
+
+		const keys = Object.keys(values) as (keyof NewSupplierSchema)[]
+
+		for (const key of keys) {
+			if (!values[key]?.length) {
+				delete values[key]
+			}
 		}
 
 		try {
@@ -118,6 +155,14 @@ export const NewSupplier = () => {
 			updatedData.cnpj = onlyNumbersCnpj(updatedData.cnpj)
 		}
 
+		const keys = Object.keys(updatedData) as (keyof NewSupplierSchema)[]
+
+		for (const key of keys) {
+			if (!updatedData[key]?.length) {
+				delete updatedData[key]
+			}
+		}
+
 		try {
 			await createSupplier(updatedData)
 			showNotification({
@@ -139,68 +184,126 @@ export const NewSupplier = () => {
 		}
 	}
 
+	const handleCNPJorCPF = (value: string) => {
+		const isCNPJ = value.length === 14
+		if (isCNPJ) {
+			setCnpj(value)
+			const masked = cnpjMask(value)
+			methods.setValue("cnpj", masked)
+			methods.trigger("cnpj")
+			return
+		}
+		setCnpj("")
+		methods.setValue("cnpj", value)
+		methods.trigger("cnpj")
+	}
+
 	return (
 		<div>
 			<FormStyled
 				onSubmit={methods.handleSubmit(isEditing ? handleEdit : handleSubmit)}
 			>
-				<Input
-					required
-					label="Nome"
-					placeholder="Nome do fornecedor"
-					errorMessage={methods.formState.errors.name?.message}
-					{...methods.register("name")}
-				/>
-				<Input
-					required
-					label="CNPJ"
-					placeholder="CNPJ do fornecedor"
-					errorMessage={methods.formState.errors.cnpj?.message}
-					onChange={(e) => {
-						const masked = cnpjMask(e.target.value)
-						if (e.target.value.length > 18) {
-							return
+				<Controller
+					name={"cnpj"}
+					control={methods.control}
+					render={({ field }) => {
+						const onlyNumbers = getOnlyNumbers(field?.value)
+						const isCNPJ = !!onlyNumbers?.length && onlyNumbers.length > 11
+
+						if (onlyNumbers?.length === 14) {
+							setCnpj(onlyNumbers)
 						}
-						methods.setValue("cnpj", masked)
-						methods.trigger("cnpj")
+						if (isCNPJ) {
+							return (
+								<ContainerInput>
+									<LabelStyled htmlFor={"cnpj"}>CNPJ/CPF</LabelStyled>
+									<Input.Search
+										autoFocus
+										size={"large"}
+										placeholder="CNPJ do fornecedor"
+										{...field}
+										loading={loadingCNPJ}
+										value={cnpjMask(onlyNumbers)}
+										onChange={(e) => {
+											const onlyNumbers = getOnlyNumbers(e.target.value)
+											handleCNPJorCPF(onlyNumbers)
+										}}
+									/>
+								</ContainerInput>
+							)
+						}
+
+						return (
+							<NewInput
+								autoFocus
+								label={"CNPJ/CPF"}
+								placeholder={"CNPJ/CPF do fornecedor"}
+								{...field}
+							/>
+						)
 					}}
-					value={methods.watch("cnpj")}
 				/>
-				<Input
-					required
-					label="Email"
-					placeholder="Email do fornecedor"
-					errorMessage={methods.formState.errors.email?.message}
-					{...methods.register("email")}
+				<Controller
+					name={"name"}
+					control={methods.control}
+					render={({ field }) => (
+						<NewInput
+							label="Nome"
+							placeholder="Nome do fornecedor"
+							errorMessage={methods.formState.errors.name?.message}
+							{...field}
+						/>
+					)}
+				/>
+				<Controller
+					name={"legalName"}
+					control={methods.control}
+					render={({ field }) => (
+						<NewInput
+							label="Razão Social"
+							placeholder="Razão Social do fornecedor"
+							errorMessage={methods.formState.errors.legalName?.message}
+							{...field}
+						/>
+					)}
+				/>
+				<Controller
+					name={"ERPcode"}
+					control={methods.control}
+					render={({ field }) => (
+						<NewInput
+							label="Código de ERP"
+							placeholder="ERP do fornecedor"
+							errorMessage={methods.formState.errors.ERPcode?.message}
+							{...field}
+						/>
+					)}
+				/>
+				<Controller
+					name={"code"}
+					control={methods.control}
+					render={({ field }) => (
+						<NewInput
+							label="Código"
+							placeholder="Código do fornecedor"
+							errorMessage={methods.formState.errors.code?.message}
+							{...field}
+						/>
+					)}
+				/>
+				<Controller
+					name={"fone"}
+					control={methods.control}
+					render={({ field }) => (
+						<NewInput
+							label="Telefone"
+							placeholder="Telefone do fornecedor"
+							errorMessage={methods.formState.errors.fone?.message}
+							{...field}
+						/>
+					)}
 				/>
 
-				<Input
-					required
-					label="Razão Social"
-					placeholder="Razão Social do fornecedor"
-					errorMessage={methods.formState.errors.legalName?.message}
-					{...methods.register("legalName")}
-				/>
-				<Input
-					required
-					label="Código de ERP"
-					placeholder="ERP do fornecedor"
-					errorMessage={methods.formState.errors.ERPcode?.message}
-					{...methods.register("ERPcode")}
-				/>
-				<Input
-					required
-					label="Código"
-					placeholder="Código do fornecedor"
-					errorMessage={methods.formState.errors.code?.message}
-					{...methods.register("code")}
-				/>
-				<Input
-					label="Telefone"
-					placeholder="Telefone do fornecedor"
-					errorMessage={methods.formState.errors.fone?.message}
-					{...methods.register("fone")}
-				/>
 				<InputSelect
 					mode="multiple"
 					label="Usuário responsável"

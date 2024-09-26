@@ -14,29 +14,44 @@ import {
 import { yupResolver } from "@hookform/resolvers/yup"
 import { Modal } from "antd"
 import type dayjs from "dayjs"
-import type { Dispatch } from "react"
+import { type Dispatch, useMemo } from "react"
 import { useForm } from "react-hook-form"
 import { useSearchParams } from "react-router-dom"
 
 type DeliveryDaysFormProps = {
 	isModalOpen: boolean
 	setIsModalOpen: Dispatch<boolean>
+	currentDeliveryDays?: DeliveryDaysSchemaType
 }
 
 export const DeliveryDaysForm = ({
 	isModalOpen,
 	setIsModalOpen,
+	currentDeliveryDays,
 }: DeliveryDaysFormProps) => {
-	const { watch, setValue, getValues } = useForm<DeliveryDaysSchemaType>({
-		resolver: yupResolver(deliveryDaysSchema),
-		values: EMPTY_DELIVERY_DAYS,
-		defaultValues: EMPTY_DELIVERY_DAYS,
-	})
+	const initialValues = useMemo(() => {
+		if (!currentDeliveryDays?.allDays?.length) {
+			return EMPTY_DELIVERY_DAYS
+		}
+		return {
+			allDays: currentDeliveryDays.allDays,
+		}
+	}, [currentDeliveryDays])
+
+	const { watch, setValue, getValues, reset } = useForm<DeliveryDaysSchemaType>(
+		{
+			resolver: yupResolver(deliveryDaysSchema),
+			values: initialValues,
+			defaultValues: EMPTY_DELIVERY_DAYS,
+		},
+	)
+
 	const [searchParams] = useSearchParams()
 	const supplierId = searchParams.get("supplier_id")
-	const { addDeliveryDays } = useGetSuppliersActions()
+	const { updateDeliveryDays, addDeliveryDays } = useGetSuppliersActions()
 	const { query: suppliersQuery } = useGetSuppliers()
 	const { showNotification } = useGetNotification()
+	const isEditing = !!supplierId && !!currentDeliveryDays?.allDays?.length
 
 	if (!supplierId) return null
 
@@ -66,11 +81,9 @@ export const DeliveryDaysForm = ({
 	}
 
 	const handleClose = () => {
-		setValue("allDays", [])
+		reset(initialValues)
 		setIsModalOpen(false)
 	}
-
-	console.log(watch("allDays"))
 
 	const handleSelectTime = (time: dayjs.Dayjs, id: number) => {
 		const allDays = getValues("allDays")
@@ -120,11 +133,12 @@ export const DeliveryDaysForm = ({
 
 	const handleSubmit = async () => {
 		const values = getValues()
+		console.log(values)
 		if (!values?.allDays?.length) return
 
 		const body = values.allDays
 			.map((day) => {
-				if (!day?.id) return
+				if (typeof day?.id !== "number") return
 				return {
 					days: day.id,
 					period: day.period,
@@ -132,11 +146,22 @@ export const DeliveryDaysForm = ({
 					id: String(day.id),
 				}
 			})
-			.filter((value) => !!value)
+			.filter((day) => !!day)
 
 		try {
-			await addDeliveryDays(supplierId, body)
+			if (isEditing) {
+				await updateDeliveryDays(supplierId, body)
+			} else {
+				await addDeliveryDays(supplierId, body)
+			}
 			await suppliersQuery.refetch()
+			showNotification({
+				type: "SUCCESS",
+				message: isEditing
+					? "Dias de entrega atualizados com sucesso"
+					: "Dias de entrega adicionados com sucesso",
+				description: "",
+			})
 			setIsModalOpen(false)
 		} catch (err) {
 			const parsedError = parseError(err as ErrorExtended)

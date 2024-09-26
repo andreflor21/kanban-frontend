@@ -87,6 +87,10 @@ export default createGlobalStyle`
       text-decoration: none;
     }
 
+	.delete {
+		color: var(--red-500);
+	}
+
 
 	// @media screen and (min-width: 920px) {
     //   body {
@@ -180,5 +184,21 @@ export const TableActionsWrapper = styled.div`
 		&.delete {
 			color: var(--red-500);
 		}
+	}
+`
+
+export const InputLabel = styled.label`
+	font-family: var(--font-standard), sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 19px;
+	text-transform: capitalize;
+	padding: 0.5rem;
+	display: flex;
+
+	> svg {
+		color: #E80202;
+		margin-left: ${spacing.micro};
 	}
 `
