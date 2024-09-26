@@ -4,8 +4,8 @@ import { InputSelect } from "@/components/InputSelect"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import {
 	EMPTY_NEW_PROFILE,
-	profileSchema,
 	type ProfileSchemaType,
+	profileSchema,
 } from "@/pages/Settings/Profile/ProfileForm/schema"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
