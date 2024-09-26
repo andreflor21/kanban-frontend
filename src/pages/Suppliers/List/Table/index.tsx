@@ -1,5 +1,5 @@
 import { StatusTag } from "@/components/StatusTag"
-import { cnpjMask } from "@/helpers/general"
+import { cnpjMask, onlyNumbersCnpj } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { NewSupplier } from "@/pages/Suppliers/List/NewSupplier"
 import { type ErrorExtended, parseError } from "@/services/api"
@@ -9,12 +9,19 @@ import {
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
-import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
+import {
+	Drawer,
+	Popconfirm,
+	Table,
+	type TableColumnsType,
+	Typography,
+} from "antd"
 import { Eye, Pencil, Trash } from "phosphor-react"
 import React, { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
 
+const { Paragraph } = Typography
 export const SuppliersTable = () => {
 	const { data, isLoading, error, query } = useGetSuppliers()
 	const { deleteSupplier } = useGetSuppliersActions()
@@ -68,7 +75,15 @@ export const SuppliersTable = () => {
 				title: "CNPJ",
 				dataIndex: "cnpj",
 				key: "cnpj",
-				render: (_, record) => cnpjMask(record.cnpj),
+				render: (_, record) => (
+					<Paragraph
+						copyable={{
+							text: onlyNumbersCnpj(record.cnpj),
+						}}
+					>
+						{cnpjMask(record.cnpj)}
+					</Paragraph>
+				),
 			},
 
 			{

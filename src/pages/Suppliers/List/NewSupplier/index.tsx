@@ -55,13 +55,12 @@ export const NewSupplier = () => {
 	}))
 
 	const editSupplierId = searchParams.get("edit_supplier_id")
-	const isCreatingNew = searchParams.get("action") === "create_supplier"
 	const isEditing = !!editSupplierId
+	const supplier = supplierData?.suppliers?.find(
+		(supplier) => supplier.id === editSupplierId,
+	)
 
 	const initialValues = useMemo(() => {
-		const supplier = supplierData?.suppliers?.find(
-			(supplier) => supplier.id === editSupplierId,
-		)
 		if (!isEditing || !supplier) {
 			return EMPTY_INITIAL_VALUES
 		}
@@ -79,7 +78,7 @@ export const NewSupplier = () => {
 			code: supplier.code,
 			users: supplier?.users?.map((user) => user.id),
 		}
-	}, [editSupplierId, isEditing, supplierData])
+	}, [supplier, isEditing])
 
 	const methods = useForm<NewSupplierSchema>({
 		mode: "all",
@@ -98,14 +97,17 @@ export const NewSupplier = () => {
 
 	useEffect(() => {
 		if (!!cnpj?.length && !loadingCNPJ && supplierInfo?.cnpj === cnpj) {
+			const name = isEditing
+				? supplier?.name
+				: (supplierInfo.nome_fantasia ?? "")
 			methods.setValue("legalName", supplierInfo?.razao_social)
-			methods.setValue("name", supplierInfo?.nome_fantasia ?? "")
+			methods.setValue("name", name ?? "")
 			const fone =
 				supplierInfo?.ddd_telefone_1 ?? supplierInfo?.ddd_telefone_2 ?? ""
 			methods.setValue("fone", fone)
 			methods.trigger(["legalName", "name", "fone"])
 		}
-	}, [cnpj, loadingCNPJ, supplierInfo, methods])
+	}, [cnpj, loadingCNPJ, supplierInfo, methods, isEditing, supplier])
 
 	const handleEdit = async () => {
 		const id = searchParams.get("edit_supplier_id")

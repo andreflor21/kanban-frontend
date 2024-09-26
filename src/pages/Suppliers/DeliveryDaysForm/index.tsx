@@ -133,11 +133,12 @@ export const DeliveryDaysForm = ({
 
 	const handleSubmit = async () => {
 		const values = getValues()
+		console.log(values)
 		if (!values?.allDays?.length) return
 
 		const body = values.allDays
 			.map((day) => {
-				if (!day?.id) return
+				if (typeof day?.id !== "number") return
 				return {
 					days: day.id,
 					period: day.period,
@@ -145,7 +146,7 @@ export const DeliveryDaysForm = ({
 					id: String(day.id),
 				}
 			})
-			.filter((value) => !!value)
+			.filter((day) => !!day)
 
 		try {
 			if (isEditing) {
