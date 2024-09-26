@@ -1,6 +1,7 @@
 import {
 	type DaySchemaType,
 	DELIVERY_DAYS_OPTIONS,
+	type DaySchemaType,
 	PERIODS,
 } from "@/pages/Suppliers/DeliveryDaysForm/schema"
 import {
