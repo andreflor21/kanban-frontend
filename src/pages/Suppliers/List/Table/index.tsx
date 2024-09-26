@@ -3,7 +3,11 @@ import { cnpjMask } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { NewSupplier } from "@/pages/Suppliers/List/NewSupplier"
 import { type ErrorExtended, parseError } from "@/services/api"
-import { type Suppliers, useGetSuppliers, useGetSuppliersActions, } from "@/services/useGetSuppliers"
+import {
+	type Suppliers,
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
 import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
 import { Eye, Pencil, Trash } from "phosphor-react"
