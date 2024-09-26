@@ -10,7 +10,7 @@ import {
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
 import { FormFooter } from "@/style/global"
-import { Collapse, Divider, Drawer, Space, Tag, Typography } from "antd"
+import { Alert, Collapse, Divider, Drawer, Space, Tag, Typography } from "antd"
 import { useState } from "react"
 import { useSearchParams } from "react-router-dom"
 import * as S from "./styles"
@@ -130,13 +130,22 @@ export const SupplierDetails = () => {
 						({supplier?.addresses?.length})
 					</Typography.Text>
 				</Typography.Title>
-				<Collapse
-					items={supplier?.addresses?.map((address) => ({
-						key: address.id,
-						label: `${address.lograd}  ${address.number ? `- ${address.number}` : ""}`,
-						children: <AddressCard address={address} />,
-					}))}
-				/>
+				{supplier?.addresses?.length ? (
+					<Collapse
+						items={supplier?.addresses?.map((address) => ({
+							key: address.id,
+							label: `${address.lograd}  ${address.number ? `- ${address.number}` : ""}`,
+							children: <AddressCard address={address} />,
+						}))}
+					/>
+				) : (
+					<Alert
+						message={"Não há endereços definidos"}
+						type={"warning"}
+						showIcon
+						style={{ marginBottom: 16 }}
+					/>
+				)}
 				<FormFooter>
 					<Button type={"primary"} onClick={handleCreateAddress}>
 						Adicionar endereço

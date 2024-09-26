@@ -20,7 +20,7 @@ export const EMPTY_DELIVERY_DAYS: DeliveryDaysSchemaType = {
 	allDays: [],
 }
 
-export const OPTIONS: DaySchemaType[] = [
+export const DELIVERY_DAYS_OPTIONS: DaySchemaType[] = [
 	{
 		checked: false,
 		time: undefined,

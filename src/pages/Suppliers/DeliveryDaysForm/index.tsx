@@ -1,24 +1,22 @@
+import { useGetNotification } from "@/hooks/useGetNotification"
+import { DeliveryDaysTable } from "@/pages/Suppliers/DeliveryDaysForm/Table"
 import {
-	type DaySchemaType,
+	DELIVERY_DAYS_OPTIONS,
 	type DeliveryDaysSchemaType,
 	EMPTY_DELIVERY_DAYS,
-	OPTIONS,
-	PERIODS,
 	deliveryDaysSchema,
 } from "@/pages/Suppliers/DeliveryDaysForm/schema"
-import { yupResolver } from "@hookform/resolvers/yup"
+import { type ErrorExtended, parseError } from "@/services/api"
 import {
-	Checkbox,
-	Modal,
-	Select,
-	Table,
-	type TableColumnsType,
-	TimePicker,
-} from "antd"
+	useGetSuppliers,
+	useGetSuppliersActions,
+} from "@/services/useGetSuppliers"
+import { yupResolver } from "@hookform/resolvers/yup"
+import { Modal } from "antd"
 import type dayjs from "dayjs"
 import type { Dispatch } from "react"
 import { useForm } from "react-hook-form"
-import * as S from "./styles"
+import { useSearchParams } from "react-router-dom"
 
 type DeliveryDaysFormProps = {
 	isModalOpen: boolean
@@ -34,8 +32,17 @@ export const DeliveryDaysForm = ({
 		values: EMPTY_DELIVERY_DAYS,
 		defaultValues: EMPTY_DELIVERY_DAYS,
 	})
+	const [searchParams] = useSearchParams()
+	const supplierId = searchParams.get("supplier_id")
+	const { addDeliveryDays } = useGetSuppliersActions()
+	const { query: suppliersQuery } = useGetSuppliers()
+	const { showNotification } = useGetNotification()
 
-	const handleToggleSelect = (option: (typeof OPTIONS)[number]) => {
+	if (!supplierId) return null
+
+	const handleToggleSelect = (
+		option: (typeof DELIVERY_DAYS_OPTIONS)[number],
+	) => {
 		const allDays = getValues("allDays")
 		if (!allDays?.length) {
 			setValue("allDays", [
@@ -70,7 +77,7 @@ export const DeliveryDaysForm = ({
 		if (!allDays?.length) {
 			setValue("allDays", [
 				{
-					...OPTIONS.find((option) => option.id === id),
+					...DELIVERY_DAYS_OPTIONS.find((option) => option.id === id),
 					time: time.format("HH:mm"),
 				},
 			])
@@ -93,7 +100,7 @@ export const DeliveryDaysForm = ({
 		if (!allDays?.length) {
 			setValue("allDays", [
 				{
-					...OPTIONS.find((option) => option.id === id),
+					...DELIVERY_DAYS_OPTIONS.find((option) => option.id === id),
 					period,
 				},
 			])
@@ -111,74 +118,35 @@ export const DeliveryDaysForm = ({
 		setValue("allDays", updatedValue)
 	}
 
-	const tableColumns: TableColumnsType<DaySchemaType> = [
-		{
-			title: "Dia",
-			dataIndex: "id",
-			key: "id",
-			onCell: (record) => ({
-				onClick: () => handleToggleSelect(record),
-			}),
-			render: (_, record) => {
-				const isChecked = !!watch("allDays")?.find(
-					(day) => day.id === record.id && day.checked,
-				)
-				return (
-					<S.DayWrapper>
-						<Checkbox
-							checked={isChecked}
-							onChange={() => handleToggleSelect(record)}
-						/>
-						{record?.key}
-					</S.DayWrapper>
-				)
-			},
-		},
-		{
-			title: "Período",
-			dataIndex: "period",
-			key: "period",
-			render: (_, record) => {
-				const isChecked = !!watch("allDays")?.find(
-					(day) => day.id === record.id && day.checked,
-				)
-				return (
-					<Select
-						options={PERIODS}
-						placeholder={"Período"}
-						disabled={!isChecked}
-						onChange={(value) => {
-							if (typeof record?.id !== "number") return
-							handleChangePeriod(value, record.id)
-						}}
-					/>
-				)
-			},
-		},
-		{
-			title: "Horário",
-			dataIndex: "time",
-			key: "time",
-			render: (_, record) => {
-				const isChecked = !!watch("allDays")?.find(
-					(day) => day.id === record.id && day.checked,
-				)
-				return (
-					<TimePicker
-						onChange={(time) => {
-							if (typeof record?.id !== "number") return
-							handleSelectTime(time, record.id)
-						}}
-						format={"HH:mm"}
-						minuteStep={10}
-						placeholder={"Horário"}
-						showNow={false}
-						disabled={!isChecked}
-					/>
-				)
-			},
-		},
-	]
+	const handleSubmit = async () => {
+		const values = getValues()
+		if (!values?.allDays?.length) return
+
+		const body = values.allDays
+			.map((day) => {
+				if (!day?.id) return
+				return {
+					days: day.id,
+					period: day.period,
+					hour: day.time,
+					id: String(day.id),
+				}
+			})
+			.filter((value) => !!value)
+
+		try {
+			await addDeliveryDays(supplierId, body)
+			await suppliersQuery.refetch()
+			setIsModalOpen(false)
+		} catch (err) {
+			const parsedError = parseError(err as ErrorExtended)
+			showNotification({
+				type: "ERROR",
+				message: parsedError ?? "Erro ao salvar dias de entrega",
+				description: "Verifique seus dados e tente novamente",
+			})
+		}
+	}
 
 	return (
 		<Modal
@@ -188,15 +156,14 @@ export const DeliveryDaysForm = ({
 			okText={"Salvar"}
 			cancelText={"Cancelar"}
 			title={"Editar dias de entrega"}
+			onOk={handleSubmit}
 		>
-			<S.PageWrapper>
-				<Table
-					columns={tableColumns}
-					dataSource={OPTIONS}
-					pagination={false}
-					rowClassName={"row"}
-				/>
-			</S.PageWrapper>
+			<DeliveryDaysTable
+				deliveryDays={watch("allDays") ?? []}
+				handleToggleSelect={handleToggleSelect}
+				handleChangePeriod={handleChangePeriod}
+				handleSelectTime={handleSelectTime}
+			/>
 		</Modal>
 	)
 }
