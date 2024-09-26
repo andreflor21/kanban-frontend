@@ -186,3 +186,19 @@ export const TableActionsWrapper = styled.div`
 		}
 	}
 `
+
+export const InputLabel = styled.label`
+	font-family: var(--font-standard), sans-serif;
+	font-style: normal;
+	font-weight: normal;
+	font-size: 16px;
+	line-height: 19px;
+	text-transform: capitalize;
+	padding: 0.5rem;
+	display: flex;
+
+	> svg {
+		color: #E80202;
+		margin-left: ${spacing.micro};
+	}
+`
