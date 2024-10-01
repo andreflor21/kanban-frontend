@@ -202,3 +202,9 @@ export const InputLabel = styled.label`
 		margin-left: ${spacing.micro};
 	}
 `
+
+export const InfoAndSubInfoWrapper = styled.div`
+	i {
+		font-size: 12px;
+	}
+`

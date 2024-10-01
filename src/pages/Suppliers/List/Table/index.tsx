@@ -8,7 +8,11 @@ import {
 	useGetSuppliers,
 	useGetSuppliersActions,
 } from "@/services/useGetSuppliers"
-import { TableActionsWrapper, TableWrapper } from "@/style/global"
+import {
+	InfoAndSubInfoWrapper,
+	TableActionsWrapper,
+	TableWrapper,
+} from "@/style/global"
 import {
 	Drawer,
 	Popconfirm,
@@ -19,7 +23,6 @@ import {
 import { Eye, Pencil, Trash } from "phosphor-react"
 import React, { useMemo } from "react"
 import { useSearchParams } from "react-router-dom"
-import * as S from "./styles"
 
 const { Paragraph } = Typography
 export const SuppliersTable = () => {
@@ -64,10 +67,10 @@ export const SuppliersTable = () => {
 				defaultSortOrder: "ascend",
 				render: (_, record) => {
 					return (
-						<S.NameWrapper>
+						<InfoAndSubInfoWrapper key={record.id}>
 							<p>{record.name}</p>
 							<i>{record.legalName}</i>
-						</S.NameWrapper>
+						</InfoAndSubInfoWrapper>
 					)
 				},
 			},
@@ -77,6 +80,7 @@ export const SuppliersTable = () => {
 				key: "cnpj",
 				render: (_, record) => (
 					<Paragraph
+						key={record.id}
 						copyable={{
 							text: onlyNumbersCnpj(record.cnpj),
 						}}
