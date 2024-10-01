@@ -7,8 +7,8 @@ import {
 	House,
 	Kanban,
 	Package,
+	ShoppingCart,
 	SignOut,
-	Tag,
 	Truck,
 	User,
 	Users,
@@ -21,9 +21,9 @@ export const defaultMenuItems = [
 		label: "Dashboard",
 	},
 	{
-		key: "/materiais",
-		icon: <Tag weight="regular" size={24} color={"#272F51"} />,
-		label: "Materiais",
+		key: "/produtos",
+		icon: <ShoppingCart weight="regular" size={24} color={"#272F51"} />,
+		label: "Produtos",
 	},
 	{
 		key: "/pedidos",
