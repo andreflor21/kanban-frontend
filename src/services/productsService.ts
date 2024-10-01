@@ -87,8 +87,20 @@ export const useGetProductsActions = () => {
 		})
 	}
 
+	const updateProduct = async (id: string, data: Partial<ProductBody>) => {
+		const url = `/products/${id}/update`
+		return await ApiInstance.patch<Partial<ProductBody>, ProductType>(
+			url,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
 	return {
 		createProduct,
 		deleteProduct,
+		updateProduct,
 	}
 }
