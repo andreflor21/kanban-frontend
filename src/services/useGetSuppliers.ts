@@ -3,7 +3,7 @@ import { ApiInstance } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { PaginatedResponse } from "@/types/rota"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
 type SuppliersBody = {
@@ -189,13 +189,14 @@ export const useGetSuppliers = () => {
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
 	const { currentPage, pageSize } = useHandlePagination()
-	const url = `/suppliers?page=${currentPage}&page_size=${pageSize}`
+	const url = `/suppliers?page=${currentPage}&pageSize=${pageSize}`
 
 	const query = useQuery({
 		queryKey: [url],
 		queryFn: () =>
 			ApiInstance.get<PaginatedResponse<SuppliersResponse>>(url, { headers }),
-		enabled: !!token,
+		enabled: !!token && !!currentPage && !!pageSize,
+		placeholderData: keepPreviousData,
 	})
 
 	const { data, isLoading, error } = query

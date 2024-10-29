@@ -5,6 +5,7 @@ import { Drawer, Popconfirm, Table, type TableColumnsType } from "antd"
 
 import { UserForm } from "@/components/NewUser/UserForm"
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { UserDetails } from "@/pages/Settings/Users/UserList/UserDetails"
 import { getDataToShow } from "@/pages/Settings/Users/UserList/helpers"
 import { type ErrorExtended, parseError } from "@/services/api"
@@ -35,6 +36,8 @@ export const UserList = () => {
 	const querySearch = searchParams.get("user") ?? ""
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
+	const { currentPage, pageSize, handlePagination, handleChangePageSize } =
+		useHandlePagination()
 
 	const isLoading = isLoadingUsers
 
@@ -174,8 +177,20 @@ export const UserList = () => {
 				columns={columns}
 				dataSource={dataToShow}
 				loading={isLoading}
-				pagination={false}
 				virtual={true}
+				pagination={{
+					showSizeChanger: !!users?.totalPages && users?.totalPages > 5,
+					current: users?.currentPage,
+					total: users?.totalPages,
+					pageSize: Number(pageSize),
+					onChange: (page, size) => {
+						handlePagination(page, Number(pageSize))
+						if (size !== Number(pageSize)) {
+							handleChangePageSize(size)
+						}
+					},
+					disabled: query.isPlaceholderData,
+				}}
 			/>
 			<Drawer
 				title="Editar Usuário"

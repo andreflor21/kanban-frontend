@@ -205,6 +205,7 @@ export const SuppliersTable = () => {
 							handleChangePageSize(size)
 						}
 					},
+					disabled: query.isPlaceholderData,
 				}}
 			/>
 			<Drawer
