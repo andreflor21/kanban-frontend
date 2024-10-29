@@ -1,6 +1,7 @@
 import { PageHeader } from "@/components/PageHeader"
 import Title from "@/components/Title"
 import TitlePage from "@/components/TitlePage"
+import { ProductTypeForm } from "@/pages/Settings/ProductsType/ProductTypeForm"
 import { ProductsTypeList } from "@/pages/Settings/ProductsType/list"
 import { Container } from "@/pages/Settings/Users/styles"
 import { Button } from "antd"
@@ -12,7 +13,7 @@ export const ManageProductsType = () => {
 
 	const handleCreateProductType = () => {
 		setSearchParams((params) => {
-			params.set("action", "create_product")
+			params.set("action", "create_product_type")
 			return params
 		})
 	}
@@ -36,6 +37,7 @@ export const ManageProductsType = () => {
 					}
 				/>
 				<ProductsTypeList />
+				<ProductTypeForm />
 			</Container>
 		</>
 	)

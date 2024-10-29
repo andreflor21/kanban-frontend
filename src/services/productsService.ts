@@ -164,7 +164,7 @@ export const useGetProductsTypesActions = () => {
 		id: string,
 		data: Partial<GenericEntity>,
 	) => {
-		const url = `/products/types/${id}/update`
+		const url = `/products/types/${id}/edit`
 		return await ApiInstance.patch<Partial<GenericEntity>, GenericEntity>(
 			url,
 			data,
