@@ -1,5 +1,6 @@
 import { defaultMenuItems } from "@/components/Menu/consts"
 import type { MenuProps } from "antd"
+import type React from "react"
 
 export type MenuItem = Required<MenuProps>["items"][number]
 

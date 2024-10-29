@@ -8,6 +8,7 @@ import {
 	Kanban,
 	Package,
 	ShoppingCart,
+	ShoppingCartSimple,
 	SignOut,
 	Truck,
 	User,
@@ -76,6 +77,13 @@ export const defaultMenuItems = [
 				key: "/configuracoes/usuarios",
 				label: "Usuário",
 				icon: <User weight="regular" size={24} color={"#272F51"} />,
+			},
+			{
+				key: "/configuracoes/tipos-de-produtos",
+				label: "Tipos de produto",
+				icon: (
+					<ShoppingCartSimple weight="regular" size={24} color={"#272F51"} />
+				),
 			},
 		],
 	},

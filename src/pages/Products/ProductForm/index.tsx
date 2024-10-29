@@ -8,6 +8,7 @@ import {
 } from "@/pages/Products/ProductForm/schema"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
+	type ProductBody,
 	useGetProducts,
 	useGetProductsActions,
 	useGetProductsTypes,
@@ -70,10 +71,28 @@ export const ProductForm = () => {
 	const handleSubmit = async (data: ProductsSchemaType) => {
 		setIsLoading(true)
 
+		const body: ProductBody = {
+			code: data.code,
+			description: data.description,
+			additionalDescription: data.additionalDescription,
+			stockUnit: data.stockUnit,
+			ERPCode: data.ERPCode,
+			productType: data.productType,
+			productGroup: data.productGroup,
+		}
+
+		const keys = Object.keys(body) as (keyof ProductBody)[]
+
+		for (const key of keys) {
+			if (!body[key]?.length) {
+				delete body[key]
+			}
+		}
+
 		try {
 			isEditing
-				? await updateProduct(editProductId, data)
-				: await createProduct(data)
+				? await updateProduct(editProductId, body)
+				: await createProduct(body)
 
 			await productsQuery.refetch()
 			showNotification({
