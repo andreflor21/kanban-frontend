@@ -1,7 +1,12 @@
 import { isValidToken } from "@/helpers/general"
 import { useHandlePagination } from "@/hooks/useHandlePagination"
 import type { ResetPasswordData } from "@/pages/ResetPassword"
-import { ApiInstance, type ErrorExtended, parseError, UNEXPECTED_ERROR, } from "@/services/api"
+import {
+	ApiInstance,
+	type ErrorExtended,
+	UNEXPECTED_ERROR,
+	parseError,
+} from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { PaginatedResponse } from "@/types/rota"
