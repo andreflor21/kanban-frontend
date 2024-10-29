@@ -5,8 +5,10 @@ export const productSchema = yup.object().shape({
 	description: yup.string().required("Campo obrigatório"),
 	additionalDescription: yup.string().optional(),
 	stockUnit: yup.string().required("Campo obrigatório"),
+	stockUnitId: yup.string().required("Campo obrigatório"),
 	ERPCode: yup.string().optional(),
 	productType: yup.string().required("Campo obrigatório"),
+	productTypeId: yup.string().required("Campo obrigatório"),
 	productGroup: yup.string().optional(),
 })
 
@@ -17,7 +19,9 @@ export const EMPTY_PRODUCTS: ProductsSchemaType = {
 	description: "",
 	additionalDescription: undefined,
 	stockUnit: "",
+	stockUnitId: "",
 	ERPCode: undefined,
 	productType: "",
+	productTypeId: "",
 	productGroup: undefined,
 }

@@ -69,7 +69,6 @@ export const ContainerInput = styled.div`
     flex-direction: column;
     position: relative;
     width: 100%;
-
 `
 export const ContainerInner = styled.div`
     display: flex;
