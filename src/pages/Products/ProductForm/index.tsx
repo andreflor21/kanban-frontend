@@ -1,3 +1,4 @@
+import { DropDownWithCreate } from "@/components/DropDownWithCreate"
 import { NewInput } from "@/components/NewInput"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import {
@@ -9,6 +10,8 @@ import { type ErrorExtended, parseError } from "@/services/api"
 import {
 	useGetProducts,
 	useGetProductsActions,
+	useGetProductsTypes,
+	useGetProductsTypesActions,
 } from "@/services/productsService"
 import { FormFooter, FormStyled } from "@/style/global"
 import { yupResolver } from "@hookform/resolvers/yup"
@@ -23,6 +26,9 @@ export const ProductForm = () => {
 	const { createProduct, updateProduct } = useGetProductsActions()
 	const { query: productsQuery, data } = useGetProducts()
 	const { showNotification } = useGetNotification()
+	const { data: productsTypes, query: productsTypesQuery } =
+		useGetProductsTypes()
+	const { createProductType } = useGetProductsTypesActions()
 
 	const isCreatingNew = searchParams.get("action") === "create_product"
 	const editProductId = searchParams.get("edit_product_id")
@@ -37,9 +43,10 @@ export const ProductForm = () => {
 			description: product?.description ?? "",
 			code: product?.code ?? "",
 			additionalDescription: product?.additionalDescription ?? "",
-			stockUnit: product?.stockUnit ?? "",
-			productType: product?.productType?.id ?? "",
-			productGroup: product?.productGroup?.id ?? "",
+			stockUnit: product?.stockUnit.abrev ?? "",
+			productType: product?.productType?.description ?? "",
+			productTypeId: product?.productType?.id ?? "",
+			productGroup: product?.productGroup?.description ?? "",
 		}
 	}, [product, isEditing])
 
@@ -88,6 +95,15 @@ export const ProductForm = () => {
 		} finally {
 			setIsLoading(false)
 		}
+	}
+
+	console.log(productsTypes)
+
+	const handleAddProductType = async (value: string) => {
+		await createProductType({
+			description: value,
+		})
+		await productsTypesQuery.refetch()
 	}
 
 	return (
@@ -161,12 +177,31 @@ export const ProductForm = () => {
 						name={"productType"}
 						control={methods.control}
 						render={({ field }) => (
-							<NewInput
+							<DropDownWithCreate
 								required
+								errorMessage={methods.formState.errors.productType?.message}
 								label={"Tipo de produto"}
 								placeholder={"Tipo de produto"}
-								errorMessage={methods.formState.errors.productType?.message}
+								options={
+									productsTypes?.productTypes?.map((productType) => ({
+										label: productType.description,
+										value: productType.id,
+									})) ?? []
+								}
+								currentValue={methods.watch("productTypeId")}
 								{...field}
+								onSelectOption={(value: string, id: string) => {
+									methods.setValue("productTypeId", id)
+									methods.setValue("productType", value)
+									methods.trigger(["productType", "productTypeId"])
+								}}
+								creation={{
+									actionLabel: "Adicionar",
+									onNewValue: handleAddProductType,
+									placeholder: "Tipo de produto",
+									isLoading: productsTypesQuery.isLoading,
+									isDisabled: productsTypesQuery.isLoading,
+								}}
 							/>
 						)}
 					/>

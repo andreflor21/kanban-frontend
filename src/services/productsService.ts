@@ -32,7 +32,10 @@ export type ProductType = {
 	code: string
 	description: string
 	additionalDescription: string
-	stockUnit: string
+	stockUnit: {
+		id: string
+		abrev: string
+	}
 	productType?: GenericEntity
 	productGroup?: GenericEntity
 	suppliers: ProductSupplier[]
@@ -106,5 +109,74 @@ export const useGetProductsActions = () => {
 		createProduct,
 		deleteProduct,
 		updateProduct,
+	}
+}
+
+type ProductsTypesResponse = {
+	productTypes: GenericEntity[]
+}
+
+export const useGetProductsTypes = () => {
+	const url = "/products/types"
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+
+	const query = useQuery({
+		queryKey: [url],
+		queryFn: () => ApiInstance.get<ProductsTypesResponse>(url, { headers }),
+		enabled: !!token,
+	})
+
+	return {
+		data: query.data,
+		isLoading: query.isLoading,
+		error: query.error,
+		query,
+	}
+}
+
+export const useGetProductsTypesActions = () => {
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+
+	const createProductType = async (data: {
+		description: string
+	}) => {
+		const url = "/products/types/new"
+		return await ApiInstance.post<
+			{
+				description: string
+			},
+			GenericEntity
+		>(url, data, {
+			headers,
+		})
+	}
+
+	const deleteProductType = async (id: string) => {
+		const url = `/products/types/${id}/delete`
+		return await ApiInstance.delete(url, {
+			headers,
+		})
+	}
+
+	const updateProductType = async (
+		id: string,
+		data: Partial<GenericEntity>,
+	) => {
+		const url = `/products/types/${id}/update`
+		return await ApiInstance.patch<Partial<GenericEntity>, GenericEntity>(
+			url,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return {
+		createProductType,
+		deleteProductType,
+		updateProductType,
 	}
 }
