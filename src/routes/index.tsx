@@ -12,6 +12,7 @@ import Orders from "@/pages/Orders"
 import Products from "@/pages/Products"
 import ResetPassword from "@/pages/ResetPassword"
 import Section from "@/pages/Section"
+import { ManageProductsType } from "@/pages/Settings/ProductsType"
 import Profile from "@/pages/Settings/Profile"
 import Users from "@/pages/Settings/Users"
 import UserDetails from "@/pages/Settings/Users/UserDetails"
@@ -91,7 +92,6 @@ export const router = createBrowserRouter([
 				children: [
 					{
 						path: "usuarios",
-
 						children: [
 							{
 								index: true,
@@ -105,7 +105,6 @@ export const router = createBrowserRouter([
 					},
 					{
 						path: "perfil",
-
 						children: [
 							{ index: true, element: <Profile /> },
 							{
@@ -117,6 +116,15 @@ export const router = createBrowserRouter([
 								element: (
 									<ProfileForm action="duplicate" title="Duplicar Perfil" />
 								),
+							},
+						],
+					},
+					{
+						path: "tipos-de-produtos",
+						children: [
+							{
+								index: true,
+								element: <ManageProductsType />,
 							},
 						],
 					},

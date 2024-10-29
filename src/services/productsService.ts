@@ -5,7 +5,7 @@ import { useUserStore } from "@/stores/User/useUserStore"
 import type { PaginatedResponse } from "@/types/rota"
 import { useQuery } from "@tanstack/react-query"
 
-type GenericEntity = {
+export type GenericEntity = {
 	id: string
 	description: string
 }
@@ -45,7 +45,7 @@ type ProductResponse = {
 	products: ProductType[]
 }
 
-type ProductBody = {
+export type ProductBody = {
 	code: string
 	description: string
 	additionalDescription?: string
@@ -95,7 +95,7 @@ export const useGetProductsActions = () => {
 	}
 
 	const updateProduct = async (id: string, data: Partial<ProductBody>) => {
-		const url = `/products/${id}/update`
+		const url = `/products/${id}/edit`
 		return await ApiInstance.patch<Partial<ProductBody>, ProductType>(
 			url,
 			data,
@@ -164,7 +164,7 @@ export const useGetProductsTypesActions = () => {
 		id: string,
 		data: Partial<GenericEntity>,
 	) => {
-		const url = `/products/types/${id}/update`
+		const url = `/products/types/${id}/edit`
 		return await ApiInstance.patch<Partial<GenericEntity>, GenericEntity>(
 			url,
 			data,
