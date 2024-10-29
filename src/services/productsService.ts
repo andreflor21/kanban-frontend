@@ -1,6 +1,8 @@
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { ApiInstance } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
+import type { PaginatedResponse } from "@/types/rota"
 import { useQuery } from "@tanstack/react-query"
 
 type GenericEntity = {
@@ -51,14 +53,16 @@ type ProductBody = {
 }
 
 export const useGetProducts = () => {
-	const url = "/products"
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
+	const { currentPage, pageSize } = useHandlePagination()
+	const url = `/products?page=${currentPage}&pageSize=${pageSize}`
 
 	const query = useQuery({
 		queryKey: [url],
-		queryFn: () => ApiInstance.get<ProductResponse>(url, { headers }),
-		enabled: !!token,
+		queryFn: () =>
+			ApiInstance.get<PaginatedResponse<ProductResponse>>(url, { headers }),
+		enabled: !!token && !!currentPage && !!pageSize,
 	})
 
 	return {

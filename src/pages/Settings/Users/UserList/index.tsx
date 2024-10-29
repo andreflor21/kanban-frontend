@@ -36,7 +36,7 @@ export const UserList = () => {
 	const querySearch = searchParams.get("user") ?? ""
 	const { deleteUser } = useGetUsersActions()
 	const { showNotification } = useGetNotification()
-	const { currentPage, pageSize, handlePagination, handleChangePageSize } =
+	const { pageSize, handlePagination, handleChangePageSize } =
 		useHandlePagination()
 
 	const isLoading = isLoadingUsers

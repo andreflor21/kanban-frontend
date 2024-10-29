@@ -31,7 +31,7 @@ export const SuppliersTable = () => {
 	const { deleteSupplier } = useGetSuppliersActions()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const { showNotification } = useGetNotification()
-	const { pageSize, currentPage, handlePagination, handleChangePageSize } =
+	const { pageSize, handlePagination, handleChangePageSize } =
 		useHandlePagination()
 
 	const supplierQuery = searchParams.get("supplier")

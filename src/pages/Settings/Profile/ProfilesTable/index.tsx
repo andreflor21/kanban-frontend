@@ -28,7 +28,7 @@ export const ProfilesTable = () => {
 	const profileQuery = searchParams.get("profile")
 	const { deleteProfile } = useGetProfilesActions()
 	const { showNotification } = useGetNotification()
-	const { currentPage, pageSize, handlePagination, handleChangePageSize } =
+	const { pageSize, handlePagination, handleChangePageSize } =
 		useHandlePagination()
 
 	const dataToShow = useMemo(() => {

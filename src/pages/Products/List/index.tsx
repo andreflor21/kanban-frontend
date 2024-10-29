@@ -1,5 +1,6 @@
 import { getTextValue } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
 	type ProductType,
@@ -23,6 +24,8 @@ export const ProductsList = () => {
 	const productQuery = searchParams.get("product")
 	const { data, isLoading, query: productsQuery } = useGetProducts()
 	const { showNotification } = useGetNotification()
+	const { pageSize, handlePagination, handleChangePageSize } =
+		useHandlePagination()
 
 	const handleDelete = async (id: string) => {
 		setIsDeleting(true)
@@ -132,7 +135,19 @@ export const ProductsList = () => {
 				columns={columns}
 				dataSource={dataToDisplay}
 				loading={isLoading}
-				pagination={false}
+				pagination={{
+					showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
+					current: data?.currentPage,
+					total: data?.totalPages,
+					pageSize: Number(pageSize),
+					onChange: (page, size) => {
+						handlePagination(page, Number(pageSize))
+						if (size !== Number(pageSize)) {
+							handleChangePageSize(size)
+						}
+					},
+					disabled: productsQuery.isPlaceholderData,
+				}}
 			/>
 		</TableWrapper>
 	)
