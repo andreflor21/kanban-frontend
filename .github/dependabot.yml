@@ -4,9 +4,9 @@ updates:
     directory: /
     schedule:
       interval: daily
-      target-branch: 'development'
-      commit-message:
-        prefix: 'chore(deps)'
+    target-branch: 'development'
+    commit-message:
+      prefix: 'chore(deps)'
 
   - package-ecosystem: npm
     directory: /
