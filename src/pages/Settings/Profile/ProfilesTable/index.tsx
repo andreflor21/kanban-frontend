@@ -1,4 +1,5 @@
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { DetailsProfile } from "@/pages/Settings/Profile/DetailsProfile"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
@@ -27,6 +28,8 @@ export const ProfilesTable = () => {
 	const profileQuery = searchParams.get("profile")
 	const { deleteProfile } = useGetProfilesActions()
 	const { showNotification } = useGetNotification()
+	const { currentPage, pageSize, handlePagination, handleChangePageSize } =
+		useHandlePagination()
 
 	const dataToShow = useMemo(() => {
 		if (!data) return []
@@ -194,8 +197,20 @@ export const ProfilesTable = () => {
 					columns={columns}
 					dataSource={dataToShow}
 					loading={isLoading}
-					pagination={false}
 					virtual={true}
+					pagination={{
+						showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
+						current: data?.currentPage,
+						total: data?.totalPages,
+						pageSize: Number(pageSize),
+						onChange: (page, size) => {
+							handlePagination(page, Number(pageSize))
+							if (size !== Number(pageSize)) {
+								handleChangePageSize(size)
+							}
+						},
+						disabled: profilesQuery.isPlaceholderData,
+					}}
 				/>
 			</TableWrapper>
 			<DetailsProfile />
