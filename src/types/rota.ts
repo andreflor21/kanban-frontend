@@ -5,3 +5,8 @@ export interface Rota {
 	metodo: string
 	habilitada: boolean
 }
+
+export type PaginatedResponse<T> = {
+	currentPage: number
+	totalPages: number
+} & T

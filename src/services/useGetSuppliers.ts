@@ -1,6 +1,8 @@
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { ApiInstance } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
+import type { PaginatedResponse } from "@/types/rota"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 
@@ -186,11 +188,13 @@ export const useGetSuppliersActions = () => {
 export const useGetSuppliers = () => {
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
-	const url = "/suppliers"
+	const { currentPage, pageSize } = useHandlePagination()
+	const url = `/suppliers?page=${currentPage}&page_size=${pageSize}`
 
 	const query = useQuery({
 		queryKey: [url],
-		queryFn: () => ApiInstance.get<SuppliersResponse>(url, { headers }),
+		queryFn: () =>
+			ApiInstance.get<PaginatedResponse<SuppliersResponse>>(url, { headers }),
 		enabled: !!token,
 	})
 
