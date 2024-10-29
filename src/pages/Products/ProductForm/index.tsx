@@ -44,6 +44,7 @@ export const ProductForm = () => {
 			code: product?.code ?? "",
 			additionalDescription: product?.additionalDescription ?? "",
 			stockUnit: product?.stockUnit.abrev ?? "",
+			stockUnitId: product?.stockUnit.id ?? "",
 			productType: product?.productType?.description ?? "",
 			productTypeId: product?.productType?.id ?? "",
 			productGroup: product?.productGroup?.description ?? "",
@@ -96,8 +97,6 @@ export const ProductForm = () => {
 			setIsLoading(false)
 		}
 	}
-
-	console.log(productsTypes)
 
 	const handleAddProductType = async (value: string) => {
 		await createProductType({
@@ -163,12 +162,38 @@ export const ProductForm = () => {
 						name={"stockUnit"}
 						control={methods.control}
 						render={({ field }) => (
-							<NewInput
+							// <NewInput
+							// 	required
+							// 	label={"Unidade de estoque"}
+							// 	placeholder={"Unidade de estoque do produto"}
+							// 	errorMessage={methods.formState.errors.stockUnit?.message}
+							// 	{...field}
+							// />
+							<DropDownWithCreate
 								required
+								errorMessage={methods.formState.errors.stockUnit?.message}
 								label={"Unidade de estoque"}
 								placeholder={"Unidade de estoque do produto"}
-								errorMessage={methods.formState.errors.stockUnit?.message}
+								options={
+									productsTypes?.productTypes?.map((productType) => ({
+										label: productType.description,
+										value: productType.id,
+									})) ?? []
+								}
+								currentValue={methods.watch("stockUnitId")}
 								{...field}
+								onSelectOption={(value: string, id: string) => {
+									methods.setValue("stockUnitId", id)
+									methods.setValue("stockUnit", value)
+									methods.trigger(["stockUnit", "stockUnitId"])
+								}}
+								creation={{
+									actionLabel: "Adicionar",
+									onNewValue: handleAddProductType,
+									placeholder: "Unidade de estoque",
+									isLoading: productsTypesQuery.isLoading,
+									isDisabled: productsTypesQuery.isLoading,
+								}}
 							/>
 						)}
 					/>
