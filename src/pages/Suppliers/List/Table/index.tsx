@@ -1,6 +1,7 @@
 import { StatusTag } from "@/components/StatusTag"
 import { cnpjMask, onlyNumbersCnpj } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { NewSupplier } from "@/pages/Suppliers/List/NewSupplier"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
@@ -29,8 +30,11 @@ export const SuppliersTable = () => {
 	const { data, isLoading, error, query } = useGetSuppliers()
 	const { deleteSupplier } = useGetSuppliersActions()
 	const [searchParams, setSearchParams] = useSearchParams()
-	const supplierQuery = searchParams.get("supplier")
 	const { showNotification } = useGetNotification()
+	const { pageSize, handlePagination, handleChangePageSize } =
+		useHandlePagination()
+
+	const supplierQuery = searchParams.get("supplier")
 	const editSupplierId = searchParams.get("edit_supplier_id")
 	const isDrawerOpen = !!editSupplierId
 
@@ -189,8 +193,20 @@ export const SuppliersTable = () => {
 				columns={getColumns()}
 				dataSource={dataToDisplay}
 				loading={isLoading}
-				pagination={false}
 				virtual={true}
+				pagination={{
+					showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
+					current: data?.currentPage,
+					total: data?.totalPages,
+					pageSize: Number(pageSize),
+					onChange: (page, size) => {
+						handlePagination(page, Number(pageSize))
+						if (size !== Number(pageSize)) {
+							handleChangePageSize(size)
+						}
+					},
+					disabled: query.isPlaceholderData,
+				}}
 			/>
 			<Drawer
 				title="Editar Fornecedor"

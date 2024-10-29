@@ -1,4 +1,5 @@
 import { isValidToken } from "@/helpers/general"
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import type { ResetPasswordData } from "@/pages/ResetPassword"
 import {
 	ApiInstance,
@@ -8,8 +9,9 @@ import {
 } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
+import type { PaginatedResponse } from "@/types/rota"
 import type { User } from "@/types/usuario"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 export type LoginBody = {
 	email: string
@@ -150,12 +152,15 @@ type UsersResponse = {
 export const useGetAllUsers = () => {
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
-	const url = "/users"
+	const { currentPage, pageSize } = useHandlePagination()
+	const url = `/users?page=${currentPage}&pageSize=${pageSize}`
 
-	const query = useQuery<UsersResponse>({
+	const query = useQuery({
 		queryKey: [url],
-		queryFn: () => ApiInstance.get<UsersResponse>(url, { headers }),
-		enabled: !!token,
+		queryFn: () =>
+			ApiInstance.get<PaginatedResponse<UsersResponse>>(url, { headers }),
+		enabled: !!token && !!currentPage && !!pageSize,
+		placeholderData: keepPreviousData,
 	})
 
 	const { data, isLoading, error } = query
