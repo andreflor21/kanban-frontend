@@ -187,9 +187,9 @@ export const useGetProductsTypesActions = () => {
 	}
 }
 
-type MeasureUnit = {
+export type MeasureUnit = {
 	id: string
-	description: string
+	description?: string
 	abrev: string
 }
 
@@ -218,7 +218,7 @@ export const useGetProductsMesureUnits = () => {
 }
 
 type UnitsMesureBody = {
-	description: string
+	description?: string
 	abrev: string
 }
 

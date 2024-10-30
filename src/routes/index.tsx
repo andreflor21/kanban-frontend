@@ -12,6 +12,7 @@ import Orders from "@/pages/Orders"
 import Products from "@/pages/Products"
 import ResetPassword from "@/pages/ResetPassword"
 import Section from "@/pages/Section"
+import { ManageMesureUnits } from "@/pages/Settings/MesureUnits"
 import { ManageProductsType } from "@/pages/Settings/ProductsType"
 import Profile from "@/pages/Settings/Profile"
 import Users from "@/pages/Settings/Users"
@@ -125,6 +126,15 @@ export const router = createBrowserRouter([
 							{
 								index: true,
 								element: <ManageProductsType />,
+							},
+						],
+					},
+					{
+						path: "unidades-de-medida",
+						children: [
+							{
+								index: true,
+								element: <ManageMesureUnits />,
 							},
 						],
 					},
