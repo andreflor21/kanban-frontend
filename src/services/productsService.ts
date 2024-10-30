@@ -112,8 +112,14 @@ export const useGetProductsActions = () => {
 	}
 }
 
+export type ProductsType = {
+	description: string
+	id: string
+	products: number
+}
+
 type ProductsTypesResponse = {
-	productTypes: GenericEntity[]
+	productTypes: ProductsType[]
 }
 
 export const useGetProductsTypes = () => {
