@@ -1,12 +1,12 @@
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
-	type GenericEntity,
+	type ProductsType,
 	useGetProductsTypes,
 	useGetProductsTypesActions,
 } from "@/services/productsService"
 import { TableActionsWrapper, TableWrapper } from "@/style/global"
-import { Popconfirm, Table, type TableColumnsType } from "antd"
+import { Popconfirm, Table, type TableColumnsType, Tag, Tooltip } from "antd"
 import { Pencil, Trash } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
@@ -48,12 +48,14 @@ export const ProductsTypeList = () => {
 		})
 	}
 
-	const columns: TableColumnsType<GenericEntity> = [
+	const columns: TableColumnsType<ProductsType> = [
 		{
 			title: "Descrição",
 			dataIndex: "description",
 			key: "description",
 			render: (_, record) => record?.description,
+			sorter: (a, b) => a?.description.localeCompare(b?.description ?? "") ?? 0,
+			sortDirections: ["descend", "ascend"],
 		},
 		{
 			title: "id",
@@ -61,37 +63,63 @@ export const ProductsTypeList = () => {
 			key: "id",
 			render: (_, record) => record?.id,
 		},
-
+		{
+			title: "Produtos associados",
+			dataIndex: "products",
+			key: "products",
+			render: (_, record) => (
+				<Tag color={record?.products > 0 ? "green" : "red"}>
+					{record?.products}
+				</Tag>
+			),
+			sorter: (a, b) => a?.products - b?.products,
+			sortDirections: ["descend", "ascend"],
+		},
 		{
 			title: "",
 			dataIndex: "action",
 			key: "action",
 			width: 100,
 			render: (_, record) => {
+				const isReadOnly = record.products > 0
 				return (
 					<TableActionsWrapper key={record?.id}>
 						<Pencil
 							color={"#1677ff"}
 							onClick={() => handleEdit(record?.id ?? "")}
 						/>
-						<Popconfirm
-							key={record?.id}
-							title={`Tem certeza que deseja excluir o produto ${record?.description ?? ""}?`}
-							onConfirm={() => handleDelete(record?.id ?? "")}
-							okText={"Deletar"}
-							cancelText={"Cancelar"}
-							placement={"topLeft"}
-							okButtonProps={{ loading: isDeleting }}
-						>
-							<Trash className={"delete"} />
-						</Popconfirm>
+						{isReadOnly ? (
+							<Tooltip
+								title={
+									"Não é possível excluir um tipo de produto com produtos associados"
+								}
+							>
+								<Trash
+									color={"#ccc"}
+									size={18}
+									style={{ cursor: "not-allowed" }}
+								/>
+							</Tooltip>
+						) : (
+							<Popconfirm
+								key={record?.id}
+								title={`Tem certeza que deseja excluir o produto ${record?.description ?? ""}?`}
+								onConfirm={() => handleDelete(record?.id ?? "")}
+								okText={"Deletar"}
+								cancelText={"Cancelar"}
+								placement={"topLeft"}
+								okButtonProps={{ loading: isDeleting }}
+							>
+								<Trash className={"delete"} />
+							</Popconfirm>
+						)}
 					</TableActionsWrapper>
 				)
 			},
 		},
 	]
 
-	const dataToDisplay: GenericEntity[] = useMemo(() => {
+	const dataToDisplay: ProductsType[] = useMemo(() => {
 		if (!data?.productTypes) return []
 		if (!typeSearchQuery) return data.productTypes
 		return data.productTypes.filter((product) =>

@@ -90,14 +90,6 @@ export default createGlobalStyle`
 	.delete {
 		color: var(--red-500);
 	}
-
-
-	// @media screen and (min-width: 920px) {
-    //   body {
-    //     padding-top: 70px;
-    //   }
-
-    // }
 `
 
 export const spacing = {
