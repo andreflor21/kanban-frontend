@@ -186,3 +186,77 @@ export const useGetProductsTypesActions = () => {
 		updateProductType,
 	}
 }
+
+type MeasureUnit = {
+	id: string
+	description: string
+	abrev: string
+}
+
+type UnitsResponse = {
+	units: MeasureUnit[]
+}
+
+export const useGetProductsMesureUnits = () => {
+	const url = "/units"
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+
+	const query = useQuery({
+		queryKey: [url],
+		queryFn: () =>
+			ApiInstance.get<PaginatedResponse<UnitsResponse>>(url, { headers }),
+		enabled: !!token,
+	})
+
+	return {
+		data: query.data,
+		isLoading: query.isLoading,
+		error: query.error,
+		query,
+	}
+}
+
+type UnitsMesureBody = {
+	description: string
+	abrev: string
+}
+
+export const useGetProductsMesureUnitsActions = () => {
+	const token = useUserStore((state) => state.token)
+	const headers = makeApiHeaders(token)
+
+	const createProductMesureUnit = async (data: UnitsMesureBody) => {
+		const url = "/units/new"
+		return await ApiInstance.post<UnitsMesureBody, MeasureUnit>(url, data, {
+			headers,
+		})
+	}
+
+	const deleteProductMesureUnit = async (id: string) => {
+		const url = `/units/${id}/delete`
+		return await ApiInstance.delete(url, {
+			headers,
+		})
+	}
+
+	const updateProductMesureUnit = async (
+		id: string,
+		data: Partial<MeasureUnit>,
+	) => {
+		const url = `/units/${id}/edit`
+		return await ApiInstance.patch<Partial<MeasureUnit>, MeasureUnit>(
+			url,
+			data,
+			{
+				headers,
+			},
+		)
+	}
+
+	return {
+		createProductMesureUnit,
+		deleteProductMesureUnit,
+		updateProductMesureUnit,
+	}
+}

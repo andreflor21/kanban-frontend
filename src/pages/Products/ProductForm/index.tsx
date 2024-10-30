@@ -11,6 +11,8 @@ import {
 	type ProductBody,
 	useGetProducts,
 	useGetProductsActions,
+	useGetProductsMesureUnits,
+	useGetProductsMesureUnitsActions,
 	useGetProductsTypes,
 	useGetProductsTypesActions,
 } from "@/services/productsService"
@@ -30,6 +32,9 @@ export const ProductForm = () => {
 	const { data: productsTypes, query: productsTypesQuery } =
 		useGetProductsTypes()
 	const { createProductType } = useGetProductsTypesActions()
+	const { data: mesureUnits, query: mesureUnitsQuery } =
+		useGetProductsMesureUnits()
+	const { createProductMesureUnit } = useGetProductsMesureUnitsActions()
 
 	const isCreatingNew = searchParams.get("action") === "create_product"
 	const editProductId = searchParams.get("edit_product_id")
@@ -124,6 +129,14 @@ export const ProductForm = () => {
 		await productsTypesQuery.refetch()
 	}
 
+	const handleAddMesureUnit = async (value: string) => {
+		await createProductMesureUnit({
+			description: "",
+			abrev: value,
+		})
+		await mesureUnitsQuery.refetch()
+	}
+
 	return (
 		<>
 			<Drawer
@@ -181,22 +194,15 @@ export const ProductForm = () => {
 						name={"stockUnit"}
 						control={methods.control}
 						render={({ field }) => (
-							// <NewInput
-							// 	required
-							// 	label={"Unidade de estoque"}
-							// 	placeholder={"Unidade de estoque do produto"}
-							// 	errorMessage={methods.formState.errors.stockUnit?.message}
-							// 	{...field}
-							// />
 							<DropDownWithCreate
 								required
 								errorMessage={methods.formState.errors.stockUnit?.message}
 								label={"Unidade de estoque"}
 								placeholder={"Unidade de estoque do produto"}
 								options={
-									productsTypes?.productTypes?.map((productType) => ({
-										label: productType.description,
-										value: productType.id,
+									mesureUnits?.units?.map((unit) => ({
+										label: unit.abrev,
+										value: unit.id,
 									})) ?? []
 								}
 								currentValue={methods.watch("stockUnitId")}
@@ -208,7 +214,7 @@ export const ProductForm = () => {
 								}}
 								creation={{
 									actionLabel: "Adicionar",
-									onNewValue: handleAddProductType,
+									onNewValue: handleAddMesureUnit,
 									placeholder: "Unidade de estoque",
 									isLoading: productsTypesQuery.isLoading,
 									isDisabled: productsTypesQuery.isLoading,
