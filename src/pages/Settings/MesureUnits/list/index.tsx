@@ -1,47 +1,52 @@
-import { getTextValue } from "@/helpers/general"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
-	type ProductType,
-	useGetProducts,
-	useGetProductsActions,
+	type MeasureUnit,
+	useGetProductsMesureUnits,
+	useGetProductsMesureUnitsActions,
 } from "@/services/productsService"
 import {
 	InfoAndSubInfoWrapper,
 	TableActionsWrapper,
 	TableWrapper,
 } from "@/style/global"
-import { Popconfirm, Table, type TableColumnsType, Tag } from "antd"
+import { Popconfirm, Table, type TableColumnsType } from "antd"
 import { Pencil, Trash } from "phosphor-react"
-import { useMemo, useState } from "react"
+import React, { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
-export const ProductsList = () => {
+export const MesureUnitsList = () => {
+	const {
+		data,
+		isLoading,
+		query: mesureUnitsQuery,
+	} = useGetProductsMesureUnits()
 	const [searchParams, setSearchParams] = useSearchParams()
 	const [isDeleting, setIsDeleting] = useState(false)
-	const { deleteProduct } = useGetProductsActions()
-	const productQuery = searchParams.get("product")
-	const { data, isLoading, query: productsQuery } = useGetProducts()
 	const { showNotification } = useGetNotification()
+	const { deleteProductMesureUnit } = useGetProductsMesureUnitsActions()
 	const { pageSize, handlePagination, handleChangePageSize } =
 		useHandlePagination()
+
+	const mesureUnitId = searchParams.get("mesure_unit_id")
+	const mesureUnitSearchQuery = searchParams.get("mesureUnit")
 
 	const handleDelete = async (id: string) => {
 		setIsDeleting(true)
 		try {
-			await deleteProduct(id)
-			await productsQuery.refetch()
+			await deleteProductMesureUnit(id)
+			await mesureUnitsQuery.refetch()
 			showNotification({
 				type: "SUCCESS",
-				message: "Produto excluído com sucesso",
+				message: "Unidade de medida deletado com sucesso",
 				description: "",
 			})
 		} catch (err) {
 			const parsedError = parseError(err as ErrorExtended)
 			showNotification({
 				type: "ERROR",
-				message: parsedError ?? "Erro ao excluir produto",
+				message: parsedError ?? "Erro ao deletar unidade de medida",
 				description: "Verifique seus dados e tente novamente",
 			})
 		} finally {
@@ -51,54 +56,32 @@ export const ProductsList = () => {
 
 	const handleEdit = (id: string) => {
 		setSearchParams((params) => {
-			params.set("edit_product_id", id)
+			params.set("mesure_unit_id", id)
 			return params
 		})
 	}
 
-	const columns: TableColumnsType<ProductType> = [
-		{
-			title: "Código",
-			dataIndex: "code",
-			key: "code",
-			width: 120,
-			sorter: (a, b) => a?.code.localeCompare(b?.code ?? "") ?? 0,
-			sortDirections: ["descend", "ascend"],
-			showSorterTooltip: {
-				title: "Clique para ordenar",
-			},
-			defaultSortOrder: "ascend",
-		},
-		{
-			title: "Descrição",
-			dataIndex: "description",
-			key: "description",
-			sorter: (a, b) => a?.description.localeCompare(b?.description ?? "") ?? 0,
-			sortDirections: ["descend", "ascend"],
-			showSorterTooltip: {
-				title: "Clique para ordenar",
-			},
-			defaultSortOrder: "ascend",
-			render: (_, record) => (
-				<InfoAndSubInfoWrapper key={record.id}>
-					<p>{record.description}</p>
-					<i>{record?.additionalDescription}</i>
-				</InfoAndSubInfoWrapper>
-			),
-		},
-		{
-			title: "Tipo de produto",
-			dataIndex: "productType",
-			key: "productType",
-			render: (_, record) => getTextValue(record?.productType?.description),
-		},
+	const columns: TableColumnsType<MeasureUnit> = [
 		{
 			title: "Unidade de medida",
-			dataIndex: "stockUnit",
-			key: "stockUnit",
-			render: (_, record) => (
-				<Tag>{getTextValue(record?.stockUnit?.abrev)}</Tag>
-			),
+			dataIndex: "abrev",
+			key: "abrev",
+			sorter: (a, b) => a?.abrev.localeCompare(b?.abrev ?? "") ?? 0,
+			sortDirections: ["descend", "ascend"],
+			render: (_, record) => {
+				return (
+					<InfoAndSubInfoWrapper key={record.id}>
+						<p>{record.abrev}</p>
+						<i>{record.description}</i>
+					</InfoAndSubInfoWrapper>
+				)
+			},
+		},
+		{
+			title: "id",
+			dataIndex: "id",
+			key: "id",
+			render: (_, record) => record?.id,
 		},
 		{
 			title: "",
@@ -129,19 +112,20 @@ export const ProductsList = () => {
 		},
 	]
 
-	const dataToDisplay: ProductType[] = useMemo(() => {
-		if (!data?.products) return []
-		if (!productQuery) return data.products
-		return data.products.filter((product) =>
-			product.description.toLowerCase().includes(productQuery.toLowerCase()),
+	const dataToDisplay: MeasureUnit[] = useMemo(() => {
+		if (!data?.units) return []
+		if (!mesureUnitSearchQuery) return data.units
+		return data.units.filter((unit) =>
+			unit.abrev.toLowerCase().includes(mesureUnitSearchQuery.toLowerCase()),
 		)
-	}, [data, productQuery])
+	}, [data, mesureUnitSearchQuery])
 
 	return (
 		<TableWrapper>
 			<Table
 				columns={columns}
 				dataSource={dataToDisplay}
+				virtual={true}
 				loading={isLoading}
 				pagination={{
 					showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
@@ -154,7 +138,7 @@ export const ProductsList = () => {
 							handleChangePageSize(size)
 						}
 					},
-					disabled: productsQuery.isPlaceholderData,
+					disabled: mesureUnitsQuery.isPlaceholderData,
 				}}
 			/>
 		</TableWrapper>

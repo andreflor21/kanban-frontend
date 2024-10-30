@@ -7,6 +7,7 @@ import {
 	House,
 	Kanban,
 	Package,
+	Scales,
 	ShoppingCart,
 	ShoppingCartSimple,
 	SignOut,
@@ -84,6 +85,11 @@ export const defaultMenuItems = [
 				icon: (
 					<ShoppingCartSimple weight="regular" size={24} color={"#272F51"} />
 				),
+			},
+			{
+				key: "/configuracoes/unidades-de-medida",
+				label: "Un de medida",
+				icon: <Scales weight="regular" size={24} color={"#272F51"} />,
 			},
 		],
 	},
