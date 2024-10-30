@@ -12,7 +12,7 @@ import {
 	TableActionsWrapper,
 	TableWrapper,
 } from "@/style/global"
-import { Popconfirm, Table, type TableColumnsType } from "antd"
+import { Popconfirm, Table, type TableColumnsType, Tag } from "antd"
 import { Pencil, Trash } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
@@ -91,6 +91,14 @@ export const ProductsList = () => {
 			dataIndex: "productType",
 			key: "productType",
 			render: (_, record) => getTextValue(record?.productType?.description),
+		},
+		{
+			title: "Unidade de medida",
+			dataIndex: "stockUnit",
+			key: "stockUnit",
+			render: (_, record) => (
+				<Tag>{getTextValue(record?.stockUnit?.abrev)}</Tag>
+			),
 		},
 		{
 			title: "",

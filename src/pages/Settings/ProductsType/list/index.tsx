@@ -11,6 +11,10 @@ import { Pencil, Trash } from "phosphor-react"
 import { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
 
+const IN_USE_TITLE = "Este tipo de produto está associado a um ou mais produtos"
+const NOT_IN_USE_TITLE =
+	"Este tipo de produto não está associado a nenhum produto"
+
 export const ProductsTypeList = () => {
 	const { data, isLoading, query: productsTypesQuery } = useGetProductsTypes()
 	const [searchParams, setSearchParams] = useSearchParams()
@@ -64,16 +68,33 @@ export const ProductsTypeList = () => {
 			render: (_, record) => record?.id,
 		},
 		{
-			title: "Produtos associados",
+			title: "Status",
 			dataIndex: "products",
 			key: "products",
-			render: (_, record) => (
-				<Tag color={record?.products > 0 ? "green" : "red"}>
-					{record?.products}
-				</Tag>
-			),
-			sorter: (a, b) => a?.products - b?.products,
-			sortDirections: ["descend", "ascend"],
+			render: (_, record) => {
+				const isInUse = record?.products > 0
+				return (
+					<Tooltip title={isInUse ? IN_USE_TITLE : NOT_IN_USE_TITLE}>
+						<Tag color={isInUse ? "green" : "red"}>
+							{isInUse ? "Em uso" : "Inutilizado"}
+						</Tag>
+					</Tooltip>
+				)
+			},
+			filters: [
+				{
+					text: "Em uso",
+					value: true,
+				},
+				{
+					text: "Inutilizado",
+					value: false,
+				},
+			],
+			onFilter: (value, record) => {
+				const isInUse = record?.products > 0
+				return isInUse === value
+			},
 		},
 		{
 			title: "",
