@@ -1,9 +1,9 @@
 import { NewInput } from "@/components/NewInput"
 import { useGetNotification } from "@/hooks/useGetNotification"
 import {
-    EMPTY_MESURE_UNIT,
-    mesureUnitSchema,
-    type MesureUnitSchemaType,
+	EMPTY_MESURE_UNIT,
+	type MesureUnitSchemaType,
+	mesureUnitSchema,
 } from "@/pages/Settings/MesureUnits/mesureUnitForm/schema"
 import { type ErrorExtended, parseError } from "@/services/api"
 import { useGetProductsMesureUnits, useGetProductsMesureUnitsActions, } from "@/services/productsService"
