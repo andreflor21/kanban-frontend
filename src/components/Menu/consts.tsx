@@ -89,7 +89,7 @@ export const defaultMenuItems = [
 			{
 				key: "/configuracoes/unidades-de-medida",
 				label: "Un de medida",
-				icon: <Scales weight="regular" size={24} color={"#272F51"}/>,
+				icon: <Scales weight="regular" size={24} color={"#272F51"} />,
 			},
 		],
 	},
