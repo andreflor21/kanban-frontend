@@ -3,7 +3,7 @@ import { ApiInstance } from "@/services/api"
 import { makeApiHeaders } from "@/services/utils"
 import { useUserStore } from "@/stores/User/useUserStore"
 import type { PaginatedResponse } from "@/types/rota"
-import { useQuery } from "@tanstack/react-query"
+import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 export type GenericEntity = {
 	id: string
@@ -123,14 +123,19 @@ type ProductsTypesResponse = {
 }
 
 export const useGetProductsTypes = () => {
-	const url = "/products/types"
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
+	const { currentPage, pageSize } = useHandlePagination()
+	const url = `/products/types?page=${currentPage}&pageSize=${pageSize}`
 
 	const query = useQuery({
 		queryKey: [url],
-		queryFn: () => ApiInstance.get<ProductsTypesResponse>(url, { headers }),
-		enabled: !!token,
+		queryFn: () =>
+			ApiInstance.get<PaginatedResponse<ProductsTypesResponse>>(url, {
+				headers,
+			}),
+		enabled: !!token && !!currentPage && !!pageSize,
+		placeholderData: keepPreviousData,
 	})
 
 	return {
@@ -191,6 +196,7 @@ export type MeasureUnit = {
 	id: string
 	description?: string
 	abrev: string
+	products: number
 }
 
 type UnitsResponse = {
@@ -198,15 +204,18 @@ type UnitsResponse = {
 }
 
 export const useGetProductsMesureUnits = () => {
-	const url = "/units"
 	const token = useUserStore((state) => state.token)
 	const headers = makeApiHeaders(token)
+	const { currentPage, pageSize } = useHandlePagination()
+
+	const url = `/units?page=${currentPage}&pageSize=${pageSize}`
 
 	const query = useQuery({
 		queryKey: [url],
 		queryFn: () =>
 			ApiInstance.get<PaginatedResponse<UnitsResponse>>(url, { headers }),
-		enabled: !!token,
+		enabled: !!token && !!currentPage && !!pageSize,
+		placeholderData: keepPreviousData,
 	})
 
 	return {

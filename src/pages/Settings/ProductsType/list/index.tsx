@@ -1,4 +1,5 @@
 import { useGetNotification } from "@/hooks/useGetNotification"
+import { useHandlePagination } from "@/hooks/useHandlePagination"
 import { type ErrorExtended, parseError } from "@/services/api"
 import {
 	type ProductsType,
@@ -22,6 +23,8 @@ export const ProductsTypeList = () => {
 	const { deleteProductType } = useGetProductsTypesActions()
 	const typeSearchQuery = searchParams.get("productType")
 	const { showNotification } = useGetNotification()
+	const { pageSize, handlePagination, handleChangePageSize } =
+		useHandlePagination()
 
 	const handleDelete = async (id: string) => {
 		setIsDeleting(true)
@@ -148,6 +151,11 @@ export const ProductsTypeList = () => {
 		)
 	}, [data, typeSearchQuery])
 
+	const getTotalItems = () => {
+		if (!data?.totalPages || !pageSize) return 0
+		return data.totalPages * Number(pageSize)
+	}
+
 	return (
 		<TableWrapper>
 			<Table
@@ -155,7 +163,21 @@ export const ProductsTypeList = () => {
 				dataSource={dataToDisplay}
 				virtual={true}
 				loading={isLoading}
-				pagination={false}
+				pagination={{
+					showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
+					current: data?.currentPage,
+					defaultPageSize: 10,
+					defaultCurrent: 1,
+					total: getTotalItems(),
+					pageSize: Number(pageSize),
+					onChange: (page, size) => {
+						handlePagination(page, Number(pageSize))
+						if (size !== Number(pageSize)) {
+							handleChangePageSize(size)
+						}
+					},
+					disabled: productsTypesQuery.isPlaceholderData,
+				}}
 			/>
 		</TableWrapper>
 	)

@@ -190,6 +190,11 @@ export const ProfilesTable = () => {
 		]
 	}, [data, handleDelete, handleDuplicate, handleToggleDetails, handleEdit])
 
+	const getTotalItems = () => {
+		if (!data?.totalPages || !pageSize) return 0
+		return data.totalPages * Number(pageSize)
+	}
+
 	return (
 		<>
 			<TableWrapper>
@@ -201,7 +206,7 @@ export const ProfilesTable = () => {
 					pagination={{
 						showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
 						current: data?.currentPage,
-						total: data?.totalPages,
+						total: getTotalItems(),
 						pageSize: Number(pageSize),
 						onChange: (page, size) => {
 							handlePagination(page, Number(pageSize))

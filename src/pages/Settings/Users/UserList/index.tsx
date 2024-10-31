@@ -169,19 +169,23 @@ export const UserList = () => {
 			},
 		]
 	}
-	const columns = getColumns()
+
+	const getTotalItems = () => {
+		if (!users?.totalPages || !pageSize) return 0
+		return users.totalPages * Number(pageSize)
+	}
 
 	return (
 		<TableWrapper>
 			<Table
-				columns={columns}
+				columns={getColumns()}
 				dataSource={dataToShow}
 				loading={isLoading}
 				virtual={true}
 				pagination={{
 					showSizeChanger: !!users?.totalPages && users?.totalPages > 5,
 					current: users?.currentPage,
-					total: users?.totalPages,
+					total: getTotalItems(),
 					pageSize: Number(pageSize),
 					onChange: (page, size) => {
 						handlePagination(page, Number(pageSize))
