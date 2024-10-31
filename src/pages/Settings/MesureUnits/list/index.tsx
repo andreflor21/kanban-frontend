@@ -11,10 +11,15 @@ import {
 	TableActionsWrapper,
 	TableWrapper,
 } from "@/style/global"
-import { Popconfirm, Table, type TableColumnsType } from "antd"
+import { Popconfirm, Table, type TableColumnsType, Tag, Tooltip } from "antd"
 import { Pencil, Trash } from "phosphor-react"
 import React, { useMemo, useState } from "react"
 import { useSearchParams } from "react-router-dom"
+
+const IN_USE_TITLE =
+	"Esta unidade de medida está associada a um ou mais produtos"
+const NOT_IN_USE_TITLE =
+	"Esta unidade de medida não está associada a nenhum produto"
 
 export const MesureUnitsList = () => {
 	const {
@@ -84,28 +89,72 @@ export const MesureUnitsList = () => {
 			render: (_, record) => record?.id,
 		},
 		{
+			title: "Status",
+			dataIndex: "products",
+			key: "products",
+			render: (_, record) => {
+				const isInUse = record?.products > 0
+				return (
+					<Tooltip title={isInUse ? IN_USE_TITLE : NOT_IN_USE_TITLE}>
+						<Tag color={isInUse ? "green" : "red"}>
+							{isInUse ? "Em uso" : "Inutilizado"}
+						</Tag>
+					</Tooltip>
+				)
+			},
+			filters: [
+				{
+					text: "Em uso",
+					value: true,
+				},
+				{
+					text: "Inutilizado",
+					value: false,
+				},
+			],
+			onFilter: (value, record) => {
+				const isInUse = record?.products > 0
+				return isInUse === value
+			},
+		},
+		{
 			title: "",
 			dataIndex: "action",
 			key: "action",
 			width: 100,
 			render: (_, record) => {
+				const isReadOnly = record.products > 0
 				return (
 					<TableActionsWrapper key={record?.id}>
 						<Pencil
 							color={"#1677ff"}
 							onClick={() => handleEdit(record?.id ?? "")}
 						/>
-						<Popconfirm
-							key={record?.id}
-							title={`Tem certeza que deseja excluir o produto ${record?.description ?? ""}?`}
-							onConfirm={() => handleDelete(record?.id ?? "")}
-							okText={"Deletar"}
-							cancelText={"Cancelar"}
-							placement={"topLeft"}
-							okButtonProps={{ loading: isDeleting }}
-						>
-							<Trash className={"delete"} />
-						</Popconfirm>
+						{isReadOnly ? (
+							<Tooltip
+								title={
+									"Não é possível excluir uma unidade de medida com produtos associados"
+								}
+							>
+								<Trash
+									color={"#ccc"}
+									size={18}
+									style={{ cursor: "not-allowed" }}
+								/>
+							</Tooltip>
+						) : (
+							<Popconfirm
+								key={record?.id}
+								title={`Tem certeza que deseja excluir a unidade de medida ${record?.abrev ?? ""}?`}
+								onConfirm={() => handleDelete(record?.id ?? "")}
+								okText={"Deletar"}
+								cancelText={"Cancelar"}
+								placement={"topLeft"}
+								okButtonProps={{ loading: isDeleting }}
+							>
+								<Trash className={"delete"} />
+							</Popconfirm>
+						)}
 					</TableActionsWrapper>
 				)
 			},

@@ -191,6 +191,7 @@ export type MeasureUnit = {
 	id: string
 	description?: string
 	abrev: string
+	products: number
 }
 
 type UnitsResponse = {
