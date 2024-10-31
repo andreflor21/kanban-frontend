@@ -187,6 +187,11 @@ export const SuppliersTable = () => {
 		})
 	}, [data?.suppliers, supplierQuery])
 
+	const getTotalItems = () => {
+		if (!data?.totalPages || !pageSize) return 0
+		return data.totalPages * Number(pageSize)
+	}
+
 	return (
 		<TableWrapper>
 			<Table
@@ -197,7 +202,7 @@ export const SuppliersTable = () => {
 				pagination={{
 					showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
 					current: data?.currentPage,
-					total: data?.totalPages,
+					total: getTotalItems(),
 					pageSize: Number(pageSize),
 					onChange: (page, size) => {
 						handlePagination(page, Number(pageSize))

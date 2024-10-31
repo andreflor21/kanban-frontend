@@ -34,7 +34,6 @@ export const MesureUnitsList = () => {
 	const { pageSize, handlePagination, handleChangePageSize } =
 		useHandlePagination()
 
-	const mesureUnitId = searchParams.get("mesure_unit_id")
 	const mesureUnitSearchQuery = searchParams.get("mesureUnit")
 
 	const handleDelete = async (id: string) => {
@@ -169,17 +168,23 @@ export const MesureUnitsList = () => {
 		)
 	}, [data, mesureUnitSearchQuery])
 
+	const getTotalItems = () => {
+		if (!data?.totalPages || !pageSize) return 0
+		return data.totalPages * Number(pageSize)
+	}
+
 	return (
 		<TableWrapper>
 			<Table
 				columns={columns}
 				dataSource={dataToDisplay}
-				virtual={true}
 				loading={isLoading}
 				pagination={{
 					showSizeChanger: !!data?.totalPages && data?.totalPages > 5,
 					current: data?.currentPage,
-					total: data?.totalPages,
+					defaultPageSize: 10,
+					defaultCurrent: 1,
+					total: getTotalItems(),
 					pageSize: Number(pageSize),
 					onChange: (page, size) => {
 						handlePagination(page, Number(pageSize))
